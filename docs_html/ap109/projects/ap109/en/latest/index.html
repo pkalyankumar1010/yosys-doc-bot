@@ -1,0 +1,1850 @@
+
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" />
+
+    <link rel="shortcut icon" href="_static/favico.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
+        <title>YosysHQ AppNote-109 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=82a976d7" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
+    
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=d5a84a82" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #ffffff;
+  --color-code-foreground: black;
+  --color-brand-primary: #d6368f;
+  --color-brand-content: #4b72b8;
+  --color-api-name: #8857a3;
+  --color-api-pre-name: #4b72b8;
+  --color-link: #8857a3;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #e488bb;
+  --color-brand-content: #98bdff;
+  --color-api-name: #8857a3;
+  --color-api-pre-name: #4b72b8;
+  --color-link: #be95d5;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #e488bb;
+  --color-brand-content: #98bdff;
+  --color-api-name: #8857a3;
+  --color-api-pre-name: #4b72b8;
+  --color-link: #be95d5;
+  
+      }
+    }
+  }
+</style>
+<!-- RTD Extra Head -->
+
+
+
+<script type="application/json" id="READTHEDOCS_DATA">{"ad_free": true, "api_host": "https://readthedocs.org", "builder": "sphinx", "canonical_url": null, "docroot": "/docs/source/", "features": {"docsearch_disabled": false}, "global_analytics_code": "UA-17997319-1", "language": "en", "page": "index", "programming_language": "words", "project": "yosyshq-appnote-109", "proxied_api_host": "/_", "source_suffix": ".rst", "subprojects": {}, "theme": "furo", "user_analytics_code": "", "version": "latest"}</script>
+
+<!--
+Using this variable directly instead of using `JSON.parse` is deprecated.
+The READTHEDOCS_DATA global variable will be removed in the future.
+-->
+<script type="text/javascript">
+READTHEDOCS_DATA = JSON.parse(document.getElementById('READTHEDOCS_DATA').innerHTML);
+</script>
+
+
+
+<!-- end RTD <extrahead> -->
+<script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="yosyshq-appnote-109" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/" /><meta name="readthedocs-http-status" content="200" /></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="#"><div class="brand">YosysHQ AppNote-109  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="#">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/logo.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  
+</div>
+
+<div
+  id="furo-sidebar-ad-placement"
+  class="flat"
+  data-ea-publisher="readthedocs"
+  data-ea-type="readthedocs-sidebar"
+  data-ea-manual="true"
+></div>
+</div>
+
+
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+  
+  <div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/YosysHQ-Docs/AppNote-109/edit/main/docs/source/index.rst" title="Edit this page">
+    <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+      <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+    </svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="property-checking-with-systemverilog-assertions">
+<h1>Property Checking with SystemVerilog Assertions<a class="headerlink" href="#property-checking-with-systemverilog-assertions" title="Link to this heading">#</a></h1>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>What You will learn in this paper</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><ul class="simple">
+<li><p>A brief history of SystemVerilog Assertions</p></li>
+<li><p>SVA layers definition and examples</p></li>
+<li><p>Assertion types, sequential property operators</p></li>
+<li><p>A short description of liveness and safety properties</p></li>
+<li><p>Practical examples using the sequence builder module written by
+our CTO Claire Xen.</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Link to this heading">#</a></h2>
+<p>This Application Note was written with the intention of
+showing a brief introduction to SVA, and is definitely not
+a substitute for extensive training. To learn more about
+formal verification and SVA, it is recommended to book the
+course given by the FPV specialists at YosysHQ.</p>
+</section>
+<section id="organisation">
+<h2>Organisation<a class="headerlink" href="#organisation" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Section <a class="reference internal" href="#property-checking-with-systemverilog-assertions"><span class="std std-ref">Property Checking with SystemVerilog Assertions</span></a> contains
+a brief introduction of SVA and the description of some elementary terms.</p></li>
+<li><p>Section <a class="reference internal" href="#assertion-types"><span class="std std-ref">Assertion Types</span></a> describes the different types of properties
+defined in the P1800, immediate and concurrent. It also presents both clock
+and disable conditions for concurrent assertions.</p></li>
+<li><p>Section <a class="reference internal" href="#elements-of-sva"><span class="std std-ref">Elements of SVA</span></a> describes each layer of SVA: Boolean, Temporal,
+Property and Verification layers. This section also describes some sequence
+property operators and property types.</p></li>
+</ul>
+</section>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<section id="brief-history-of-systemverilog-assertions">
+<h3>Brief history of SystemVerilog Assertions<a class="headerlink" href="#brief-history-of-systemverilog-assertions" title="Link to this heading">#</a></h3>
+<p>Assertion Based Verification (ABV) is considered an efficient
+verification methodology of ASIC/SoC designs. This methodology is based
+on instrumenting the design with assertions that were considered in the
+past as executable comments that could be verified in simulation,
+emulation and formal property verification. These assertions served as
+a documentation of the design as well, being sometimes preferred over
+comments inlined in the RTL constructs.</p>
+<p>Many assertion language specifications were developed to address the
+different verification needs with ABV. For example, ForSpec, OVA, ‘e’
+and Sugar. These language specifications were not part of hardware
+design languages such as VHDL or Verilog mainly because they were
+considered as languages of different purposes.</p>
+<p>The <em>SVA 3.1a</em> assertion specification was born as an integral part of
+the SystemVerilog specification language with the introduction of
+<em>SystemVerilog 3.1a</em> and its goals of including both hardware design
+and verification capabilities.</p>
+<p>The difference between <em>SVA 3.1a</em> and other property specification
+languages is that SVA is a native part of the SystemVerilog language,
+and the assertions were no longer seen as interpreted comments but as
+part of the language itself. The standardisation of the semantics
+of SVA facilitated that different verification, emulation and formal
+property checking EDA tools could standardize its implementation,
+ensuring that all designs had the same results across different tools.
+This increased the adoption of SVA in the industry.</p>
+<p>In <em>SVA 3.1a</em>, both immediate and concurrent assertions were defined as
+part of the standard. There were many conflicts and weaknesses in some
+language features that were fixed in SVA2009. Different companies have
+worked to improve the semantics and syntax of SVA to make it into what it
+is today.</p>
+<p>The SVA (SystemVerilog Assertions) specification is part of the P1800.
+All the features of SystemVerilog regarding assertions are
+specified by the Assertions Committee (SV-AC).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The SVA and PSL (Property Specification Language) are the results
+of different efforts that started with the standardisation of
+temporal logic for use in the hardware design and verification
+usage that <em>Accelera Formal Verification Technical Committee</em>
+started around 1998.</p>
+</div>
+</section>
+<section id="introduction-to-sva">
+<h3>Introduction to SVA<a class="headerlink" href="#introduction-to-sva" title="Link to this heading">#</a></h3>
+<p><em>What is an assertion</em> <a class="footnote-reference brackets" href="#id9" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a><em>?</em> - From the P1800, an assertion
+<em>specifies a behavior of the system</em>. This term is confusing because is
+similar to the definition of <em>property</em>. In fact, both <em>assert</em> and
+<em>property</em> refer to the same thing. The inconsistency is mainly because
+the term <em>assertion</em> is adopted in ABV, and <em>property</em> in FPV. ABV is more
+widely adopted, so the term assertion is used in a more “traditionalist” way.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <em>inconsistency</em> in the definition of the
+building blocks of SVA that may lead to confusion can be read from the P1800, where
+<em>assertion</em> is defined as:</p>
+<ul class="simple">
+<li><p><strong>16. Assertions, 16.2 Overview, P364, Rev 2017:</strong> “An assertion specifies
+a behavior of the system”.</p></li>
+<li><p><strong>16. Assertions, 16.2 Overview, P364, Rev 2017:</strong> “An assertion appears as
+an assertion statement that states the verification function to be performed”.</p></li>
+<li><p><strong>16. Assertions, 16.2 Overview, P364, Rev 2017:</strong> “[assertion kinds …] assert,
+to specify the property as an obligation for the design that is to be checked to
+verify that the property holds”.</p></li>
+</ul>
+<p>Whereas property, is defined as:</p>
+<ul class="simple">
+<li><p><strong>16.12. Declaring properties, P420, Rev 2017:</strong> “A property defines a behavior
+of the design”.</p></li>
+</ul>
+<p>So in short, an <em>assertion</em> is an affirmation or verification construct of a behavior
+described using <em>properties</em> or the specification.</p>
+<p>Another way to define an assertion is as an unambiguous design behavior
+expressed as a Boolean function or temporal expressions, that the design
+must fulfill. Such property are usually described using a language that
+can express behaviors of the design over time.</p>
+</div>
+<p><em>Then, what is SVA?</em> - SVA is part of the P1800 and standardizes
+assertion language semantics for SystemVerilog. That standard describes
+the usage of a linear temporal logic <a class="footnote-reference brackets" href="#id10" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> to define implementation
+correctness of a design described with properties over Boolean-valued
+functions and/or sequences that can be used to characterize the set of
+states where such formula holds, using assertions. SVA can be used for
+functional dynamic (simulation/emulation) and static (Formal Property
+Verification) testing. The focus of <em>YosysHQ</em> are <em>static methods</em>,
+therefore the description of SVA will be related to FPV.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although SVA talks a lot about verification tasks, it can (and should) also be
+used by design engineers. In fact, in FPV all properties must be synthesizable,
+so they are more natural for a design engineer.
+Using SVA instead of comments to check some functionalities of the RTL,
+or some behaviors when a testbench is not available, can be very useful in the
+RTL bring-up, for example.</p>
+</div>
+<p>The building block of SVA is the <cite>property</cite> construct, that not only
+distinguishes an <em>immediate</em> from a <em>concurrent</em> assertion, but is the
+actual element of the language where the behavior of the design is specified,
+for example, using Boolean functions, sequences, and other expressions. SVA
+introduces different kind of assertions discussed in the following sections.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>SVA supports both white-box and black-box verification.</p>
+</div>
+<p>Some benefits of SVA are:</p>
+<ul class="simple">
+<li><p>Enables protocols to be specified and verified using unambiguous constructs.</p></li>
+<li><p>Highly improves IP reuse. Interface assertions in the IP can be used as monitors
+for simulation/FPV to ensure correct integration.</p></li>
+<li><p>Reduces Time to Market (TTM).</p></li>
+<li><p>Assertions can be used instead of comments to document in a concise way design
+behaviors in a common and expressive language.</p></li>
+</ul>
+<p>Among others.</p>
+<p>There are two kinds of assertions: <em>immediate</em> and <em>concurrent</em>.
+Immediate assertions are further divided into simple and deferred
+immediate. Deferred immediate are subdivided into observed immediate and
+final immediate assertions. Except from <em>Simple immediate</em> that are used
+in SymbiYosys for the open source FPV framework, and concurrent assertions,
+the rest are focused on simulation tasks. Immediate assertions are covered
+in detail in <strong>Appnote 105 Formal Property Checking Basics</strong>.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><a class="reference internal image-reference" href="_images/assertion_types.png"><img alt="_images/assertion_types.png" class="align-center" src="_images/assertion_types.png" style="width: 6.5in; height: 3.18in;" /></a>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 3.1. A graphical description of the kinds of assertions.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>An example of a concurrent assertion is shown in <em>Figure 3.2</em>. This is
+the kind of assertion commonly using in <em>Formal Property Verification
+(FPV)</em>.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><a class="reference internal image-reference" href="_images/assertion_struct.png"><img alt="_images/assertion_struct.png" class="align-center" src="_images/assertion_struct.png" style="width: 6.5in; height: 2.93in;" /></a>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 3.2. One possible definition of a concurrent SVA.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>As shown in Figure 3.2, the property has a verification layer with different
+functions namely <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="k">assert</span></code>, <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="k">assume</span></code>,
+<code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="k">cover</span></code> and <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="k">restrict</span></code> that are described
+in <a class="reference internal" href="#verification-layer"><span class="std std-ref">Verification Layer</span></a>.</p>
+</section>
+</section>
+</section>
+<section id="assertion-types">
+<h1>Assertion Types<a class="headerlink" href="#assertion-types" title="Link to this heading">#</a></h1>
+<section id="immediate-assertions">
+<h2>Immediate Assertions<a class="headerlink" href="#immediate-assertions" title="Link to this heading">#</a></h2>
+<p>Immediate assertions are pure combinatorial elements that do not allow for temporal domain events or sequences. Immediate assertions have the following properties:</p>
+<ul class="simple">
+<li><p>Non-temporal.</p>
+<ul>
+<li><p>They are evaluated and reported at the same time (they cannot wait for any temporal time).</p></li>
+</ul>
+</li>
+<li><p>Evaluation is performed immediately.</p>
+<ul>
+<li><p>With the values sampled at the moment of activation of the assertion condition variables.</p></li>
+</ul>
+</li>
+<li><p>Simpler evaluation semantics.</p>
+<ul>
+<li><p>A clocked immediate assertion does not have the semantics of a concurrent assertion <a class="footnote-reference brackets" href="#id11" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p></li>
+</ul>
+</li>
+<li><p>Can be specified only in procedural blocks.</p></li>
+</ul>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><a class="reference internal image-reference" href="_images/immediate0.png"><img alt="_images/immediate0.png" class="align-center" src="_images/immediate0.png" style="width: 3.9in; height: 2.5in;" /></a>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 4.1. Immediate assertion example, with clocked and unclocked
+semantics.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Immediate assertions are better described in <strong>Appnote 105 Formal Property
+Checking Basics</strong>.</p>
+</section>
+<section id="concurrent-assertions">
+<h2>Concurrent Assertions<a class="headerlink" href="#concurrent-assertions" title="Link to this heading">#</a></h2>
+<p>The concurrent assertions capture sequences of events that span over time,
+that is, they have a temporal domain that is evaluated at each clock tick
+or time step of the system. A concurrent assertion raises the level of
+abstraction of SystemVerilog due the transactional nature of this construct.</p>
+<p>Only in terms of FPV, an immediate assertion could mimic a concurrent assertion
+if certain helper logic is created such that it generates the notion of
+<em>progress</em>. This logic of course may not be correct and can be quite complex
+depending on the property expression to be described, so it needs to be verified
+along with the property that this logic is supposed to describe. This method is
+not suggested as it could add an extra verification task to the design that can
+be avoided using SVA.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>One of the advantages of the <em>Tabby CAD Suite</em> over the Open Source
+Version of SymbiYosys is that a leading-industry parser provides P1800
+standard-compliant SV and SV-AC semantics for elaboration. So all the
+SystemVerilog constructs are enabled for the designer/validation
+engineers to use either for Formal Property Verification and/or FPGA synthesis.</p>
+</div>
+<p>The Figure 4.2 shows an example of a concurrent assertion definition. This kind
+of assertions can be defined in:</p>
+<ul class="simple">
+<li><p><code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="k">initial</span></code> or <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="k">always</span></code> blocks.</p></li>
+<li><p>Inside a systemverilog:<cite>module</cite> or systemverilog:<cite>checker</cite> object.</p></li>
+<li><p>In a SystemVerilog <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="k">interface</span></code>.</p></li>
+<li><p>For simulation, in <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="k">program</span></code> blocks.</p></li>
+</ul>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><a class="reference internal image-reference" href="_images/concurrent0.png"><img alt="_images/concurrent0.png" class="align-center" src="_images/concurrent0.png" style="width: 5.4in; height: 2.2in;" /></a>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 4.2. Concurrent assertion example, defined in the procedural
+code and as standalone.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="clock-or-time-step">
+<h3>Clock or time step<a class="headerlink" href="#clock-or-time-step" title="Link to this heading">#</a></h3>
+<p>Concurrent assertions are associated with a <em>clock</em> which defines the
+sampling clock or the point in time where the assertion is evaluated. This
+construct helps to explicitly define the event for sampled valued
+functions as well, that will be discussed in next sections.
+The default clock event for a concurrent property can be defined using
+the keyword <cite>default clocking</cite> and serves as the leading clock for all
+the concurrent properties. The Figure 4.3 shows an example of default
+clocking definition.</p>
+</section>
+<section id="disable-condition">
+<h3>Disable condition<a class="headerlink" href="#disable-condition" title="Link to this heading">#</a></h3>
+<p>Likewise, some properties may need to be disabled during some events,
+because their results are not valid anyway, for example, during the
+reset state. The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="k">default</span><span class="w"> </span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="w"> </span><span class="p">(</span><span class="kt">event</span><span class="p">)</span></code> keywords can be used
+to define when a concurrent assertion result is not intended to be
+checked. The Figure 4.3 shows an example of default reset definition.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="c1">// Concurrent properties are checked each *posedge* PCLK</span>
+<span class="k">default</span><span class="w"> </span><span class="k">clocking</span>
+<span class="w">   </span><span class="n">formal_clock</span><span class="w"> </span><span class="p">@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">PCLK</span><span class="p">);</span>
+<span class="k">endclocking</span>
+
+<span class="c1">// And disabled if the *PRSTn* reset is deasserted</span>
+<span class="k">default</span><span class="w"> </span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">PRSTn</span><span class="p">);</span>
+
+<span class="cm">/* The property does not need to explicitly</span>
+<span class="cm"> * define PCLK as main clock and !PRSTn as disable event, as it is</span>
+<span class="cm"> * defined in the default clocking and disable blocks. */</span>
+<span class="nl">property_a:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="w"> </span><span class="p">(</span><span class="n">RxStatus</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mb">3&#39;b011</span><span class="w"> </span><span class="o">|-&gt;</span><span class="w"> </span><span class="p">##</span><span class="mi">1</span>
+<span class="w">			     </span><span class="n">Receiver_detected</span><span class="p">);</span>
+</pre></div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 4.3. Usage of default clocking and default disable events used
+to state that all concurrent properties are checked each <em>posedge</em>
+PCLK and disabled if the <em>PRSTn</em> reset is deasserted.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+</section>
+<section id="elements-of-sva">
+<h1>Elements of SVA<a class="headerlink" href="#elements-of-sva" title="Link to this heading">#</a></h1>
+<section id="sva-layers">
+<h2>SVA Layers<a class="headerlink" href="#sva-layers" title="Link to this heading">#</a></h2>
+<p>A concurrent property is composed primarily of four layers:</p>
+<ul class="simple">
+<li><p>Boolean layer.</p></li>
+<li><p>Temporal or Sequence layer.</p></li>
+<li><p>Property layer.</p></li>
+<li><p>Verification layer.</p></li>
+</ul>
+<p>These layers makes SVA very expressive. More details are discussed in the
+following sections.</p>
+<section id="boolean-layer">
+<h3>Boolean Layer<a class="headerlink" href="#boolean-layer" title="Link to this heading">#</a></h3>
+<p>Concurrent properties can contain Boolean expressions that are composed of
+SystemVerilog constructs with some restrictions <a class="footnote-reference brackets" href="#id13" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>. These expressions are used
+to express conditions or behaviors of the design. Consider Figure 5.1 that
+represents the Boolean layer of a concurrent property extracted from AXI4-Stream.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="c1">// An invalid scenario that is reserved (op: not)</span>
+<span class="c1">// occurs when there&#39;s any bit in the vector (op: wide-or)</span>
+<span class="c1">// whose TKEEP value is LOW and TSTRB is HIGH (op: not TKEEP and TSTRB)</span>
+<span class="o">!</span><span class="p">(</span><span class="o">|</span><span class="p">(</span><span class="o">~</span><span class="n">TKEEP</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">TSTRB</span><span class="p">));</span>
+</pre></div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 5.1. The Boolean layer of the following property: “A combination
+of TKEEP LOW and TSTRB HIGH must not be used (2.4.3 TKEEP and TSTRB
+combinations, p2-9, Table 2-2).” from AMBA IHI0051A.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The evaluation of the Boolean expression shown in Figure 5.1 will be <cite>logic one</cite>
+when any combination of a TKEEP bit low and the same bit in TSTRB high,
+otherwise the result will be <cite>logic zero</cite>. The SystemVerilog Boolean operators
+are used in the SVA Boolean layer to represent true/false conditions.</p>
+<p>Another type of constructs that can be expressed in the Boolean layer are the
+Boolean invariance properties. A Boolean invariance (or invariant) property
+evaluates to <em>true</em> on any state, in other words, a property that always holds. For
+example, consider the following sentence: “The <em>packet_error</em> port  must be never
+asserted” that can be expressed as <em>an assertion</em> in the following way:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="nl">ap_never:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="w"> </span><span class="p">(@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">clk</span><span class="p">)</span><span class="w"> </span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="p">(</span><span class="o">!</span><span class="n">rstn</span><span class="p">)</span>
+<span class="w">                           </span><span class="o">!</span><span class="n">packet_error</span><span class="p">);</span>
+</pre></div>
+</div>
+<aside class="topic">
+<p class="topic-title">Invariant Example</p>
+<p>The file <em>../src/invariant/invariant.sv</em> applies defines the following sequence for the
+property <em>ap_never</em>:</p>
+<a class="reference internal image-reference" href="_images/invariant.png"><img alt="_images/invariant.png" class="align-center" src="_images/invariant.png" style="width: 15.92cm; height: 4.44cm;" /></a>
+<p>In the following way:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="k">default</span><span class="w"> </span><span class="k">clocking</span><span class="w"> </span><span class="p">@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">clk</span><span class="p">);</span><span class="w"> </span><span class="k">endclocking</span>
+<span class="w">   </span><span class="k">default</span><span class="w"> </span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="p">(</span><span class="o">!</span><span class="n">rstn</span><span class="p">);</span>
+<span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;__------------------&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">reset</span><span class="w"> </span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">rstn</span><span class="p">);</span>
+<span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;xx____x_____________&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">pkt_err</span><span class="w"> </span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">packet_error</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>By running the command <strong>sby -f ../src/invariant/invariant.sby err</strong> it can be seen that
+<em>packet_error</em> is set as <em>1</em> at step <em>6</em> causing a failure of the property. To fix this,
+the sequence <em>pkt_err</em> must be always low:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;xx__________________&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">pkt_err</span><span class="w"> </span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">packet_error</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Running <em>sby -f ../src/invariant/invariant.sby pass</em> will make the error will go away.</p>
+</aside>
+<p>The unary logical negation operator is used to express that <em>packet_error</em> should
+not evaluate to logic one or the assertion will fail. The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">clk</span><span class="p">)</span></code>
+implicitly implies that this Boolean condition is <cite>always</cite> evaluated, therefore this assertion
+is an <em>invariant</em> because it should always hold.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When FPV proves that an assertion holds in the design, is because the solver guarantees
+that the property is true in any reachable state from certain initial state. This is
+the definition of an <em>invariance property</em>, and in fact, is how the solver decides to finish
+the proof if he has found that the property is an invariant.
+This is specially helpful in certain FPV techniques to cope with complexity, such as
+assume-guarantee technique. Future application notes will delve into these topics.</p>
+</div>
+</section>
+<section id="temporal-or-sequence-layer">
+<h3>Temporal or Sequence Layer<a class="headerlink" href="#temporal-or-sequence-layer" title="Link to this heading">#</a></h3>
+<p>The temporal layer express behaviors that can span over time, usually
+expressed using SERE-regular <a class="footnote-reference brackets" href="#id14" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a> expressions known as <em>sequences</em> that
+describes sequential behaviors composed of Boolean conditions that are
+employed to build properties.</p>
+<p>SVA provides a set of powerful temporal operators that can be used to
+describe complex behaviors or conditions in different points of time.</p>
+<p>Sequences can be promoted to sequential properties if they are used in a
+property context (in other words, when used in property blocks). Starting
+from SV09, <em>weak</em> and <em>strong</em> operators have been defined.
+<em>Strong</em> sequential properties hold if there is a non-empty match of the
+sequence (it must be witnessed), whereas a <em>weak</em> sequence holds if there
+is no finite prefix witnessing a no match (if the sequence never happens,
+the property holds).</p>
+<p><em>Strong</em> sequential properties are identified by the prefix <em>s_</em> as
+in:</p>
+<ul class="simple">
+<li><p><em>s_eventually</em></p></li>
+<li><p><em>s_until</em></p></li>
+<li><p><em>s_until_with</em></p></li>
+<li><p><em>s_nexttime</em></p></li>
+</ul>
+<p>Or enclosed within parenthesis after the keyword <em>strong</em> as in:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="k">strong</span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="p">##[</span><span class="mi">1</span><span class="o">:</span><span class="p">$]</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <strong>default evaluation</strong> of sequential properties (if they are weak or strong) when the
+<em>weak</em> or <em>strong</em> operands are omitted depends on the verification directive
+where they are used:</p>
+<ul class="simple">
+<li><p><strong>Weak</strong> when the sequence is used in <em>assert</em> or <em>assume</em> directive.</p></li>
+<li><p><strong>Strong</strong> in all other cases.</p></li>
+</ul>
+</div>
+<p>Some sequential property operators are discussed below.</p>
+</section>
+<section id="basic-sequence-operators-introduction">
+<h3>Basic Sequence Operators Introduction<a class="headerlink" href="#basic-sequence-operators-introduction" title="Link to this heading">#</a></h3>
+</section>
+<section id="bounded-delay-operator">
+<h3>Bounded Delay Operator<a class="headerlink" href="#bounded-delay-operator" title="Link to this heading">#</a></h3>
+<p>Sequences can be more complex than just Boolean values. Basic sequences
+can contain single delays (for example <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">##</span><span class="mi">1</span></code> that means one cycle delay) and
+bounded/unbounded range delays (the bounded sequence <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">##[</span><span class="mi">1</span><span class="o">:</span><span class="mi">10</span><span class="p">]</span></code> means one
+to ten cycles later, the unbounded sequence <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">##[</span><span class="o">+</span><span class="p">]</span></code> means one or more
+cycles later). Sequences can be enclosed within <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="k">sequence</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="k">endsequence</span></code>
+SVA constructs, or described directly in a property block.</p>
+<p>A sequence can be seen as a description that defines values over time,
+and unlike <em>properties</em> or <em>Boolean functions</em>, a sequence does not have
+true or false values but <em>matches</em> or <em>tight satisfaction</em> points. For
+example, the sequence <em>foo is followed by bar in one or two cycles</em> expressed
+in SVA as:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="n">foo</span><span class="w"> </span><span class="p">##[</span><span class="mi">1</span><span class="o">:</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="n">bar</span>
+</pre></div>
+</div>
+<p>Is shown in Figure 5.2. As can be seen, there may be different match or tight
+satisfaction points:</p>
+<ul class="simple">
+<li><p>When <em>foo</em> is true at cycle t2 and bar at cycle t3.</p></li>
+<li><p>When <em>foo</em> is true at cycle t2 and bar at cycle t4.</p></li>
+<li><p>When <em>foo</em> is true at cycle t2 and bar is true at cycle t3 and t4.</p></li>
+</ul>
+<p>There is also a case where sequence does not match, which is when
+<em>foo</em> is true at cycle t2 but <em>bar</em> is not seen during the next
+one or two cycles.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><a class="reference internal image-reference" href="_images/first_seq.png"><img alt="_images/first_seq.png" class="align-center" src="_images/first_seq.png" style="width: 10.05cm; height: 10.85cm;" /></a>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 5.2. Example of sequence <cite>foo ##[1:2] bar</cite>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<aside class="topic">
+<p class="topic-title">Bounded Delay Example</p>
+<p>The <cite>src/relaxed_delay/relaxed_delay.sv</cite> uses the waveform in Figure 5.2, and a slightly
+modification of the property used to describe that image, to exemplify the bounded delay
+operator in an assertion.</p>
+<a class="reference internal image-reference" href="_images/relaxed_delay.png"><img alt="_images/relaxed_delay.png" class="align-center" src="_images/relaxed_delay.png" style="width: 15.92cm; height: 4.59cm;" /></a>
+<p>In the waveform, the match of the sequences are shown in cycles 3, 7, 10 and 11,
+and no match in any of 18 or 19 when <em>bar</em> is expected to be asserted. The property
+does not specify expected behavior in the cycles 11 to 16, so any value that <em>foo</em>
+has in these cycles does not affect the property validity.</p>
+<p>The sequence is described in <cite>relaxed_delay</cite> as follows:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;__------------------&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">reset</span><span class="w"> </span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">rstn</span><span class="p">);</span>
+<span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;__-__-__-_______-___&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_foo</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">foo</span><span class="p">);</span>
+<span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;___-___-_--_----____&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_bar</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">bar</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>And the assertion where this sequence is used:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="nl">ap_relaxed_delay:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="w"> </span><span class="p">(</span><span class="n">foo</span><span class="w"> </span><span class="o">|-&gt;</span><span class="w"> </span><span class="p">##[</span><span class="mi">1</span><span class="o">:</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="n">bar</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>By running <strong>sby -f src/relaxed_delay/relaxed_delay.sby err</strong> an error is shown
+pointing that the last <em>foo</em> is not followed by <em>bar</em> in the defined time window,
+as described in Figure 5.1 wave name <em>No match</em> (also shown at smt_step 16 in
+GTKWave).</p>
+<p>To fix this, the last <em>foo</em> must be followed again by <em>bar</em> in one to two cycles,
+so the sequence needs to be changed:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;__-__-__-_______-__-&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_foo</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">foo</span><span class="p">);</span>
+<span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;___-___-_--_----_-__&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_bar</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">bar</span><span class="p">);</span>
+</pre></div>
+</div>
+</aside>
+<p>The bounded operators <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">##</span><span class="n">m</span></code> and <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">##[</span><span class="nl">m:</span><span class="n">n</span><span class="p">]</span></code> where <em>m</em> and <em>n</em> are non-negative integers, can be used to specify clock delays between two events. The Figure 5.2 is
+an example of usage of these operators. For the following sequence:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="n">foo</span><span class="w"> </span><span class="p">##</span><span class="n">m</span><span class="w"> </span><span class="n">bar</span>
+</pre></div>
+</div>
+<p>If <em>m == 1</em> the sequence is split in two adjacent fragments, <em>concatenating</em>
+both <em>foo</em> and <em>bar</em> expressions. If <em>m == 0</em> both <em>foo</em> and <em>bar</em> overlaps,
+creating a <em>fusion</em> of both expressions. The sequence concatenation starts
+matching <em>bar</em> in the next clock cycle after <em>foo</em> matches. Whereas for
+sequence fusion, both <em>foo</em> and <em>bar</em> start matching at the same clock tick
+where <em>foo</em> matches. See Figure 5.3 for a better understanding.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><a class="reference internal image-reference" href="_images/concat_fusion.png"><img alt="_images/concat_fusion.png" class="align-center" src="_images/concat_fusion.png" style="width: 10.05cm; height: 5.29cm;" /></a>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 5.3. Illustration of sequence fusion and sequence concatenation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For a more concise example, consider the Figure 14-5 Combined Tx and Rx
+state machines from ARM IHI 0050E. To describe the transitions of the Tx Link
+FSM the following sequence can be defined:</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><a class="reference internal image-reference" href="_images/arm_tx_Seq.png"><img alt="_images/arm_tx_Seq.png" class="align-center" src="_images/arm_tx_Seq.png" style="width: 15.92cm; height: 4.69cm;" /></a>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Example of the sequence <em>tx_link_full</em> that happens in 5 clock cycles.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="cm">/* TX FSM should transition from TxStop</span>
+<span class="cm"> * to TxAct in one to four cycles. And</span>
+<span class="cm"> * in the same way with the other states</span>
+<span class="cm"> * of the FSM, fulfilling the transitions</span>
+<span class="cm"> * shown in Figure 14-5. */</span>
+<span class="k">sequence</span><span class="w"> </span><span class="n">tx_link_full</span><span class="p">;</span>
+<span class="w">  </span><span class="n">fsm_lnk_ns</span><span class="p">.</span><span class="n">chi_tx_t</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TxStop</span><span class="w">  </span><span class="p">##[</span><span class="mi">1</span><span class="o">:</span><span class="mi">4</span><span class="p">]</span>
+<span class="w">  </span><span class="n">fsm_lnk_ns</span><span class="p">.</span><span class="n">chi_tx_t</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TxAct</span><span class="w">   </span><span class="p">##[</span><span class="mi">1</span><span class="o">:</span><span class="mi">4</span><span class="p">]</span>
+<span class="w">  </span><span class="n">fsm_lnk_ns</span><span class="p">.</span><span class="n">chi_tx_t</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TxRun</span><span class="w">   </span><span class="p">##[</span><span class="mi">1</span><span class="o">:</span><span class="mi">4</span><span class="p">]</span>
+<span class="w">  </span><span class="n">fsm_lnk_ns</span><span class="p">.</span><span class="n">chi_tx_t</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TxDeact</span><span class="w"> </span><span class="p">##[</span><span class="mi">1</span><span class="o">:</span><span class="mi">4</span><span class="p">]</span>
+<span class="w">  </span><span class="n">fsm_lnk_ns</span><span class="p">.</span><span class="n">chi_tx_t</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TxStop</span><span class="w">  </span><span class="p">##[</span><span class="mi">1</span><span class="o">:</span><span class="mi">4</span><span class="p">]</span>
+<span class="k">endsequence</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <em>tx_link_full</em> is a relaxed sequence because it allows the check of
+the transitions to happen in a small time window and not in a fixed amount
+of cycles. This usually helps in property convergence of complex sequences or
+architecture exploration for RTL development.</p>
+</div>
+<p>This sequence <em>tx_link_full</em> describes the transition of the Tx Link FSM from TxStop
+up to TxStop that precedes TxDeact. This sequence can be used in a cover or assert
+construct to verify that the design implements correctly the Tx Link, or to show
+a witness of this transition. For example, to find a trace in a design where these
+transitions are fulfilled, a cover construct such as the one shown below can be employed:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="nl">wp_full_tx:</span><span class="w"> </span><span class="k">cover</span><span class="w"> </span><span class="k">property</span><span class="w"> </span><span class="p">(@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">ACLK</span><span class="p">)</span><span class="w"> </span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ARESETn</span><span class="p">)</span><span class="w"> </span><span class="n">tx_link_full</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>For FPV, it is always recommended to keep the cycle window small as possible
+since this impacts the performance of the proof.</p>
+</div>
+</section>
+<section id="unbounded-delay-operator">
+<h3>Unbounded Delay Operator<a class="headerlink" href="#unbounded-delay-operator" title="Link to this heading">#</a></h3>
+<p>There are two operators for relaxed delay requirements:</p>
+<ul class="simple">
+<li><p>Zero or more clock ticks: <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">##[</span><span class="mi">0</span><span class="o">:</span><span class="p">$]</span></code> (or the shorcut <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">##[</span><span class="o">*</span><span class="p">]</span></code>).</p></li>
+<li><p>One or more clock ticks: <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">##[</span><span class="mi">1</span><span class="o">:</span><span class="p">$]</span></code> (or the shorcut <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">##[</span><span class="o">+</span><span class="p">]</span></code>).</p></li>
+</ul>
+<p>The formal semantics are the same as in the bounded delay operator. These operators
+are useful, for example, to check forward progress of safety
+properties that could be satisfied <em>by doing nothing</em>. What does this means?, consider
+the VALID/READY handshake defined in <strong>ARM IHI 0022E Page A3-9</strong> (better known as
+AXI-4 specification). A potential deadlock can happen when VALID signal is asserted
+but READY is never asserted. If the property shown in Figure 5.4 is part of a design
+where READY is deasserted forever after VALID has been asserted, the property will
+pass vacuously.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="cm">/* ,         ,                                                     *</span>
+<span class="cm">    * |\\\\ ////|  &quot;EXOKAY: Exclusive access okay. Indicates that     *</span>
+<span class="cm">    * | \\\V/// |   either the read or write portion of an exclusive  *</span>
+<span class="cm">    * |  |~~~|  |   access has been succesful&quot;.                       *</span>
+<span class="cm">    * |  |===|  |   Ref: A3.4.4 Read and write response structure,    *</span>
+<span class="cm">    * |  |A  |  |   pA3-57, Table A3-4.                               *</span>
+<span class="cm">    * |  | X |  |                                                     *</span>
+<span class="cm">    *  \ |  I| /                                                      *</span>
+<span class="cm">    *   \|===|/                                                       *</span>
+<span class="cm">    *    &#39;---&#39;                                                        */</span>
+<span class="w">   </span><span class="k">property</span><span class="w"> </span><span class="n">rdwr_response_exokay</span><span class="w"> </span><span class="p">(</span><span class="n">valid</span><span class="p">,</span><span class="w"> </span><span class="n">ready</span><span class="p">,</span><span class="w"> </span><span class="n">resp</span><span class="p">);</span>
+<span class="w">      </span><span class="p">(</span><span class="n">valid</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">ready</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">       </span><span class="p">(</span><span class="n">resp</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">amba_axi4_protocol_checker_pkg</span><span class="o">::</span><span class="n">EXOKAY</span><span class="p">));</span>
+<span class="w">   </span><span class="k">endproperty</span><span class="w"> </span><span class="c1">// rdwr_response_exokay</span>
+</pre></div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 5.4. A property that monitors the EXOKAY response value when
+VALID and READY are asserted.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>To check that the system is actually making progress, the property using <em>one or
+more clock ticks</em> operator shown in Figure 5.5 can be used. If this property fails,
+then the FPV user can deduce that property of Figure 5.4 is not healthy.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="c1">// Deadlock (ARM Recommended)</span>
+<span class="w">   </span><span class="cm">/* ,         ,                                                     *</span>
+<span class="cm">    * |\\\\ ////|  It is recommended that READY is asserted within    *</span>
+<span class="cm">    * | \\\V/// |  MAXWAITS cycles of VALID being asserted.           *</span>
+<span class="cm">    * |  |~~~|  |  This is a *potential deadlock check* that can be   *</span>
+<span class="cm">    * |  |===|  |  implemented as well using the strong eventually    *</span>
+<span class="cm">    * |  |A  |  |  operator (if the required bound is too large to be *</span>
+<span class="cm">    * |  | X |  |  formally efficient). Otherwise this bounded        *</span>
+<span class="cm">    *  \ |  I| /   property works fine.                               *</span>
+<span class="cm">    *   \|===|/                                                       *</span>
+<span class="cm">    *    &#39;---&#39;                                                        */</span>
+<span class="w">   </span><span class="k">property</span><span class="w"> </span><span class="n">handshake_max_wait</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span><span class="w"> </span><span class="n">ready</span><span class="p">,</span><span class="w"> </span><span class="n">timeout</span><span class="p">);</span>
+<span class="w">      </span><span class="n">valid</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">ready</span><span class="w"> </span><span class="o">|-&gt;</span><span class="w"> </span><span class="p">##[</span><span class="mi">1</span><span class="o">:</span><span class="n">timeout</span><span class="p">]</span><span class="w"> </span><span class="n">ready</span><span class="p">;</span>
+<span class="w">   </span><span class="k">endproperty</span><span class="w"> </span><span class="c1">// handshake_max_wait</span>
+</pre></div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 5.5. A property that checks for a deadlock condition. If VALID
+is asserted and READY is not asserted in <em>timeout</em> non-negative
+cycles, the property will be unsuccessful.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The property of Figure 5.5 can still fail in certain scenarios. This is
+because the unbounded operator employed in the property definition has
+weak semantics. A better solution could be to make this property <em>strong</em>
+but this implies that this <em>safety</em> property will be converted into a <em>liveness</em>
+one. Liveness and safety concepts are described in <em>Property Layer</em> section.</p>
+</div>
+</section>
+<section id="consecutive-repetition">
+<h3>Consecutive Repetition<a class="headerlink" href="#consecutive-repetition" title="Link to this heading">#</a></h3>
+<p>Imagine the following property from an SDRAM controller (JESDEC 21-C): The WR (write) command
+can be followed by a PRE (precharge) command in a minimum of tWR cycles. If <em>tWR == 15</em>
+then the property can be described as follows:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="k">let</span><span class="w"> </span><span class="n">CMDWR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">cmd</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">WR</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">bank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nd_bank</span><span class="p">);</span>
+<span class="k">let</span><span class="w"> </span><span class="n">notCMDPRE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="n">cmd</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">PRE</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">bank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nd_bank</span><span class="p">);</span>
+<span class="c1">// notCMDPRE must hold 15 times after WR command is seen</span>
+<span class="k">property</span><span class="w"> </span><span class="n">cmdWR_to_cmdPRE</span><span class="p">;</span>
+<span class="w">  </span><span class="n">CMDWR</span><span class="w"> </span><span class="o">|-&gt;</span><span class="w"> </span><span class="p">##</span><span class="mi">1</span><span class="w"> </span><span class="n">notCMDPRE</span><span class="w"> </span><span class="p">##</span><span class="mi">1</span><span class="w"> </span><span class="n">notCMDPRE</span><span class="w"> </span><span class="p">##</span><span class="mi">1</span><span class="w"> </span><span class="n">notCMDPRE</span>
+<span class="w">            </span><span class="p">##</span><span class="mi">1</span><span class="w"> </span><span class="n">notCMDPRE</span><span class="w"> </span><span class="p">##</span><span class="mi">1</span><span class="w"> </span><span class="n">notCMDPRE</span><span class="w"> </span><span class="p">##</span><span class="mi">1</span><span class="w"> </span><span class="n">notCMDPRE</span>
+<span class="w">            </span><span class="p">...</span><span class="w"> </span><span class="p">##</span><span class="mi">1</span><span class="w"> </span><span class="n">notCMDPRE</span><span class="w"> </span><span class="p">##</span><span class="mi">1</span><span class="w"> </span><span class="n">notCMDPRE</span><span class="p">;</span>
+<span class="k">endproperty</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <em>let</em> declaration serves as customization and can be used as a replacement
+for text macros, but with a local scope. Also, unlike the compiler directives
+<cite>ifdef,</cite> ifndef, etc, the <em>let</em> construct is part of the SystemVerilog language,
+so it is safer to use than macros.</p>
+</div>
+<p>This is too verbose and not an elegant solution. SVA has a construct to define that
+an expression must hold for <em>m</em> consecutive cycles: the consecutive repetition
+operator <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">[</span><span class="o">*</span><span class="n">m</span><span class="p">]</span></code>. The same property can be described using the consecutive
+repetition operator as follows <a class="footnote-reference brackets" href="#id15" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="k">let</span><span class="w"> </span><span class="n">CMDWR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">cmd</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">WR</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">bank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nd_bank</span><span class="p">);</span>
+<span class="k">let</span><span class="w"> </span><span class="n">notCMDPRE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="n">cmd</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">PRE</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">bank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nd_bank</span><span class="p">);</span>
+<span class="c1">// notCMDPRE must hold 15 times after WR command is seen</span>
+<span class="k">property</span><span class="w"> </span><span class="n">cmdWR_to_cmdPRE</span><span class="p">;</span>
+<span class="w">  </span><span class="n">CMDWR</span><span class="w"> </span><span class="o">|-&gt;</span><span class="w"> </span><span class="p">##</span><span class="mi">1</span><span class="w"> </span><span class="n">notCMDPRE</span><span class="w"> </span><span class="p">[</span><span class="o">*</span><span class="mi">15</span><span class="p">];</span>
+<span class="k">endproperty</span>
+</pre></div>
+</div>
+<p>And if the tWR value is set as a parameter, then this can be further reduced to:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="n">CMDWR</span><span class="w"> </span><span class="o">|-&gt;</span><span class="w"> </span><span class="p">##</span><span class="mi">1</span><span class="w"> </span><span class="n">notCMDPRE</span><span class="w"> </span><span class="p">[</span><span class="o">*</span><span class="n">tWR</span><span class="p">];</span>
+</pre></div>
+</div>
+<aside class="topic">
+<p class="topic-title">Consecutive Repetition</p>
+<blockquote>
+<div><p>The file <em>src/consecutive_repetition/consecutive_repetition.sv</em> demonstrates
+both the consecutive repetition operator in practice and the usage of non-deterministic
+elements for exhaustive verification of structures such as the number of banks in an
+SDRAM controller. First, the following waveform:</p>
+<a class="reference internal image-reference" href="_images/consecutive_ndbank.png"><img alt="_images/consecutive_ndbank.png" class="align-center" src="_images/consecutive_ndbank.png" style="width: 15.92cm; height: 7.62cm;" /></a>
+<p>Represents a possible valid sequence of commands, encoded in the file
+<em>consecutive_repetition.sv</em> as follows:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;03200000200001200100&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">seq_cmd</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">cmd</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>It can be seen that, at clock cycle 14, the <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">cmd</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">WR</span></code> but a
+<code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">cmd</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">PRE</span></code> is seen at cycle 17 (3 cycles after a write) violating
+the property, as shown in the waveform called <em>Fail</em>, this scenario can be seen by
+executing <em>sby -f src/consecutive_repetition/consecutive_repetition.sby err</em>.</p>
+<p>The problem can be solved, for example, by modifying the controller FSM re-schedule a
+<code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">cmd</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">PRE</span></code> for a longer time if possible. In this case, by fixing the
+sequence <em>seq_cmd</em> as follows:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;03200000200001200000&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">seq_cmd</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">cmd</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>As a final note, <strong>observe how the solver is selecting different SDRAM banks</strong> by choosing
+values for <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">bank</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span></code> and it finally found the problem in the bank
+<code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">bank</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">8&#39;hFF</span></code> that has the same value as <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">nd_bank</span><span class="p">[</span><span class="mi">7</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span></code>.
+That value was never selected by any logic but instead was defined as a <em>symbolic,
+non-deterministic variable</em> that can be, conceptually, any possible valid value. In this
+scenario, this means that the property holds for all SDRAM banks in the design, for all
+combination of commands. This is a simple but powerful FPV concept, that will be explained
+in detail in a future application note.</p>
+</div></blockquote>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="cm">/* Conceptually nd_bank is any possible value in the range</span>
+<span class="cm">    * of BA_WIDTH-1. So this variable test all possible banks</span>
+<span class="cm">    * of the SDRAM, in all possible conbinations, instead of</span>
+<span class="cm">    * using a fixed value. The nd_bank is a (free) primary input */</span>
+<span class="w">   </span><span class="nl">nd_bank_select:</span><span class="w"> </span><span class="k">assume</span><span class="w"> </span><span class="k">property</span><span class="p">($</span><span class="n">stable</span><span class="p">(</span><span class="n">nd_bank</span><span class="p">));</span>
+</pre></div>
+</div>
+</aside>
+<p>As with delay operators, sequence repetition constructs have some variants
+such as:</p>
+<ul class="simple">
+<li><p><strong>Consecutive repetition range</strong> <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">s</span><span class="p">[</span><span class="o">*</span><span class="nl">m:</span><span class="n">n</span><span class="p">]</span></code>: The sequence <em>s</em> occurs from
+m to n times.</p></li>
+<li><p><strong>Infinite repetition range</strong> <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">s</span><span class="p">[</span><span class="o">*</span><span class="p">]</span></code>: The sequence <em>s</em> is repeated zero or more times.</p></li>
+<li><p><strong>Infinite repetition range</strong> <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">s</span><span class="p">[</span><span class="o">+</span><span class="p">]</span></code>: The sequence <em>s</em> is repeated one or more times.</p></li>
+<li><p><strong>Nonconsecutive repetition operator</strong> <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">s</span><span class="p">[</span><span class="o">=</span><span class="nl">m:</span><span class="n">n</span><span class="p">]</span></code>: The sequence <em>s</em> occurs
+exactly from n to m times and <em>s is not required to be the last element</em>.</p></li>
+<li><p><strong>GoTo repetition operator</strong> <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">s</span><span class="p">[</span><span class="o">-&gt;</span><span class="nl">m:</span><span class="n">n</span><span class="p">]</span></code>: The sequence <em>s</em> occurs
+exactly from n to m times and <em>s is required to be the last element</em>.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Not all sequential property operators are FPV friendly:</p>
+<ul class="simple">
+<li><p>GoTo and nonconsecutive operators.</p></li>
+<li><p>Throughout.</p></li>
+<li><p>Intersect.</p></li>
+<li><p>first_match().</p></li>
+<li><p>Within.</p></li>
+<li><p>Etc.</p></li>
+</ul>
+<p>These operators increases the complexity of the model and may cause some
+assertions not converge. Use them with caution.</p>
+<p>All these operators was demonstrated in practice using the same <strong>seq.sv</strong> in the
+past, by Matt Venn, so they will not be shown again in this document. The reader is
+invited to generate some random sequences and try the operators in some properties.
+It is a great exercise to understand the fundamentals of sequential properties.</p>
+</div>
+</section>
+<section id="property-layer">
+<h3>Property Layer<a class="headerlink" href="#property-layer" title="Link to this heading">#</a></h3>
+<p>The property layer is where all the expressiveness of SVA starts to take shape. In
+this layer, Boolean constructs, sequences and property operators are used to
+encapsulate the behavior of the design within <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="k">property</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="k">endproperty</span></code> blocks
+that will be further utilised by the <em>verification layer</em> to perform a certain task.</p>
+<p>A property construct can have formal arguments as shown in Figure 5.4 and Figure 5.5,
+that are expanded when the property is instantiated with the proper arguments. Properties
+can also have no arguments.</p>
+<p>The P1800 defines several kinds of properties of which some are shown below:</p>
+<ul class="simple">
+<li><p><strong>Sequence</strong>: As described in Section Temporal or Sequence Layer, a sequence
+property have three forms namely <em>sequence_expression</em>, <em>weak(sequence_expression)</em>
+and <em>strong(sequence_expression)</em>. Remember that a sequence is promoted to a sequence
+property if the sequence expression is used in property context.</p></li>
+<li><p><strong>Negation</strong>: This property uses the <strong>not</strong> <em>property_expression</em> operator to basically
+evaluate to true if <em>property_expression</em> is false.</p></li>
+<li><p><strong>Disjunction</strong>: A property of the form <em>property_expression1</em> <strong>or</strong>
+<em>property_expression2</em> evaluates to true if at least one of the property expressions
+evaluates to true.</p></li>
+<li><p><strong>Conjunction</strong>: A property of the form <em>property_expression1</em> <strong>and</strong>
+<em>property_expression2</em> evaluates to true if the two property expressions
+evaluates to true.</p></li>
+<li><p><strong>If-else</strong>: This property has the form <strong>if (condition)</strong> <em>property_expression1</em> <strong>else</strong>
+<em>property_expression2</em> and can be seen as a mechanism to select a valid property based on
+a certain condition.</p></li>
+<li><p><strong>Implication</strong>: One of the most used kinds of properties in ABV. This property has the
+form <strong>sequence_expression</strong> <em>|=&gt; or |-&gt;</em> <strong>property_expression</strong> that connects the cause
+(expression in LHS or antecedent) to an effect (expression in RHS or consequent).
+More about this type of property is described in <strong>YosysHQ AppNote 120 – Weak
+precondition cover and witness for SVA properties.</strong></p></li>
+</ul>
+<p>The rest of the kinds of properties are better explained with a graph as shown
+below.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There are different versions of the following properties. Refer to <strong>P1800
+(2017) Section 16.12 Declaring properties</strong> for more information.</p>
+</div>
+<p><strong>Nexttime property</strong>
+This property evaluates to true if the property expression <em>p</em> is true
+in the next clock cycle.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><a class="reference internal image-reference" href="_images/nexttime.png"><img alt="_images/nexttime.png" class="align-center" src="_images/nexttime.png" style="width: 15.92cm; height: 6.46cm;" /></a>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 5.6. The property <em>nexttime p</em>  holds if <em>p</em> is true in the next
+clock cycle.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Always property</strong>
+This property evaluates to true if the expression <em>p</em> holds at all states.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><a class="reference internal image-reference" href="_images/always.png"><img alt="_images/always.png" class="align-center" src="_images/always.png" style="width: 15.92cm; height: 6.46cm;" /></a>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 5.7. The property <em>always p</em>  is also known as <em>invariance
+property</em> or simply <em>invariant</em>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Eventually property</strong>
+This property evaluates to true if the expression <em>p</em> holds at some time
+in the future.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><a class="reference internal image-reference" href="_images/eventually.png"><img alt="_images/eventually.png" class="align-center" src="_images/eventually.png" style="width: 15.92cm; height: 6.46cm;" /></a>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 5.8. The property <em>eventually p</em> can be used to check for
+progress during proof evaluation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Until property</strong>
+The property <em>p until q</em> is true starting from an initial point if <em>q</em>
+is true in some reachable state from the initial state, and <em>p</em> is true
+in all states until <em>q</em> is asserted.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><a class="reference internal image-reference" href="_images/until.png"><img alt="_images/until.png" class="align-center" src="_images/until.png" style="width: 15.92cm; height: 6.46cm;" /></a>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 5.9. The property <em>eventually p</em> can be used to check for
+progress during proof evaluation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<aside class="topic">
+<p class="topic-title">Property Operators Examples</p>
+<blockquote>
+<div><p>The file <em>./src/property_operators/property_operators.sv</em> has some sequences
+and properties that needs to be fixed:</p>
+<p>Sequences:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;____--____----------&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_en</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">en</span><span class="p">);</span>
+<span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;_____-_-_-----------&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_a</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">);</span>
+<span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;_____-------__------&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_b</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+<span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;_______-------______&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_c</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;______________--____&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_d</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Properties:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="nl">ap_nexttime:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="w"> </span><span class="p">(</span><span class="n">en</span><span class="w"> </span><span class="o">|-&gt;</span><span class="w"> </span><span class="k">nexttime</span><span class="w"> </span><span class="n">a</span><span class="p">);</span>
+<span class="w">   </span><span class="nl">ap_always:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="p">(</span><span class="n">en</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="k">always</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+<span class="w">   </span><span class="nl">ap_until:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="p">(</span><span class="n">en</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="k">until</span><span class="w"> </span><span class="n">d</span><span class="p">);</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>This is a quite simple exercise. We will publish the solution in the next
+application note.</p>
+</aside>
+</section>
+<section id="safety-properties">
+<h3>Safety Properties<a class="headerlink" href="#safety-properties" title="Link to this heading">#</a></h3>
+<p>A safety property, in short, checks that something bad never happens. It
+is the most used type of property in FPV because it is less complicated for
+a solver to find a proof, compared to the <em>liveness</em> case (for example,
+by proving inductively that the property is an invariant).</p>
+<p>These might be the results of a safety property:</p>
+<ul class="simple">
+<li><p>A full proof is reached, meaning that the solver can guarantee that
+a “bad thing” can never happen.</p></li>
+<li><p>A bounded proof showing that the “bad thing” cannot happen in a certain
+number of cycles.</p></li>
+<li><p>A counterexample of finite prefix showing the path where the “bad thing”
+happens.</p></li>
+</ul>
+<p>An example of a safety property extracted from IHI0051A amba4 axi4 stream
+is shown below:</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="cm">/* ,         ,                                                     *</span>
+<span class="cm">    * |\\\\ ////| &quot;Once TVALID is asserted it must remain asserted    *</span>
+<span class="cm">    * | \\\V/// |  until the handshake (TVALID) occurs&quot;.              *</span>
+<span class="cm">    * |  |~~~|  |  Ref: 2.2.1. Handshake Protocol, p2-3. 	      *</span>
+<span class="cm">    * |  |===|  |						      *</span>
+<span class="cm">    * |  |A  |  |						      *</span>
+<span class="cm">    * |  | X |  |						      *</span>
+<span class="cm">    *  \ |  I| /						      *</span>
+<span class="cm">    *   \|===|/							      *</span>
+<span class="cm">    *    &#39;---&#39;							      */</span>
+<span class="w">   </span><span class="k">property</span><span class="w"> </span><span class="n">tvalid_tready_handshake</span><span class="p">;</span>
+<span class="w">      </span><span class="p">@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">ACLK</span><span class="p">)</span><span class="w"> </span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ARESETn</span><span class="p">)</span>
+<span class="w">	</span><span class="n">TVALID</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">TREADY</span><span class="w"> </span><span class="o">|-&gt;</span><span class="w"> </span><span class="p">##</span><span class="mi">1</span><span class="w"> </span><span class="n">TVALID</span><span class="p">;</span>
+<span class="w">   </span><span class="k">endproperty</span><span class="w"> </span><span class="c1">// tvalid_tready_handshake</span>
+</pre></div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 5.10. A safety property to state that a packet should not be
+dropped if the receiver cannot process it.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="liveness-properties">
+<h3>Liveness Properties<a class="headerlink" href="#liveness-properties" title="Link to this heading">#</a></h3>
+<p>A liveness property checks that something good eventually happens. These
+kinds of properties are more complex to check in FPV because in contrast
+to safety properties a CEX cannot be found in a single state.
+To find a CEX,
+sufficient evidence is needed that the “good thing” could be postponed forever,
+and sometimes an auxiliary property is needed to help the solver understand that
+there is some progress ongoing (fairness assumption).</p>
+<p>A safety property can be trivially proven by doing nothing, because this
+will never lead to a scenario where a “bad thing” occurs. A liveness
+property complements safety properties, but they are more difficult to prove
+because the solver needs to guarantee that something will happen infinitely
+many times.</p>
+<p>An example of a liveness property is from the classic arbiter problem that
+states that <em>every request must be eventually granted</em>, that can be described
+in SVA as follows:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="k">property</span><span class="w"> </span><span class="n">liveness_obligation_arbiter</span><span class="p">;</span>
+<span class="w">  </span><span class="n">req</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="k">s_eventually</span><span class="w"> </span><span class="n">gnt</span>
+<span class="k">endproperty</span>
+</pre></div>
+</div>
+<p>Another example of a liveness property that defines that a handshake must
+eventually occur between a sender and a receiver, from the IHI0022E AMBA
+and AXI protocol spec, is shown below.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="c1">// Deadlock (ARM Recommended)</span>
+<span class="w">   </span><span class="cm">/* ,         ,                                                     *</span>
+<span class="cm">    * |\\\\ ////|  It is recommended that READY is asserted within    *</span>
+<span class="cm">    * | \\\V/// |  MAXWAITS cycles of VALID being asserted.           *</span>
+<span class="cm">    * |  |~~~|  |  This is a *potential deadlock check* that can be   *</span>
+<span class="cm">    * |  |===|  |  implemented as well using the strong eventually    *</span>
+<span class="cm">    * |  |A  |  |  operator (if the required bound is too large to be *</span>
+<span class="cm">    * |  | X |  |  formally efficient). Otherwise this bounded        *</span>
+<span class="cm">    *  \ |  I| /   property works fine.                               *</span>
+<span class="cm">    *   \|===|/                                                       *</span>
+<span class="cm">    *    &#39;---&#39;                                                        */</span>
+<span class="w">   </span><span class="k">property</span><span class="w"> </span><span class="n">handshake_max_wait</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span><span class="w"> </span><span class="n">ready</span><span class="p">);</span>
+<span class="w">      </span><span class="n">valid</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">ready</span><span class="w"> </span><span class="o">|-&gt;</span><span class="w"> </span><span class="k">strong</span><span class="p">(##[</span><span class="mi">1</span><span class="o">:</span><span class="p">$])</span><span class="w"> </span><span class="n">ready</span><span class="p">;</span>
+<span class="w">   </span><span class="k">endproperty</span><span class="w"> </span><span class="c1">// handshake_max_wait</span>
+</pre></div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 5.11. Using a liveness property to check for deadlock
+conditions. This is a very common practice.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A deep explanation of how a solver of a FPV tool finds a liveness CEX is
+outside of the scope of this application note, but for the sake of clarity,
+consider Figure 5.12 that explains in broad terms the rationale behind
+liveness property analysis.</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><a class="reference internal image-reference" href="_images/liveness.png"><img alt="_images/liveness.png" class="align-center" src="_images/liveness.png" style="width: 15.92cm; height: 4.2cm;" /></a>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 5.12. A very simplistic example of liveness resolution.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<aside class="topic">
+<p class="topic-title">Liveness Property Example</p>
+<p>The liveness properties are very important for FPV, specially for proving designs
+free of deadlocks, livelocks, starvation and lost of information. One of the
+problems with liveness, apart from the difficulties to achieve proof convergence, is
+debugging them: understanding safety CEX can be difficult sometimes, but interpreting
+liveness CEX can be quite an art.</p>
+<p>In future application notes, a deep explanation of liveness properties will be
+provided. To introduce some of the issues and solutions when working with them,
+consider the following trivial Finite State Machine:</p>
+<a class="reference internal image-reference" href="_images/live_fsm.png"><img alt="_images/live_fsm.png" class="align-center" src="_images/live_fsm.png" style="width: 3.78cm; height: 8.7cm;" /></a>
+<p>This FSM is written as follows:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="no">`default_nettype</span><span class="w"> </span><span class="n">none</span>
+<span class="k">module</span><span class="w"> </span><span class="n">liveness</span>
+<span class="w">  </span><span class="p">(</span><span class="k">input</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">rstn</span><span class="p">,</span>
+<span class="w">   </span><span class="k">input</span><span class="w"> </span><span class="kt">bit</span><span class="w">  </span><span class="n">start</span><span class="p">,</span>
+<span class="w">   </span><span class="k">output</span><span class="w"> </span><span class="kt">bit</span><span class="w"> </span><span class="n">done</span><span class="p">);</span>
+
+<span class="w">   </span><span class="k">typedef</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="kt">logic</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="o">:</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="n">idle</span><span class="p">,</span><span class="w"> </span><span class="n">decrypt</span><span class="p">,</span><span class="w"> </span><span class="n">validate_key</span><span class="p">,</span><span class="w"> </span><span class="n">inform_result</span><span class="p">}</span><span class="w"> </span><span class="n">states_t</span><span class="p">;</span>
+<span class="w">   </span><span class="n">states_t</span><span class="w"> </span><span class="n">ps</span><span class="p">;</span>
+
+<span class="w">   </span><span class="k">default</span><span class="w"> </span><span class="k">clocking</span><span class="w"> </span><span class="n">fpv_clk</span><span class="w"> </span><span class="p">@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">clk</span><span class="p">);</span><span class="w"> </span><span class="k">endclocking</span>
+
+<span class="w">   </span><span class="c1">// Drive the reset sequence</span>
+<span class="w">   </span><span class="nl">init0:</span><span class="w"> </span><span class="k">assume</span><span class="w"> </span><span class="k">property</span><span class="p">($</span><span class="n">fell</span><span class="p">(</span><span class="n">rstn</span><span class="p">)</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">idle</span><span class="p">);</span>
+<span class="w">   </span><span class="nl">init1:</span><span class="w"> </span><span class="k">assume</span><span class="w"> </span><span class="k">property</span><span class="p">($</span><span class="n">rose</span><span class="p">(</span><span class="n">rstn</span><span class="p">)</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="n">rstn</span><span class="p">);</span>
+
+<span class="w">   </span><span class="c1">// Drive outputs</span>
+<span class="w">   </span><span class="nl">ap_done:</span><span class="w"> </span><span class="k">assume</span><span class="w"> </span><span class="k">property</span><span class="p">(</span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">inform_result</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="n">done</span><span class="p">);</span>
+<span class="w">   </span>
+<span class="w">   </span><span class="c1">// Write the state machine transitions as assumptions</span>
+<span class="w">   </span><span class="nl">state0:</span><span class="w"> </span><span class="k">assume</span><span class="w"> </span><span class="k">property</span><span class="p">(</span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="p">(</span><span class="o">!</span><span class="n">rstn</span><span class="p">)</span>
+<span class="w">			   </span><span class="n">start</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">idle</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">decrypt</span><span class="p">);</span>
+<span class="w">   </span>
+<span class="w">   </span><span class="nl">state1:</span><span class="w"> </span><span class="k">assume</span><span class="w"> </span><span class="k">property</span><span class="p">(</span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="p">(</span><span class="o">!</span><span class="n">rstn</span><span class="p">)</span>
+<span class="w">			   </span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">decrypt</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">validate_key</span><span class="p">);</span>
+<span class="w">   </span><span class="nl">state2:</span><span class="w"> </span><span class="k">assume</span><span class="w"> </span><span class="k">property</span><span class="p">(</span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="p">(</span><span class="o">!</span><span class="n">rstn</span><span class="p">)</span>
+<span class="w">			   </span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">validate_key</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">inform_result</span><span class="p">);</span>
+<span class="w">   </span><span class="nl">state3:</span><span class="w"> </span><span class="k">assume</span><span class="w"> </span><span class="k">property</span><span class="p">(</span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="p">(</span><span class="o">!</span><span class="n">rstn</span><span class="p">)</span>
+<span class="w">			   </span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">inform_result</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">idle</span><span class="p">);</span>
+<span class="w">   </span>
+<span class="w">   </span><span class="c1">// A weak unbounded property that cant catch the deadlock</span>
+<span class="w">   </span><span class="nl">ap_deadlock:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="p">(</span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="p">(</span><span class="o">!</span><span class="n">rstn</span><span class="p">)</span>
+<span class="w">				</span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">idle</span><span class="w"> </span><span class="o">|-&gt;</span><span class="w"> </span><span class="p">##[</span><span class="mi">1</span><span class="o">:</span><span class="p">$]</span><span class="w"> </span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">inform_result</span><span class="p">);</span>
+
+<span class="w">   </span><span class="c1">// A liveness property to check for FSM deadlocks better than ap_deadlock</span>
+<span class="w">   </span><span class="nl">ap_deadlock_2:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="p">(</span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="p">(</span><span class="o">!</span><span class="n">rstn</span><span class="p">)</span>
+<span class="w">				  </span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">idle</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="k">s_eventually</span><span class="w"> </span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">inform_result</span><span class="p">);</span>
+<span class="k">endmodule</span><span class="w"> </span><span class="c1">// liveness</span>
+</pre></div>
+</div>
+<p>The property <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">ap_deadlock</span></code> was written to capture any deadlock,
+but due to the <em>weak</em> nature of the unbounded delay operator, this will not be
+possible (but why?). The property <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">ap_deadlock_2</span></code> is a better solution
+for this problem. By running <em>sby -f ./src/liveness/liveness.sby err</em> it can be seen
+that, although the FSM sequence is correct, SBY shows that the property <strong>FAILS</strong>,
+furthermore, there is no VCD file to debug. What to do now?</p>
+<p>One of the techniques to debug liveness properties is to find if the <em>liveness
+obligation is fulfilled</em> by using a bounded safety assertion. If such property
+fails, it means that a fairness assumption is missing. In this case, the liveness
+obligation is <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">inform_result</span></code>. The reader is invited to analyse
+Figure 5.12 to understand what is happening (hint: there are two return paths to idle,
+one when start is 0 and other when start can become 1, in only one of these two paths
+the liveness obligation is fulfilled).</p>
+<p>As mentioned before, a future appnote will delve into this, but to continue with the
+example, the solution or the missing fairness assumption is shown below:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="nl">ap_fairness:</span><span class="w"> </span><span class="k">assume</span><span class="w"> </span><span class="k">property</span><span class="p">(</span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="p">(</span><span class="o">!</span><span class="n">rstn</span><span class="p">)</span>
+<span class="w">   				</span><span class="o">!</span><span class="n">start</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="k">s_eventually</span><span class="w"> </span><span class="n">start</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Uncomment lines 45 to 48 to enable the <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="n">ap_fairness</span></code> assumption.</p>
+<p>By filling line 32 with an erroneous state and running
+<em>sby -f ./src/liveness/liveness.sby pass</em>, the deadlock will be captured by
+the property and now we know that the CEX is true and not an spurios false negative.</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">			   </span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">validate_key</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="n">ps</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">&lt;</span><span class="n">state</span><span class="o">&gt;</span><span class="p">);</span><span class="w"> </span><span class="c1">// correct state</span>
+</pre></div>
+</div>
+</aside>
+</section>
+<section id="verification-layer">
+<h3>Verification Layer<a class="headerlink" href="#verification-layer" title="Link to this heading">#</a></h3>
+<p>A property by himself does not execute any check unless is instantiated with
+a verification statement. In section <a class="reference internal" href="#property-layer"><span class="std std-ref">Property Layer</span></a> results of property
+evaluation are constantly mentioned. Those values and conditions applies
+when the property is used with the verification directives listed below:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For simulation, properties works as monitors that checks the traffic/behavior
+of the test vectors applied to the design under test. For FPV, properties are
+non-deterministic since all possible values are used to check a proof.</p>
+</div>
+<ul class="simple">
+<li><p><strong>assert:</strong> Specifies <em>validity</em>, <em>correctness</em>, or a behavior that a
+system or design is obligated to implement. When using the <em>assert</em>
+function, the solver’s task is to either conclude that the assertion
+and the design are a <em>tautology</em> or to show a counterexample (CEX)
+indicating how the design violates or <em>contradicts</em> the assertion.
+<strong>Behaviors are observed on the outputs of a Boolean functions,
+either design primary outputs or internal signals where some
+calculations of interest happens</strong>. In short, The assertion w.r.t of
+a property must be true for all legal values applied at design inputs.</p></li>
+<li><p><strong>assume:</strong> The property models how inputs of the design are driven
+in an unexamined way, that is, as a fact that the solver does not check
+but uses to <em>constrain</em> the valid values that will be used in the
+<em>primary inputs</em>. when an assertion with related <em>input assumptions</em> is
+proven, it is said that it holds <em>assuming</em> only the values constrained at
+the input are driven in the block under test. Modeling <em>assumptions</em> is one
+of the most error-prone tasks in formal verification that can cause some problems
+such as <em>vacuity</em> as described in <em>YosysHQ AppNote 120 – Weak precondition
+cover and witness for SVA properties</em>. Assumption correctness is not checked by
+the formal tool.</p></li>
+<li><p><strong>cover:</strong> Checks for satisfiability, that is, an evidence of whether any
+given behavior is implemented in the design. The main difference with the
+assertion statement is that when using the <em>cover</em> statement on a property,
+the proof succeed if there is <em>any</em> behavior in the design that the property
+dictates. For the proof under assertion directive, the behavior should be
+observed <em>for all</em> conditions in the inputs of the design.</p></li>
+<li><p><strong>restrict:</strong> This directive is primarily used in FPV and is ignored in simulation.
+The <em>restrict</em> directive has similar semantics as <em>assume</em>, but is intended
+to use as delimiter in the state space, or in other words, to help in assertion
+convergence <a class="footnote-reference brackets" href="#id12" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>. For example, the <em>restrict</em> verification directive can be used to
+prove in a separated way, each arithmetic opcode (such as add, sub, etc). If the same
+environment is reused in simulation, the simulator will ignore the restriction.
+Otherwise, if an assumption had been used, the simulator would have failed because
+it cannot be guaranteed that certain opcode is the only one applied to the design.</p></li>
+</ul>
+<p>For example, to assert the deadlock-free property shown in Figure 5.5, the
+following construct can now be defined using all the SVA layers:</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="nl">ap_AW_SRC_DST_READY_MAXWAIT:</span><span class="w"> </span>
+<span class="w">	   </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="p">(</span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ARESETn</span><span class="p">)</span><span class="w"> </span><span class="n">handshake_max_wait</span><span class="p">(</span><span class="n">AWVALID</span><span class="p">,</span><span class="w"> </span><span class="n">AWREADY</span><span class="p">))</span>
+<span class="w">           </span><span class="k">else</span><span class="w"> </span><span class="p">$</span><span class="n">error</span><span class="p">(</span><span class="s">&quot;Violation: AWREADY should be asserted within MAXWAIT cycles&quot;</span><span class="p">,</span>
+<span class="w">		       </span><span class="s">&quot; of AWVALID being asserted (AMBA recommended).&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Figure 5.13. Using the AXI deadlock property as an assertion.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In this way and using the other verification directives as well, FPV users
+can create powerful SVA checks for simple and complex designs.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The action block (or the <code class="docutils literal notranslate"><span class="pre">`else</span> <span class="pre">$error</span> <span class="pre">[...]</span></code>) is not synthesizable, therefore
+an FPV tool will not execute that part of the assertion. This helps to debug
+the case where a property is failing as the FPV user can see the source code and get
+an idea of where to check for more information.
+It is also important to give a meaningful name to all the properties/assertions,
+so debugging and readability are improved. If no name is given to a property,
+the FPV tool will assign a name to it.</p>
+</div>
+</section>
+</section>
+<section id="more-advanced-sva-constructs">
+<h2>More Advanced SVA Constructs<a class="headerlink" href="#more-advanced-sva-constructs" title="Link to this heading">#</a></h2>
+<section id="checkers">
+<h3>Checkers<a class="headerlink" href="#checkers" title="Link to this heading">#</a></h3>
+<p>Usually, properties are defined inside a module but this has been proven
+to be a problem in certain scenarios. For example, in a module, all port types
+must be explicitly defined but to reuse properties sometimes it is needed that
+the unit that encapsulates the SVA constructs can admit any type as input
+(to make it generic). Also, modules cannot accept sequences and/or properties
+as inputs and some other drawbacks that the construct <cite>checker … endchecker</cite>
+solves.</p>
+<p>For example, a checker to create the deadlock-free checker for property
+shown in Figure 5.11 the following code can be used:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="k">checker</span><span class="w"> </span><span class="n">deadlock_axi</span><span class="p">(</span><span class="k">sequence</span><span class="w"> </span><span class="n">handshake_start</span><span class="p">,</span><span class="w"> </span><span class="k">property</span><span class="w"> </span><span class="n">handshake_end</span><span class="p">);</span>
+<span class="w">  </span><span class="k">default</span><span class="w"> </span><span class="k">clocking</span><span class="w"> </span><span class="n">fpv_clk</span><span class="w"> </span><span class="p">@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">ACLK</span><span class="p">);</span><span class="w"> </span><span class="k">endclocking</span>
+<span class="w">  </span><span class="k">default</span><span class="w"> </span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="p">(</span><span class="o">!</span><span class="n">ARESETn</span><span class="p">);</span>
+
+<span class="w">  </span><span class="k">property</span><span class="w"> </span><span class="n">handshake_max_wait</span><span class="p">(</span><span class="n">valid_seq</span><span class="p">,</span><span class="w"> </span><span class="n">ready</span><span class="p">);</span>
+<span class="w">   </span><span class="n">valid_seq</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="k">s_eventually</span><span class="w"> </span><span class="n">ready</span><span class="p">;</span>
+<span class="w">  </span><span class="k">endproperty</span><span class="w"> </span><span class="c1">// handshake_max_wait</span>
+
+<span class="w">  </span><span class="nl">deadlock_free:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="p">(</span><span class="n">handshake_max_wait</span><span class="p">(</span><span class="n">handshake_start</span><span class="p">,</span><span class="w"> </span><span class="n">handshake_end</span><span class="p">));</span>
+<span class="k">endchecker</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="systemverilog-system-functions-in-sva">
+<h1>SystemVerilog System Functions in SVA<a class="headerlink" href="#systemverilog-system-functions-in-sva" title="Link to this heading">#</a></h1>
+<p>The P1800 provides some system functions and utilities that can be used to increase
+expressibility of SVA, these are the <em>Bit Vector Functions</em> and <em>Sampled Value Functions</em>.
+System functions are well described in the P1800 LRM and are quite straightforward to
+understand. Some examples are shown below for the sake of exemplification. These examples
+contains some errors that needs to be fixed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To use SystemVerilog system functions, the argument of the function must be
+known at elaboration time. Remember that all components of SVA for FPV must
+be synthesizable.</p>
+</div>
+<section id="bit-vector-functions-reference">
+<h2>Bit Vector Functions Reference<a class="headerlink" href="#bit-vector-functions-reference" title="Link to this heading">#</a></h2>
+<section id="the-countbits-function">
+<h3>The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">countbits</span></code> function<a class="headerlink" href="#the-countbits-function" title="Link to this heading">#</a></h3>
+<p>This function returns the number of bits of an specific set of values in
+a bit vector. See the following example.</p>
+<blockquote>
+<div><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;__________________-_&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_a</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">);</span>
+<span class="w">   </span><span class="nl">ap_countbits:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="p">($</span><span class="n">countbits</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="m">&#39;1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mb">1&#39;b0</span><span class="p">);</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Execute <em>sby -f ./src/src/system_functions/systemf_bv.sby err</em> and see the result, it
+may need to be fixed.</p>
+</section>
+<section id="the-countones-function">
+<h3>The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">countones</span></code> function<a class="headerlink" href="#the-countones-function" title="Link to this heading">#</a></h3>
+<p>Counts the number of 1’s in a bus, equivalent to <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">countbits</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span><span class="m">&#39;1</span><span class="p">)</span></code>.
+See the following example.</p>
+<blockquote>
+<div><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;__________________-_&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_a</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">);</span>
+<span class="w">   </span><span class="nl">ap_countones:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="p">($</span><span class="n">countones</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mb">1&#39;b0</span><span class="p">);</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Execute <em>sby -f ./src/src/system_functions/systemf_bv.sby err</em> and see the result, it
+may need to be fixed.</p>
+</section>
+<section id="the-onehot0-function">
+<h3>The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">onehot0</span></code> function<a class="headerlink" href="#the-onehot0-function" title="Link to this heading">#</a></h3>
+<p>Evaluates to true if at most one bit of the bus is set to logic one, otherwise it evaluates
+to zero. As its name mentions, it is used to check that some bits are mutually exclusive. This
+expression is equivalent to <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">countbits</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span><span class="m">&#39;1</span><span class="p">)</span><span class="o">&lt;=</span><span class="mi">1</span></code>. See the following example:</p>
+<blockquote>
+<div><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;00000000000000000000&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">seq_b</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+<span class="w">   </span><span class="nl">ap_onehot0:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="p">($</span><span class="n">onehot0</span><span class="p">(</span><span class="n">b</span><span class="p">));</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Execute <em>sby -f ./src/src/system_functions/systemf_bv.sby err</em> and see the result, it
+may need to be fixed.</p>
+</section>
+<section id="the-onehot-function">
+<h3>The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">onehot</span></code> function<a class="headerlink" href="#the-onehot-function" title="Link to this heading">#</a></h3>
+<p>It is similar to <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">onehot0</span></code> with the difference that <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">onehot</span></code>
+is equivalent to <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">countbits</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span><span class="m">&#39;1</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span></code> (exactly one bit set to
+logic one) and <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">onehot0</span></code> requires at most one (or none) bits set to 1. See
+the following example:</p>
+<blockquote>
+<div><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;00000000000000000000&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">seq_b</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+<span class="w">   </span><span class="nl">ap_onehot:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="p">($</span><span class="n">onehot</span><span class="p">(</span><span class="n">b</span><span class="p">));</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Execute <em>sby -f ./src/src/system_functions/systemf_bv.sby err</em> and see the result, it
+may need to be fixed.</p>
+</section>
+<section id="the-isunknown-function">
+<h3>The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">isunknown</span></code> function<a class="headerlink" href="#the-isunknown-function" title="Link to this heading">#</a></h3>
+<p>This function evaluates to true if any bit from the vector has a don’t care (‘x) or
+high impedance (‘z). At the moment, Tabby CAD has some limitations on these data types
+so the example will be skipped. This function can be used in FPV to debug and detect
+X-propagation in digital designs.</p>
+</section>
+</section>
+<section id="sampled-value-functions">
+<h2>Sampled Value Functions<a class="headerlink" href="#sampled-value-functions" title="Link to this heading">#</a></h2>
+<section id="the-sampled-function">
+<h3>The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">sampled</span></code> function<a class="headerlink" href="#the-sampled-function" title="Link to this heading">#</a></h3>
+<p>This function simply returns the sampled value of the argument. This function is
+redundant for concurrent assertions and FPV <a class="footnote-reference brackets" href="#id16" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>, and is more useful in simulation.
+However, there exist a case where is useful for FPV: when using <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="p">(</span><span class="n">reset</span><span class="p">)</span></code> to define when the check is disabled, this <em>reset</em> results in an
+asynchronous event (i.e., the check will be disabled at <em>any time</em> reset becomes 1).
+Using the <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">sampled</span></code> function the disable condition can be “synchronized”:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="w"> </span><span class="p">(@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">clk</span><span class="p">)</span><span class="w"> </span><span class="k">disable</span><span class="w"> </span><span class="k">iff</span><span class="p">($</span><span class="n">sampled</span><span class="p">(</span><span class="n">reset</span><span class="p">))</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">|-&gt;</span><span class="w"> </span><span class="n">q</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="the-past-function">
+<h3>The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">past</span></code> function<a class="headerlink" href="#the-past-function" title="Link to this heading">#</a></h3>
+<p>This system function has been studied frequently in other SymbiYosys tutorials. It
+simply returns the sampled value of the expression in <em>n</em> steps ago. The value of the
+expression before the initial clock may be undefined, causing the property to fail.</p>
+<blockquote>
+<div><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="c1">// If a is true in the current clock cycle it must be true</span>
+<span class="w">   </span><span class="c1">// in the previous cycle as well.</span>
+<span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;_-------------------&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_a</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">);</span>
+<span class="w">   </span><span class="nl">ap_past:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="p">($</span><span class="n">past</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Execute <em>sby -f ./src/src/system_functions/systemf_sv.sby err</em> and see the result, it
+may need to be fixed.</p>
+</section>
+<section id="the-rose-function">
+<h3>The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">rose</span></code> function<a class="headerlink" href="#the-rose-function" title="Link to this heading">#</a></h3>
+<p>This function returns true if the LSB of the expression was 0 in the previous clock
+tick and 1 in the current.</p>
+<blockquote>
+<div><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="c1">// If b becomes 1, it must be 1 for the next 5 clock cycles</span>
+<span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;-------____________-&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_b</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+<span class="w">   </span><span class="nl">ap_rose:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="p">($</span><span class="n">rose</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="o">*</span><span class="mi">4</span><span class="p">]);</span>
+<span class="w">   </span><span class="nl">cp_rose:</span><span class="w"> </span><span class="k">cover</span><span class="w"> </span><span class="k">property</span><span class="p">($</span><span class="n">rose</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">##</span><span class="mi">1</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="o">*</span><span class="mi">4</span><span class="p">]);</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Execute <em>sby -f ./src/src/system_functions/systemf_sv.sby err</em> and see the result, then run
+<em>sby -f ./src/src/system_functions/systemf_sv.sby cover</em> and compare the result. It may need
+to be fixed.</p>
+</section>
+<section id="the-fell-function">
+<h3>The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">fell</span></code> function<a class="headerlink" href="#the-fell-function" title="Link to this heading">#</a></h3>
+<p>This function returns true if the LSB of the expression was 1 in the previous clock
+tick and 0 in the current.</p>
+<blockquote>
+<div><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="c1">// If c becomes low, it must be low for the next 5 clock cycles</span>
+<span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;------------------__&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_c</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<span class="w">   </span><span class="nl">ap_fell:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="p">($</span><span class="n">fell</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">|=&gt;</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="o">*</span><span class="mi">4</span><span class="p">]);</span>
+<span class="w">   </span><span class="nl">cp_fell:</span><span class="w"> </span><span class="k">cover</span><span class="w"> </span><span class="k">property</span><span class="p">($</span><span class="n">fell</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">##</span><span class="mi">1</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="o">*</span><span class="mi">4</span><span class="p">]);</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Execute <em>sby -f ./src/src/system_functions/systemf_sv.sby err</em> and see the result, then run
+<em>sby -f ./src/src/system_functions/systemf_sv.sby cover</em> and compare the result. It may need
+to be fixed.</p>
+</section>
+<section id="the-changed-function">
+<h3>The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">changed</span></code> function<a class="headerlink" href="#the-changed-function" title="Link to this heading">#</a></h3>
+<p>Returns true if the logic value of the expression changed.</p>
+<blockquote>
+<div><div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="c1">// d toggles forever</span>
+<span class="w">   </span><span class="n">seq</span><span class="w"> </span><span class="p">#(</span><span class="s">&quot;_-_-_-_-_-_-_-_-_-_-&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">seq_d</span><span class="p">(</span><span class="n">clk</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">);</span>
+<span class="w">   </span><span class="nl">ap_changed:</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="k">property</span><span class="p">(</span><span class="o">&lt;</span><span class="n">implement</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">assertion</span><span class="o">&gt;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Write the property <em>ap_changed</em> and run <em>sby -f ./src/src/system_functions/systemf_sv.sby</em>,
+then try to get a witness of this property.</p>
+</section>
+<section id="the-stable-function">
+<h3>The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">stable</span></code> function<a class="headerlink" href="#the-stable-function" title="Link to this heading">#</a></h3>
+<p>Returns true if the logic value of the expression remains stable, as seen in
+<a class="reference internal" href="#consecutive-repetition"><span class="std std-ref">Consecutive Repetition</span></a>.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id9" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Unfortunately, the definition of “assertion” is not consistent in the
+industry, and is often used interchangeably with the term “property”.</p>
+</aside>
+<aside class="footnote brackets" id="id10" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>SystemVerilog Assertions are temporal logic and model checking
+methods applied to real world hardware design and verification. In
+fact, most of the notations from the literature that describe these
+methods are employed to express the formal semantics of SVA in the
+P1800 Language Reference Manual (LRM).</p>
+</aside>
+<aside class="footnote brackets" id="id11" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>Although the result of using one or the other in FPV may be the same,
+under certain circumstances, the way in which they are evaluated, for example,
+in simulation, is totally different. So this can create consistency problems
+in environments where the same assertions are used for both flows.</p>
+</aside>
+<aside class="footnote brackets" id="id12" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">4</a><span class="fn-bracket">]</span></span>
+<p>Convergence in FPV is the process to have a full proof, which can be
+challenging for some designs.</p>
+</aside>
+<aside class="footnote brackets" id="id13" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">5</a><span class="fn-bracket">]</span></span>
+<p>These restrictions are described in P1800 Section 16.6 Boolean expressions.</p>
+</aside>
+<aside class="footnote brackets" id="id14" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">6</a><span class="fn-bracket">]</span></span>
+<p>Sequential Extended Regular Expressions.</p>
+</aside>
+<aside class="footnote brackets" id="id15" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">7</a><span class="fn-bracket">]</span></span>
+<p>The <em>nd_bank</em> expression is a non-deterministic value chosen by the
+formal solver as a symbolic variable. A symbolic variable is a variable
+that takes any valid value in the initial state and then is kept stable.
+This variable is useful to track a single arbitrary instances of a design
+where properties are defined for multiple symmetric units.</p>
+</aside>
+<aside class="footnote brackets" id="id16" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">8</a><span class="fn-bracket">]</span></span>
+<p>Expressions in FPV are already using sampled semantics. This is the reason
+why <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">sampled</span></code> is redundant.</p>
+</aside>
+</aside>
+</section>
+</section>
+</section>
+<section id="references">
+<h1>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>The YosysHQ AppNote 109 repository: <a class="reference external" href="https://github.com/YosysHQ-Docs/AppNote-109">https://github.com/YosysHQ-Docs/AppNote-109</a></p></li>
+<li><p>1800-2017 - IEEE Standard for SystemVerilog Unified Hardware Design, Specification, and
+Verification Language.</p></li>
+<li><p>Bustan, D., Korchemny, D., Seligman, E., &amp; Yang, J. (2012). SystemVerilog Assertions:
+Past, present, and future SVA standardization experience. IEEE Design &amp; Test of
+Computers, 29(2), 23-31.</p></li>
+<li><p>The AMBA AXI4 Stream SVA Verification IP for FPV which was used to show
+some of the properties described in this AppNote can be obtained in:
+<a class="reference external" href="https://github.com/dh73/A_Formal_Tale_Chapter_I_AMBA">https://github.com/dh73/A_Formal_Tale_Chapter_I_AMBA</a></p></li>
+</ul>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2021 YosysHQ GmbH
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link" href="https://readthedocs.org/projects/yosyshq-appnote-109" aria-label="On Read the Docs">
+                <svg x="0px" y="0px" viewBox="-125 217 360 360" xml:space="preserve">
+                  <path fill="currentColor" d="M39.2,391.3c-4.2,0.6-7.1,4.4-6.5,8.5c0.4,3,2.6,5.5,5.5,6.3 c0,0,18.5,6.1,50,8.7c25.3,2.1,54-1.8,54-1.8c4.2-0.1,7.5-3.6,7.4-7.8c-0.1-4.2-3.6-7.5-7.8-7.4c-0.5,0-1,0.1-1.5,0.2 c0,0-28.1,3.5-50.9,1.6c-30.1-2.4-46.5-7.9-46.5-7.9C41.7,391.3,40.4,391.1,39.2,391.3z M39.2,353.6c-4.2,0.6-7.1,4.4-6.5,8.5 c0.4,3,2.6,5.5,5.5,6.3c0,0,18.5,6.1,50,8.7c25.3,2.1,54-1.8,54-1.8c4.2-0.1,7.5-3.6,7.4-7.8c-0.1-4.2-3.6-7.5-7.8-7.4 c-0.5,0-1,0.1-1.5,0.2c0,0-28.1,3.5-50.9,1.6c-30.1-2.4-46.5-7.9-46.5-7.9C41.7,353.6,40.4,353.4,39.2,353.6z M39.2,315.9 c-4.2,0.6-7.1,4.4-6.5,8.5c0.4,3,2.6,5.5,5.5,6.3c0,0,18.5,6.1,50,8.7c25.3,2.1,54-1.8,54-1.8c4.2-0.1,7.5-3.6,7.4-7.8 c-0.1-4.2-3.6-7.5-7.8-7.4c-0.5,0-1,0.1-1.5,0.2c0,0-28.1,3.5-50.9,1.6c-30.1-2.4-46.5-7.9-46.5-7.9 C41.7,315.9,40.4,315.8,39.2,315.9z M39.2,278.3c-4.2,0.6-7.1,4.4-6.5,8.5c0.4,3,2.6,5.5,5.5,6.3c0,0,18.5,6.1,50,8.7 c25.3,2.1,54-1.8,54-1.8c4.2-0.1,7.5-3.6,7.4-7.8c-0.1-4.2-3.6-7.5-7.8-7.4c-0.5,0-1,0.1-1.5,0.2c0,0-28.1,3.5-50.9,1.6 c-30.1-2.4-46.5-7.9-46.5-7.9C41.7,278.2,40.4,278.1,39.2,278.3z M-13.6,238.5c-39.6,0.3-54.3,12.5-54.3,12.5v295.7 c0,0,14.4-12.4,60.8-10.5s55.9,18.2,112.9,19.3s71.3-8.8,71.3-8.8l0.8-301.4c0,0-25.6,7.3-75.6,7.7c-49.9,0.4-61.9-12.7-107.7-14.2 C-8.2,238.6-10.9,238.5-13.6,238.5z M19.5,257.8c0,0,24,7.9,68.3,10.1c37.5,1.9,75-3.7,75-3.7v267.9c0,0-19,10-66.5,6.6 C59.5,536.1,19,522.1,19,522.1L19.5,257.8z M-3.6,264.8c4.2,0,7.7,3.4,7.7,7.7c0,4.2-3.4,7.7-7.7,7.7c0,0-12.4,0.1-20,0.8 c-12.7,1.3-21.4,5.9-21.4,5.9c-3.7,2-8.4,0.5-10.3-3.2c-2-3.7-0.5-8.4,3.2-10.3c0,0,0,0,0,0c0,0,11.3-6,27-7.5 C-16,264.9-3.6,264.8-3.6,264.8z M-11,302.6c4.2-0.1,7.4,0,7.4,0c4.2,0.5,7.2,4.3,6.7,8.5c-0.4,3.5-3.2,6.3-6.7,6.7 c0,0-12.4,0.1-20,0.8c-12.7,1.3-21.4,5.9-21.4,5.9c-3.7,2-8.4,0.5-10.3-3.2c-2-3.7-0.5-8.4,3.2-10.3c0,0,11.3-6,27-7.5 C-20.5,302.9-15.2,302.7-11,302.6z M-3.6,340.2c4.2,0,7.7,3.4,7.7,7.7s-3.4,7.7-7.7,7.7c0,0-12.4-0.1-20,0.7 c-12.7,1.3-21.4,5.9-21.4,5.9c-3.7,2-8.4,0.5-10.3-3.2c-2-3.7-0.5-8.4,3.2-10.3c0,0,11.3-6,27-7.5C-16,340.1-3.6,340.2-3.6,340.2z" />
+                </svg>
+              </a><a class="muted-link" href="https://github.com/YosysHQ-Docs/AppNote-109" aria-label="On GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+<div class="toc-sticky toc-scroll">
+    
+    <div class="toc-title-container">
+    <span class="toc-title">
+        YosysHQ
+    </span>
+    </div>
+    <div class="toc-tree-container yosyshq-links" style="padding-bottom: 0">
+    <div class="toc-tree">
+        <ul>
+        <li></li>
+        <li><a class="reference external" href="https://yosyshq.readthedocs.io">Docs</a></li>
+        <li><a class="reference external" href="https://blog.yosyshq.com">Blog</a></li>
+        <li><a class="reference external" href="https://www.yosyshq.com">Website</a></li>
+        </ul>
+    </div>
+    </div>
+    
+    
+    <div class="toc-title-container">
+    <span class="toc-title">
+        On this page
+    </span>
+    </div>
+    <div class="toc-tree-container">
+    <div class="toc-tree">
+        <ul>
+<li><a class="reference internal" href="#">Property Checking with SystemVerilog Assertions</a><ul>
+<li><a class="reference internal" href="#abstract">Abstract</a></li>
+<li><a class="reference internal" href="#organisation">Organisation</a></li>
+<li><a class="reference internal" href="#introduction">Introduction</a><ul>
+<li><a class="reference internal" href="#brief-history-of-systemverilog-assertions">Brief history of SystemVerilog Assertions</a></li>
+<li><a class="reference internal" href="#introduction-to-sva">Introduction to SVA</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#assertion-types">Assertion Types</a><ul>
+<li><a class="reference internal" href="#immediate-assertions">Immediate Assertions</a></li>
+<li><a class="reference internal" href="#concurrent-assertions">Concurrent Assertions</a><ul>
+<li><a class="reference internal" href="#clock-or-time-step">Clock or time step</a></li>
+<li><a class="reference internal" href="#disable-condition">Disable condition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#elements-of-sva">Elements of SVA</a><ul>
+<li><a class="reference internal" href="#sva-layers">SVA Layers</a><ul>
+<li><a class="reference internal" href="#boolean-layer">Boolean Layer</a></li>
+<li><a class="reference internal" href="#temporal-or-sequence-layer">Temporal or Sequence Layer</a></li>
+<li><a class="reference internal" href="#basic-sequence-operators-introduction">Basic Sequence Operators Introduction</a></li>
+<li><a class="reference internal" href="#bounded-delay-operator">Bounded Delay Operator</a></li>
+<li><a class="reference internal" href="#unbounded-delay-operator">Unbounded Delay Operator</a></li>
+<li><a class="reference internal" href="#consecutive-repetition">Consecutive Repetition</a></li>
+<li><a class="reference internal" href="#property-layer">Property Layer</a></li>
+<li><a class="reference internal" href="#safety-properties">Safety Properties</a></li>
+<li><a class="reference internal" href="#liveness-properties">Liveness Properties</a></li>
+<li><a class="reference internal" href="#verification-layer">Verification Layer</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#more-advanced-sva-constructs">More Advanced SVA Constructs</a><ul>
+<li><a class="reference internal" href="#checkers">Checkers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#systemverilog-system-functions-in-sva">SystemVerilog System Functions in SVA</a><ul>
+<li><a class="reference internal" href="#bit-vector-functions-reference">Bit Vector Functions Reference</a><ul>
+<li><a class="reference internal" href="#the-countbits-function">The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">countbits</span></code> function</a></li>
+<li><a class="reference internal" href="#the-countones-function">The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">countones</span></code> function</a></li>
+<li><a class="reference internal" href="#the-onehot0-function">The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">onehot0</span></code> function</a></li>
+<li><a class="reference internal" href="#the-onehot-function">The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">onehot</span></code> function</a></li>
+<li><a class="reference internal" href="#the-isunknown-function">The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">isunknown</span></code> function</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sampled-value-functions">Sampled Value Functions</a><ul>
+<li><a class="reference internal" href="#the-sampled-function">The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">sampled</span></code> function</a></li>
+<li><a class="reference internal" href="#the-past-function">The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">past</span></code> function</a></li>
+<li><a class="reference internal" href="#the-rose-function">The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">rose</span></code> function</a></li>
+<li><a class="reference internal" href="#the-fell-function">The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">fell</span></code> function</a></li>
+<li><a class="reference internal" href="#the-changed-function">The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">changed</span></code> function</a></li>
+<li><a class="reference internal" href="#the-stable-function">The <code class="code highlight systemverilog docutils literal highlight-systemverilog"><span class="p">$</span><span class="n">stable</span></code> function</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+
+    </div>
+    </div>
+    
+</div>
+
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=32e29ea5"></script>
+    
+    </body>
+</html>

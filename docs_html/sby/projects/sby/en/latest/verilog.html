@@ -1,0 +1,537 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="SystemVerilog, VHDL, SVA" href="verific.html" /><link rel="prev" title="Autotune: Automatic Engine Selection" href="autotune.html" />
+
+    <link rel="shortcut icon" href="_static/yshq_favicon.png"/><!-- Generated with Sphinx 8.2.3 and Furo 2025.04.22.dev1 -->
+        <title>Formal extensions to Verilog - YosysHQ SBY documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-ys.css?v=5cc2bdad" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=883c87dd" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
+  
+      }
+    }
+  }
+</style><script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="yosyshq-sby" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/verilog.html" /><meta name="readthedocs-http-status" content="200" /></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">YosysHQ SBY  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand"
+   title="External link to https://yosyshq.readthedocs.io"
+   href="https://yosyshq.readthedocs.io"><div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/yshq_logo.png" alt="Main Brand Logo"/>
+  </div>
+  
+  
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Using <cite>sby</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference for .sby file format</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autotune.html">Autotune: Automatic Engine Selection</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Formal extensions to Verilog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="verific.html">SystemVerilog, VHDL, SVA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">SymbiYosys license</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/verilog.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="formal-extensions-to-verilog">
+<h1>Formal extensions to Verilog<a class="headerlink" href="#formal-extensions-to-verilog" title="Link to this heading">¶</a></h1>
+<p>Any Verilog file may be read using <code class="docutils literal notranslate"><span class="pre">read</span> <span class="pre">-formal</span> <span class="pre">&lt;file&gt;</span></code> within the
+SymbiYosys <code class="docutils literal notranslate"><span class="pre">script</span></code> section.  Multiple files may be given on the sames
+line, or various files may be read in subsequent lines.</p>
+<p><code class="docutils literal notranslate"><span class="pre">read</span> <span class="pre">-formal</span></code> will also define the <code class="docutils literal notranslate"><span class="pre">FORMAL</span></code> macro, which can be used
+to separate a section having formal properties from the rest of the logic
+within the core.</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="k">module</span><span class="w"> </span><span class="n">somemodule</span><span class="p">(</span><span class="n">port1</span><span class="p">,</span><span class="w"> </span><span class="n">port2</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<span class="w">    </span><span class="c1">// User logic here</span>
+<span class="w">    </span><span class="c1">//</span>
+<span class="no">`ifdef</span><span class="w"> </span><span class="n">FORMAL</span>
+<span class="w">    </span><span class="c1">// Formal properties here</span>
+<span class="no">`endif</span>
+<span class="k">endmodule</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">bind()</span></code> operator can also be used when using the Verific front end. This
+will provide an option to attach formal properties to a given piece of logic,
+without actually modifying the module in question to do so as we did in the
+example above. Refer to <a class="reference internal" href="verific.html"><span class="doc">SystemVerilog, VHDL, SVA</span></a> for more on the Verific front end.</p>
+<section id="systemverilog-immediate-assertions">
+<h2>SystemVerilog Immediate Assertions<a class="headerlink" href="#systemverilog-immediate-assertions" title="Link to this heading">¶</a></h2>
+<p>SymbiYosys supports three basic immediate assertion types.</p>
+<ol class="arabic">
+<li><p><code class="docutils literal notranslate"><span class="pre">assume(&lt;expr&gt;);</span></code></p>
+<p>An assumption restricts the possibilities the formal tool examines, making
+the search space smaller.  In any solver generated trace, all of the
+assumptions will always be true.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">assert(&lt;expr&gt;);</span></code></p>
+<p>An assertion is something the solver will try to make false.  Any time
+SymbiYosys is run with <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">bmc</span></code>, the proof will fail if some set
+of inputs can cause the <code class="docutils literal notranslate"><span class="pre">&lt;expr&gt;</span></code> within the assertion to be zero (false).
+When SymbiYosys is run with <code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">prove</span></code>, the proof may also yield an
+<code class="docutils literal notranslate"><span class="pre">UNKNOWN</span></code> result if an assertion can be made to fail during the induction
+step.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cover(&lt;expr&gt;);</span></code></p>
+<p>A cover statement only applies when SymbiYosys is ran with option
+<code class="docutils literal notranslate"><span class="pre">mode</span> <span class="pre">cover</span></code>.  In this case, the formal solver will start at the
+beginning of time (i.e. when all initial statements are true), and it will
+try to find some clock when <code class="docutils literal notranslate"><span class="pre">&lt;expr&gt;</span></code> can be made to be true.  Such a
+cover run will “PASS” once all internal <code class="docutils literal notranslate"><span class="pre">cover()</span></code> statements have been
+fulfilled.  It will “FAIL” if any <code class="docutils literal notranslate"><span class="pre">cover()</span></code> statement exists that cannot
+be reached in the first <code class="docutils literal notranslate"><span class="pre">N</span></code> states, where <code class="docutils literal notranslate"><span class="pre">N</span></code> is set by the
+<code class="docutils literal notranslate"><span class="pre">depth</span></code> option.  A cover pass will also fail if an assertion needs to
+be broken in order to reach the covered state.</p>
+</li>
+</ol>
+<p>To be used, each of these statements needs to be placed into an <em>immediate</em>
+context.  That is, it needs to be placed within an <code class="docutils literal notranslate"><span class="pre">always</span></code> block of some
+type.  Two types of <code class="docutils literal notranslate"><span class="pre">always</span></code> block contexts are permitted:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">always</span> <span class="pre">&#64;(*)</span></code></p>
+<p>Formal properties within an <code class="docutils literal notranslate"><span class="pre">always</span> <span class="pre">&#64;(*)</span></code> block will be checked on every
+time step.  For synchronous proofs, the property will be checked every
+clock period.  For asynchronous proofs, i.e. those with <code class="docutils literal notranslate"><span class="pre">multiclock</span> <span class="pre">on</span></code>,
+the property will still be checked on every time step but, depending upon
+how you set up your time steps, it may also be checked multiple times
+per clock interval.</p>
+<p>As an example, consider the following assertion that the <code class="docutils literal notranslate"><span class="pre">error_flag</span></code>
+signal must remain low.</p>
+</li>
+</ul>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="k">always</span><span class="w"> </span><span class="p">@(</span><span class="o">*</span><span class="p">)</span>
+<span class="w">    </span><span class="k">assert</span><span class="p">(</span><span class="o">!</span><span class="n">error_flag</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>While it is not recommended that formal properties be mixed with logic in
+the same <code class="docutils literal notranslate"><span class="pre">always</span> <span class="pre">&#64;(*)</span></code> block, the language supports it.  In such cases,
+the formal property will be evaluated as though it took place in the middle
+of the logic block.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">always</span> <span class="pre">&#64;(posedge</span> <span class="pre">&lt;clock&gt;)</span></code></p>
+<p>The second form of immediate assertion is one within a clocked always block.
+This form of assertion is required when attempting to use the <code class="docutils literal notranslate"><span class="pre">$past</span></code>,
+<code class="docutils literal notranslate"><span class="pre">$stable</span></code>, <code class="docutils literal notranslate"><span class="pre">$changed</span></code>, <code class="docutils literal notranslate"><span class="pre">$rose</span></code>, or <code class="docutils literal notranslate"><span class="pre">$fell</span></code> SystemVerilog functions
+discussed in the next section.</p>
+<p>Unlike the <code class="docutils literal notranslate"><span class="pre">&#64;(*)</span></code> assertion, this one will only be checked on the clock
+edge.  Depending upon how the clock is set up, that may mean that there are
+several formal time steps between when this assertion is checked.</p>
+<p>The two types of immediate assertions, both with and without a clock
+reference, are very similar.  There is one critical difference between
+them, however.  The clocked assertion will not be checked until the
+positive edge of the clock following the time period in question.  Within
+a synchronous design, this means that the fault will not lie on the last
+time step, but rather the time step prior.  New users often find this
+non-intuitive.</p>
+</li>
+</ul>
+<p>One subtlety to be aware of is that any <code class="docutils literal notranslate"><span class="pre">always</span> <span class="pre">&#64;(*)</span></code> assertion that
+depends upon an <code class="docutils literal notranslate"><span class="pre">always</span> <span class="pre">&#64;(posedge</span> <span class="pre">&lt;clock&gt;)</span></code> assumption might fail before
+the assumption is applied.  One solution is to use all clocked or all
+combinatorial blocks.  Another solution is to move the assertion into an
+<code class="docutils literal notranslate"><span class="pre">always</span> <span class="pre">&#64;(posedge</span> <span class="pre">&lt;clock&gt;)</span></code> block.</p>
+</section>
+<section id="systemverilog-functions">
+<h2>SystemVerilog Functions<a class="headerlink" href="#systemverilog-functions" title="Link to this heading">¶</a></h2>
+<p>Yosys supports five formal related functions: <code class="docutils literal notranslate"><span class="pre">$past</span></code>, <code class="docutils literal notranslate"><span class="pre">$stable</span></code>,
+<code class="docutils literal notranslate"><span class="pre">$changed</span></code>, <code class="docutils literal notranslate"><span class="pre">$rose</span></code>, and <code class="docutils literal notranslate"><span class="pre">$fell</span></code>.  Internally, these are all implemented
+in terms of the implementation of the <code class="docutils literal notranslate"><span class="pre">$past</span></code> operator.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">$past(&lt;expr&gt;)</span></code> function returns the value of <code class="docutils literal notranslate"><span class="pre">&lt;expr&gt;</span></code> from one clock
+ago.  It can only be used within a clocked always block, since the clock is
+used to define “one clock ago.”  It is roughly equivalent to,</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="kt">reg</span><span class="w"> </span><span class="n">past_value</span><span class="p">;</span>
+<span class="k">always</span><span class="w"> </span><span class="p">@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">clock</span><span class="p">)</span>
+<span class="w">    </span><span class="n">past_value</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">expression</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>There are two keys to the use of <code class="docutils literal notranslate"><span class="pre">$past</span></code>.  The first is that
+<code class="docutils literal notranslate"><span class="pre">$past(&lt;expr&gt;)</span></code> can only be used within a clocked always block.  The second
+is that there is no initial value given to any <code class="docutils literal notranslate"><span class="pre">$past(&lt;expr&gt;)</span></code>.  That means
+that on the first clock period of any design, <code class="docutils literal notranslate"><span class="pre">$past(&lt;expr&gt;)</span></code> will be
+undefined.</p>
+<p>Yosys supports both one and two arguments to <code class="docutils literal notranslate"><span class="pre">$past</span></code>.  In the two argument
+form, <code class="docutils literal notranslate"><span class="pre">$past(&lt;expr&gt;,N)</span></code>, the expression returns the value of <code class="docutils literal notranslate"><span class="pre">&lt;expr&gt;</span></code>
+from <code class="docutils literal notranslate"><span class="pre">N</span></code> clocks ago.  <code class="docutils literal notranslate"><span class="pre">N</span></code> must be a synthesis time constant.</p>
+<p><code class="docutils literal notranslate"><span class="pre">$stable(&lt;expr&gt;)</span></code> is short hand for <code class="docutils literal notranslate"><span class="pre">&lt;expr&gt;</span> <span class="pre">==</span> <span class="pre">$past(&lt;expr&gt;)</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">$changed(&lt;expr&gt;)</span></code> is short hand for <code class="docutils literal notranslate"><span class="pre">&lt;expr&gt;</span> <span class="pre">!=</span> <span class="pre">$past(&lt;expr&gt;)</span></code>.</p>
+<p>While the next two functions, <code class="docutils literal notranslate"><span class="pre">$rose</span></code> and <code class="docutils literal notranslate"><span class="pre">$fell</span></code>, can be applied to
+multi-bit expressions, only the least significant bits will be examined.
+If we allow that <code class="docutils literal notranslate"><span class="pre">&lt;expr&gt;</span></code> has only a single bit within it, perhaps selected
+from the least significant bit of a larger expression, then we can
+express the following equivalencies.</p>
+<p><code class="docutils literal notranslate"><span class="pre">$rose(&lt;expr&gt;)</span></code> is short hand for <code class="docutils literal notranslate"><span class="pre">&lt;expr&gt;</span> <span class="pre">&amp;&amp;</span> <span class="pre">!$past(&lt;expr)</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">$fell(&lt;expr&gt;)</span></code> is short hand for <code class="docutils literal notranslate"><span class="pre">!&lt;expr&gt;</span> <span class="pre">&amp;&amp;</span> <span class="pre">$past(&lt;expr)</span></code>.</p>
+</section>
+<section id="liveness-and-fairness">
+<h2>Liveness and Fairness<a class="headerlink" href="#liveness-and-fairness" title="Link to this heading">¶</a></h2>
+<p>TBD</p>
+<p><code class="docutils literal notranslate"><span class="pre">assert</span> <span class="pre">property</span> <span class="pre">(eventually</span> <span class="pre">&lt;expr&gt;);</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">assume</span> <span class="pre">property</span> <span class="pre">(eventually</span> <span class="pre">&lt;expr&gt;);</span></code></p>
+</section>
+<section id="unconstrained-variables">
+<h2>Unconstrained Variables<a class="headerlink" href="#unconstrained-variables" title="Link to this heading">¶</a></h2>
+<p>Yosys supports four attributes which can be used to create unconstrained
+variables.  These attributes can be applied to the variable at declaration
+time, as in</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span><span class="w"> </span><span class="n">anyconst</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="kt">reg</span><span class="w"> </span><span class="n">some_value</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">anyconst</span> <span class="pre">*)</span></code> attribute will create a solver chosen constant.
+It is often used when verifying memories: the proof allows the solver to
+pick a constant address, and then proves that the value at that address
+matches however the designer desires.</p>
+<p><code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">anyseq</span> <span class="pre">*)</span></code> differs from <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">anyconst</span> <span class="pre">*)</span></code> in that the solver chosen
+value can change from one time step to the next.  In many ways, it is
+similar to how the solver will treat an input to the design, with the
+difference that an <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">anyseq</span> <span class="pre">*)</span></code> variable can originate internal
+to the design.</p>
+<p>Both <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">anyseq</span> <span class="pre">*)</span></code> and <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">anyconst</span> <span class="pre">*)</span></code> marked values can be constrained
+with assumptions.</p>
+<p>Yosys supports two other attributes useful to formal processing,
+<code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">allconst</span> <span class="pre">*)</span></code> and <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">allseq</span> <span class="pre">*)</span></code>.  These are very similar in their
+functionality to the <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">anyseq</span> <span class="pre">*)</span></code> and <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">anyconst</span> <span class="pre">*)</span></code> attributes we
+just discussed for creating unconstrained values.  Indeed, for both assertions
+and cover statements, the two sets are identical.  Where they differ is
+with respect to assumptions.  Assumed properties of an <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">allseq</span> <span class="pre">*)</span></code>
+or <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">allconst</span> <span class="pre">*)</span></code> value will be applied to all possible values of that
+variable may take on.  This gets around the annoying reality associated with
+defining a property using <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">anyconst</span> <span class="pre">*)</span></code> or <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">anyseq</span> <span class="pre">*)</span></code> only to
+have the solver pick a value which wasn’t the one that was constrained.</p>
+</section>
+<section id="global-clock">
+<h2>Global Clock<a class="headerlink" href="#global-clock" title="Link to this heading">¶</a></h2>
+<p>Accessing the formal timestep becomes important when verifying code in any
+asynchronous context.  In such asynchronous contexts, there may be multiple
+independent clocks within the design.  Each of the clocks may be defined by
+an assumption allowing the designer to carefully select the relationships
+between them.</p>
+<p>All of this requires the <code class="docutils literal notranslate"><span class="pre">multiclock</span> <span class="pre">on</span></code> line in the SBY options section.</p>
+<p>It also requires the <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">gclk</span> <span class="pre">*)</span></code> attribute.</p>
+<p>To use <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">gclk</span> <span class="pre">*)</span></code>, define a register with that attribute, as in:</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span><span class="w"> </span><span class="n">gclk</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="kt">reg</span><span class="w"> </span><span class="n">formal_timestep</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>You can then reference this <code class="docutils literal notranslate"><span class="pre">formal_timestep</span></code> in the clocking section
+of an always block, as in,</p>
+<div class="highlight-systemverilog notranslate"><div class="highlight"><pre><span></span><span class="k">always</span><span class="w"> </span><span class="p">@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">formal_timestep</span><span class="p">)</span>
+<span class="w">    </span><span class="k">assume</span><span class="p">(</span><span class="n">incoming_clock</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">!</span><span class="p">$</span><span class="n">past</span><span class="p">(</span><span class="n">incoming_clock</span><span class="p">));</span>
+</pre></div>
+</div>
+</section>
+<section id="systemverilog-concurrent-assertions">
+<h2>SystemVerilog Concurrent Assertions<a class="headerlink" href="#systemverilog-concurrent-assertions" title="Link to this heading">¶</a></h2>
+<p>TBD, see <a class="reference internal" href="verific.html#sva"><span class="std std-ref">Supported SVA Property Syntax</span></a>.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="verific.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">SystemVerilog, VHDL, SVA</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="autotune.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Autotune: Automatic Engine Selection</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023 YosysHQ GmbH
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+          YosysHQ
+          </span>
+        </div>
+        <div class="toc-tree-container yosyshq-links" style="padding-bottom: 0">
+          <div class="toc-tree">
+            <ul>
+              <li></li>
+              <li><a class="reference external" href="https://yosyshq.readthedocs.io">Docs</a></li>
+              <li><a class="reference external" href="https://blog.yosyshq.com">Blog</a></li>
+              <li><a class="reference external" href="https://www.yosyshq.com">Website</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Formal extensions to Verilog</a><ul>
+<li><a class="reference internal" href="#systemverilog-immediate-assertions">SystemVerilog Immediate Assertions</a></li>
+<li><a class="reference internal" href="#systemverilog-functions">SystemVerilog Functions</a></li>
+<li><a class="reference internal" href="#liveness-and-fairness">Liveness and Fairness</a></li>
+<li><a class="reference internal" href="#unconstrained-variables">Unconstrained Variables</a></li>
+<li><a class="reference internal" href="#global-clock">Global Clock</a></li>
+<li><a class="reference internal" href="#systemverilog-concurrent-assertions">SystemVerilog Concurrent Assertions</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+        
+      </div>
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo-ys.js?v=8d9c4053"></script>
+    </body>
+</html>

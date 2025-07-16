@@ -1,0 +1,552 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Formal extensions to Verilog" href="verilog.html" /><link rel="prev" title="Reference for .sby file format" href="reference.html" />
+
+    <link rel="shortcut icon" href="_static/yshq_favicon.png"/><!-- Generated with Sphinx 8.2.3 and Furo 2025.04.22.dev1 -->
+        <title>Autotune: Automatic Engine Selection - YosysHQ SBY documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-ys.css?v=5cc2bdad" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=883c87dd" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
+  
+      }
+    }
+  }
+</style><script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="yosyshq-sby" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/autotune.html" /><meta name="readthedocs-http-status" content="200" /></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">YosysHQ SBY  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand"
+   title="External link to https://yosyshq.readthedocs.io"
+   href="https://yosyshq.readthedocs.io"><div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="_static/yshq_logo.png" alt="Main Brand Logo"/>
+  </div>
+  
+  
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Using <cite>sby</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference for .sby file format</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Autotune: Automatic Engine Selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="verilog.html">Formal extensions to Verilog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="verific.html">SystemVerilog, VHDL, SVA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">SymbiYosys license</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/autotune.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="autotune-automatic-engine-selection">
+<h1>Autotune: Automatic Engine Selection<a class="headerlink" href="#autotune-automatic-engine-selection" title="Link to this heading">¶</a></h1>
+<p>Selecting the best performing engine for a given verification task often
+requires some amount of trial and error. To reduce the manual work required for
+this, sby offers the <code class="docutils literal notranslate"><span class="pre">--autotune</span></code> option. This takes an <code class="docutils literal notranslate"><span class="pre">.sby</span></code> file and
+runs it using engines and engine configurations. At the end it produces a
+report listing the fastest engines among these candidates.</p>
+<section id="using-autotune">
+<h2>Using Autotune<a class="headerlink" href="#using-autotune" title="Link to this heading">¶</a></h2>
+<p>To run autotune, you can add the <code class="docutils literal notranslate"><span class="pre">--autotune</span></code> option to your usual sby
+invocation. For example, if you usually run <code class="docutils literal notranslate"><span class="pre">sby</span> <span class="pre">demo.sby</span></code> you would run
+<code class="docutils literal notranslate"><span class="pre">sby</span> <span class="pre">--autotune</span> <span class="pre">demo.sby</span></code> instead. When the <code class="docutils literal notranslate"><span class="pre">.sby</span></code> file contains multiple
+tasks, autotune is run for each task independently. As without <code class="docutils literal notranslate"><span class="pre">--autotune</span></code>,
+it is possible to specify which tasks to run on the command line.</p>
+<p>Autotune runs without requiring further interaction, and will eventually print a
+list of engine configurations and their respective solving times. To
+permanently use an engine configuration you can copy it from the
+<code class="docutils literal notranslate"><span class="pre">sby</span> <span class="pre">--autotune</span></code> output into the <code class="docutils literal notranslate"><span class="pre">[engines]</span></code> section of your <code class="docutils literal notranslate"><span class="pre">.sby</span></code> file.</p>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading">¶</a></h3>
+<p>The Sby repository contains a <a class="reference external" href="https://github.com/YosysHQ/sby/tree/master/docs/examples/autotune">small example</a> in the <code class="docutils literal notranslate"><span class="pre">docs/examples/autotune</span></code>
+directory.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">divider.sby</span></code> file contains the following <code class="docutils literal notranslate"><span class="pre">[engines]</span></code> section:</p>
+<div class="highlight-sby notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="nc">engines</span><span class="p">]</span>
+<span class="k">smtbmc</span>
+</pre></div>
+</div>
+<p>We notice that running <code class="docutils literal notranslate"><span class="pre">sby</span> <span class="pre">-f</span> <span class="pre">divider.sby</span> <span class="pre">medium</span></code> takes a long time and want
+to see if another engine would speed things up, so we run
+<code class="docutils literal notranslate"><span class="pre">sby</span> <span class="pre">--autotune</span> <span class="pre">-f</span> <span class="pre">divider.sby</span> <span class="pre">medium</span></code>. After a few minutes this prints:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SBY [divider_medium] finished engines:
+SBY [divider_medium]   #4: engine_7: smtbmc --nopresat bitwuzla -- --noincr (32 seconds, status=PASS)
+SBY [divider_medium]   #3: engine_2: smtbmc boolector -- --noincr (32 seconds, status=PASS)
+SBY [divider_medium]   #2: engine_3: smtbmc --nopresat boolector -- --noincr (32 seconds, status=PASS)
+SBY [divider_medium]   #1: engine_6: smtbmc bitwuzla -- --noincr (31 seconds, status=PASS)
+SBY [divider_medium] DONE (AUTOTUNED, rc=0)
+</pre></div>
+</div>
+<p>This tells us that for the <code class="docutils literal notranslate"><span class="pre">medium</span></code> task, the best engine choice (#1) is
+<code class="docutils literal notranslate"><span class="pre">smtbmc</span> <span class="pre">bitwuzla</span> <span class="pre">--</span> <span class="pre">--noincr</span></code>. To use this engine by default we can change
+the <code class="docutils literal notranslate"><span class="pre">[engines]</span></code> section of <code class="docutils literal notranslate"><span class="pre">divider.sby</span></code> to:</p>
+<div class="highlight-sby notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="nc">engines</span><span class="p">]</span>
+<span class="k">smtbmc</span><span class="w"> </span>bitwuzla -- --noincr
+</pre></div>
+</div>
+</section>
+</section>
+<section id="autotune-log-output">
+<h2>Autotune Log Output<a class="headerlink" href="#autotune-log-output" title="Link to this heading">¶</a></h2>
+<p>The log output in <code class="docutils literal notranslate"><span class="pre">--autotune</span></code> mode differs from the usual sby log output.</p>
+<p>It also starts with preparing the design (this includes running the user
+provided <code class="docutils literal notranslate"><span class="pre">[script]</span></code>) so it can be passed to the solvers. This is only done
+once and will be reused to run every candidate engine.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SBY [demo] model &#39;base&#39;: preparing now...
+SBY [demo] base: starting process &quot;cd demo/src; yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY [demo] base: finished (returncode=0)
+SBY [demo] prepared model &#39;base&#39;
+</pre></div>
+</div>
+<p>This is followed by selecting the engine candidates to run. The design
+and sby configuration are analyzed to skip engines that are not compatible or
+unlikely to work well. When an engine is skipped due to a recommendation, a
+corresponding log message is displayed as well as the total number of
+candidates to try:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SBY [demo] checking more than 20 timesteps (100), disabling nonincremental smtbmc
+SBY [demo] testing 16 engine configurations...
+</pre></div>
+</div>
+<p>After this, the candidate engine configurations are started. Depending on the
+configuration, engines can run in parallel. The engine output itself is not
+logged to stdout when running autotune, so you will only see messages about
+starting an engine:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SBY [demo] engine_1 (smtbmc --nopresat boolector): starting... (14 configurations pending)
+SBY [demo] engine_2 (smtbmc bitwuzla): starting... (13 configurations pending)
+SBY [demo] engine_3 (smtbmc --nopresat bitwuzla): starting... (12 configurations pending)
+...
+</pre></div>
+</div>
+<p>The engine log that would normally be printed is instead redirected to files
+named <code class="docutils literal notranslate"><span class="pre">engine_*_autotune.txt</span></code> within sby’s working directory.</p>
+<p>To run an engine, further preparation steps may be necessary. These are cached
+and will be reused for every engine requiring them, while properly accounting
+for the required prepration time. Below is an example of the log output
+produced by such a preparation step. Note that this runs in parallel, so it may
+be interspersed with other log output.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SBY [demo] model &#39;smt2&#39;: preparing now...
+SBY [demo] smt2: starting process &quot;cd demo/model; yosys -ql design_smt2.log design_smt2.ys&quot;
+...
+SBY [demo] smt2: finished (returncode=0)
+SBY [demo] prepared model &#39;smt2&#39;
+</pre></div>
+</div>
+<p>Whenever an engine finishes, a log message is printed:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SBY [demo] engine_4 (smtbmc --unroll yices): succeeded (status=PASS)
+SBY [demo] engine_4 (smtbmc --unroll yices): took 30 seconds (first engine to finish)
+</pre></div>
+</div>
+<p>When an engine takes longer than the current hard timeout, it is stopped:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SBY [demo] engine_2 (smtbmc bitwuzla): timeout (150 seconds)
+</pre></div>
+</div>
+<p>Depending on the configuration, autotune will also stop an engine earlier when
+reaching a soft timeout. If no other engine finishes in less
+time, the engine will be retried later with a longer soft timeout:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SBY [demo] engine_0 (smtbmc boolector): timeout (60 seconds, will be retried if necessary)
+</pre></div>
+</div>
+<p>Finally, a summary of all finished engines is printed, sorted by
+their solving time:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SBY [demo] finished engines:
+SBY [demo]   #3: engine_1: smtbmc --nopresat boolector (52 seconds, status=PASS)
+SBY [demo]   #2: engine_5: smtbmc --nopresat --unroll yices (41 seconds, status=PASS)
+SBY [demo]   #1: engine_4: smtbmc --unroll yices (30 seconds, status=PASS)
+SBY [demo] DONE (AUTOTUNED, rc=0)
+</pre></div>
+</div>
+<p>If any tried engine encounters an error or produces an unexpected result,
+autotune will also output a list of failed engines. Note that when the sby file
+does not contain the <code class="docutils literal notranslate"><span class="pre">expect</span></code> option, autotune defaults to
+<code class="docutils literal notranslate"><span class="pre">expect</span> <span class="pre">pass,fail</span></code> to simplify running autotune on a verification task with a
+currently unknown outcome.</p>
+</section>
+<section id="configuring-autotune">
+<h2>Configuring Autotune<a class="headerlink" href="#configuring-autotune" title="Link to this heading">¶</a></h2>
+<p>Autotune can be configured by adding an <code class="docutils literal notranslate"><span class="pre">[autotune]</span></code> section to the <code class="docutils literal notranslate"><span class="pre">.sby</span></code>
+file. Each line in that section has the form <code class="docutils literal notranslate"><span class="pre">option_name</span> <span class="pre">value</span></code>, the
+possible options and their supported values are described below. In addition,
+the <code class="docutils literal notranslate"><span class="pre">--autotune-config</span></code> command line option can be used to specify a file
+containing further autotune options, using the same syntax. When both are used,
+the command line option takes precedence. This makes it easy to run autotune
+with existing <code class="docutils literal notranslate"><span class="pre">.sby</span></code> files without having to modify them.</p>
+</section>
+<section id="autotune-options">
+<h2>Autotune Options<a class="headerlink" href="#autotune-options" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Autotune Option</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">timeout</span></code></p></td>
+<td><p>Set a different timeout value (in seconds) used only
+for autotune. The value <code class="docutils literal notranslate"><span class="pre">none</span></code> can be used to
+disable the timeout. Default: uses the non-autotune
+timeout option.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">soft_timeout</span></code></p></td>
+<td><p>Initial timeout value (in seconds) used to interrupt
+a candidate engine when other candidates are
+pending. Increased every time a candidate is retried
+to ensure progress. Default: <code class="docutils literal notranslate"><span class="pre">60</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wait</span></code></p></td>
+<td><p>Additional time to wait past the time taken by the
+fastest finished engine candidate so far. Can be an
+absolute time in seconds, a percentage of the
+fastest candidate or a sum of both.
+Default: <code class="docutils literal notranslate"><span class="pre">50%+10</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">parallel</span></code></p></td>
+<td><p>Maximal number of engine candidates to try in
+parallel. When set to <code class="docutils literal notranslate"><span class="pre">auto</span></code>, the number of
+available CPUs is used. Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">presat</span></code></p></td>
+<td><p>Filter candidates by whether they perform a presat
+check. Values <code class="docutils literal notranslate"><span class="pre">on</span></code>, <code class="docutils literal notranslate"><span class="pre">off</span></code>, <code class="docutils literal notranslate"><span class="pre">any</span></code>.
+Default: <code class="docutils literal notranslate"><span class="pre">any</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">incr</span></code></p></td>
+<td><p>Filter candidates by whether they use incremental
+solving (when applicable). Values <code class="docutils literal notranslate"><span class="pre">on</span></code>, <code class="docutils literal notranslate"><span class="pre">off</span></code>,
+<code class="docutils literal notranslate"><span class="pre">any</span></code>, <code class="docutils literal notranslate"><span class="pre">auto</span></code> (see next option).
+Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">incr_threshold</span></code></p></td>
+<td><p>Number of timesteps required to only consider
+incremental solving when <code class="docutils literal notranslate"><span class="pre">incr</span></code> is set to
+<code class="docutils literal notranslate"><span class="pre">auto</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">20</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mem</span></code></p></td>
+<td><p>Filter candidates by whether they have native
+support for memory. Values <code class="docutils literal notranslate"><span class="pre">on</span></code>, <code class="docutils literal notranslate"><span class="pre">any</span></code>, <code class="docutils literal notranslate"><span class="pre">auto</span></code>
+(see next option). Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mem_threshold</span></code></p></td>
+<td><p>Number of memory bits required to only consider
+candidates with native memory support when <code class="docutils literal notranslate"><span class="pre">mem</span></code>
+is set to <code class="docutils literal notranslate"><span class="pre">auto</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">10240</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">forall</span></code></p></td>
+<td><p>Filter candidates by whether they support
+<code class="docutils literal notranslate"><span class="pre">$allconst</span></code>/<code class="docutils literal notranslate"><span class="pre">$allseq</span></code>. Values <code class="docutils literal notranslate"><span class="pre">on</span></code>, <code class="docutils literal notranslate"><span class="pre">any</span></code>,
+<code class="docutils literal notranslate"><span class="pre">auto</span></code> (<code class="docutils literal notranslate"><span class="pre">on</span></code> when <code class="docutils literal notranslate"><span class="pre">$allconst</span></code>/<code class="docutils literal notranslate"><span class="pre">allseq</span></code> are
+found in the design). Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="verilog.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Formal extensions to Verilog</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="reference.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Reference for .sby file format</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023 YosysHQ GmbH
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+          YosysHQ
+          </span>
+        </div>
+        <div class="toc-tree-container yosyshq-links" style="padding-bottom: 0">
+          <div class="toc-tree">
+            <ul>
+              <li></li>
+              <li><a class="reference external" href="https://yosyshq.readthedocs.io">Docs</a></li>
+              <li><a class="reference external" href="https://blog.yosyshq.com">Blog</a></li>
+              <li><a class="reference external" href="https://www.yosyshq.com">Website</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Autotune: Automatic Engine Selection</a><ul>
+<li><a class="reference internal" href="#using-autotune">Using Autotune</a><ul>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#autotune-log-output">Autotune Log Output</a></li>
+<li><a class="reference internal" href="#configuring-autotune">Configuring Autotune</a></li>
+<li><a class="reference internal" href="#autotune-options">Autotune Options</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+        
+      </div>
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo-ys.js?v=8d9c4053"></script>
+    </body>
+</html>

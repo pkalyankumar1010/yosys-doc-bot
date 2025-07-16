@@ -1,0 +1,1471 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Contributing to Yosys" href="contributing.html" /><link rel="prev" title="Compiling with Verific library" href="build_verific.html" />
+
+    <link rel="shortcut icon" href="../../_static/yshq_favicon.png"/><!-- Generated with Sphinx 8.2.3 and Furo 2025.04.22.dev1 -->
+        <title>Writing a new backend using FunctionalIR - YosysHQ Yosys 0.55-dev documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-ys.css?v=5cc2bdad" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=63c85a92" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
+  
+      }
+    }
+  }
+</style><script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="yosys" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/yosys_internals/extending_yosys/functional_ir.html" /><meta name="readthedocs-http-status" content="200" /></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">YosysHQ Yosys 0.55-dev documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand"
+   title="External link to https://yosyshq.readthedocs.io"
+   href="https://yosyshq.readthedocs.io"><div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../_static/yshq_logo.png" alt="Main Brand Logo"/>
+  </div>
+  
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Yosys (index)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">What is Yosys</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../getting_started/index.html">Getting started with Yosys</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting started with Yosys</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/example_synth.html">Synthesis starter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/scripting_intro.html">Scripting in Yosys</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../using_yosys/index.html">Using Yosys (advanced)</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Using Yosys (advanced)</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../using_yosys/synthesis/index.html">Synthesis in detail</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Synthesis in detail</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/synth.html">Synth commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/proc.html">Converting process blocks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/fsm.html">FSM handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/memory.html">Memory handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/opt.html">Optimization passes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/techmap_synth.html">Technology mapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/extract.html">The extract pass</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/abc.html">The ABC toolbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/cell_libs.html">Mapping to cell libraries</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../using_yosys/more_scripting/index.html">More scripting</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of More scripting</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/more_scripting/load_design.html">Loading a design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/more_scripting/selections.html">Selections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/more_scripting/interactive_investigation.html">Interactive design investigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/more_scripting/model_checking.html">Symbolic model checking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/more_scripting/data_flow_tracking.html">Dataflow tracking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">Yosys internals</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Yosys internals</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../flow/index.html">Internal flow</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Internal flow</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../flow/overview.html">Flow overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flow/control_and_data.html">Control and data flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flow/verilog_frontend.html">The Verilog and AST frontends</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../formats/index.html">Internal formats</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Internal formats</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../formats/rtlil_rep.html">The RTL Intermediate Language (RTLIL)</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Working with the Yosys codebase</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Working with the Yosys codebase</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="extensions.html">Writing extensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="build_verific.html">Compiling with Verific library</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Writing a new backend using FunctionalIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html">Contributing to Yosys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test_suites.html">Testing Yosys</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../techmap.html">Techmap by example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../verilog.html">Notes on Verilog support in Yosys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hashing.html">Hashing and associative data structures in Yosys</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../appendix/primer.html">A primer on digital circuit synthesis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../appendix/rtlil_text.html">RTLIL text representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../appendix/auxlibs.html">Auxiliary libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../appendix/auxprogs.html">Auxiliary programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bib.html">Literature references</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cell_index.html">Internal cell library</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of Internal cell library</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../cell/index_word.html">Word-level cells</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of Word-level cells</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_unary.html">Unary operators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_binary.html">Binary operators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_mux.html">Multiplexers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_reg.html">Registers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_mem.html">Memories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_fsm.html">Finite state machines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_arith.html">Coarse arithmetics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_logic.html">Arbitrary logic functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_spec.html">Specify rules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_formal.html">Formal verification cells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_debug.html">Debugging cells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_wire.html">Wire cells</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../cell/index_gate.html">Gate-level cells</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of Gate-level cells</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/gate_comb_simple.html">Combinatorial cells (simple)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/gate_comb_combined.html">Combinatorial cells (combined)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/gate_reg_ff.html">Flip-flop cells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/gate_reg_latch.html">Latch cells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/gate_other.html">Other gate-level cells</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../cell/properties.html">Cell properties</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cmd_ref.html">Command line reference</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of Command line reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../appendix/env_vars.html">Yosys environment variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/abc.html">abc - use ABC for technology mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/abc9.html">abc9 - use ABC9 for technology mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/abc9_exe.html">abc9_exe - use ABC9 for technology mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/abc9_ops.html">abc9_ops - helper functions for ABC9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/abc_new.html">abc_new - (experimental) use ABC for SC technology mapping (new)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/abstract.html">abstract - replace signals with abstract values during formal verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/add.html">add - add objects to the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/aigmap.html">aigmap - map logic to and-inverter-graph circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/alumacc.html">alumacc - extract ALU and MACC cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/anlogic_eqn.html">anlogic_eqn - Anlogic: Calculate equations for luts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/anlogic_fixcarry.html">anlogic_fixcarry - Anlogic: fix carry chain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/assertpmux.html">assertpmux - adds asserts for parallel muxes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/async2sync.html">async2sync - convert async FF inputs to sync circuits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/attrmap.html">attrmap - renaming attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/attrmvcp.html">attrmvcp - move or copy attributes from wires to driving cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/autoname.html">autoname - automatically assign names to objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/blackbox.html">blackbox - convert modules into blackbox modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/bmuxmap.html">bmuxmap - transform $bmux cells to trees of $mux cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/booth.html">booth - map $mul cells to Booth multipliers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/box_derive.html">box_derive - derive box modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/bufnorm.html">bufnorm - (experimental) convert design into buffered-normalized form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/bugpoint.html">bugpoint - minimize testcases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/bwmuxmap.html">bwmuxmap - replace $bwmux cells with equivalent logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/cd.html">cd - a shortcut for ‘select -module &lt;name&gt;’</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/cellmatch.html">cellmatch - match cells to their targets in cell library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/check.html">check - check for obvious problems in the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/chformal.html">chformal - change formal constraints of the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/chparam.html">chparam - re-evaluate modules with new parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/chtype.html">chtype - change type of cells in the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/clean.html">clean - remove unused cells and wires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/clean_zerowidth.html">clean_zerowidth - clean zero-width connections from the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/clk2fflogic.html">clk2fflogic - convert clocked FFs to generic $ff cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/clkbufmap.html">clkbufmap - insert clock buffers on clock networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/clockgate.html">clockgate - extract clock gating out of flip flops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/connect.html">connect - create or remove connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/connect_rpc.html">connect_rpc - connect to RPC frontend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/connwrappers.html">connwrappers - match width of input-output port pairs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/constmap.html">constmap - technology mapping of coarse constant value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/coolrunner2_fixup.html">coolrunner2_fixup - insert necessary buffer cells for CoolRunner-II architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/coolrunner2_sop.html">coolrunner2_sop - break $sop cells into ANDTERM/ORTERM cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/copy.html">copy - copy modules in the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/cover.html">cover - print code coverage counters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/cutpoint.html">cutpoint - adds formal cut points to the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/debug.html">debug - run command with debug log messages enabled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/delete.html">delete - delete objects in the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/deminout.html">deminout - demote inout ports to input or output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/demuxmap.html">demuxmap - transform $demux cells to $eq + $mux cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/design.html">design - save, restore and reset current design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/dffinit.html">dffinit - set INIT param on FF cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/dfflegalize.html">dfflegalize - convert FFs to types supported by the target</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/dfflibmap.html">dfflibmap - technology mapping of flip-flops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/dffunmap.html">dffunmap - unmap clock enable and synchronous reset from FFs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/dft_tag.html">dft_tag - create tagging logic for data flow tracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/dump.html">dump - print parts of the design in RTLIL format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/echo.html">echo - turning echoing back of commands on and off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/edgetypes.html">edgetypes - list all types of edges in selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/efinix_fixcarry.html">efinix_fixcarry - Efinix: fix carry chain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_add.html">equiv_add - add a $equiv cell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_induct.html">equiv_induct - proving $equiv cells using temporal induction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_make.html">equiv_make - prepare a circuit for equivalence checking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_mark.html">equiv_mark - mark equivalence checking regions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_miter.html">equiv_miter - extract miter from equiv circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_opt.html">equiv_opt - prove equivalence for optimized circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_purge.html">equiv_purge - purge equivalence checking module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_remove.html">equiv_remove - remove $equiv cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_simple.html">equiv_simple - try proving simple $equiv instances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_status.html">equiv_status - print status of equivalent checking module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_struct.html">equiv_struct - structural equivalence checking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/eval.html">eval - evaluate the circuit given an input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/example_dt.html">example_dt - drivertools example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/exec.html">exec - execute commands in the operating system shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/expose.html">expose - convert internal signals to module ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/extract.html">extract - find subcircuits and replace them with cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/extract_counter.html">extract_counter - Extract GreenPak4 counter cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/extract_fa.html">extract_fa - find and extract full/half adders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/extract_reduce.html">extract_reduce - converts gate chains into $reduce_* cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/extractinv.html">extractinv - extract explicit inverter cells for invertible cell pins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/flatten.html">flatten - flatten design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/flowmap.html">flowmap - pack LUTs with FlowMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fmcombine.html">fmcombine - combine two instances of a cell into one</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fminit.html">fminit - set init values/sequences for formal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/formalff.html">formalff - prepare FFs for formal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/freduce.html">freduce - perform functional reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm.html">fsm - extract and optimize finite state machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_detect.html">fsm_detect - finding FSMs in design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_expand.html">fsm_expand - expand FSM cells by merging logic into it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_export.html">fsm_export - exporting FSMs to KISS2 files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_extract.html">fsm_extract - extracting FSMs in design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_info.html">fsm_info - print information on finite state machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_map.html">fsm_map - mapping FSMs to basic logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_opt.html">fsm_opt - optimize finite state machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_recode.html">fsm_recode - recoding finite state machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fst2tb.html">fst2tb - generate testbench out of fst file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/future.html">future - resolve future sampled value functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/gatemate_foldinv.html">gatemate_foldinv - fold inverters into Gatemate LUT trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/glift.html">glift - create GLIFT models and optimization problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/greenpak4_dffinv.html">greenpak4_dffinv - merge greenpak4 inverters and DFF/latches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/help.html">help - display help messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/hierarchy.html">hierarchy - check, expand and clean up design hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/hilomap.html">hilomap - technology mapping of constant hi- and/or lo-drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/history.html">history - show last interactive commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ice40_braminit.html">ice40_braminit - iCE40: perform SB_RAM40_4K initialization from file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ice40_dsp.html">ice40_dsp - iCE40: map multipliers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ice40_opt.html">ice40_opt - iCE40: perform simple optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ice40_wrapcarry.html">ice40_wrapcarry - iCE40: wrap carries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/insbuf.html">insbuf - insert buffer cells for connected wires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/internal_stats.html">internal_stats - print internal statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/iopadmap.html">iopadmap - technology mapping of i/o pads (or buffers)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/jny.html">jny - write design and metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/json.html">json - write design in JSON format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/keep_hierarchy.html">keep_hierarchy - selectively add the keep_hierarchy attribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/lattice_gsr.html">lattice_gsr - Lattice: handle GSR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/libcache.html">libcache - control caching of technology library data parsed from liberty files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/license.html">license - print license terms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/log.html">log - print text and log files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/logger.html">logger - set logger properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ls.html">ls - list modules or objects in modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ltp.html">ltp - print longest topological path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/lut2mux.html">lut2mux - convert $lut to $_MUX_</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/maccmap.html">maccmap - mapping macc cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory.html">memory - translate memories to basic cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_bmux2rom.html">memory_bmux2rom - convert muxes to ROMs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_bram.html">memory_bram - map memories to block rams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_collect.html">memory_collect - creating multi-port memory cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_dff.html">memory_dff - merge input/output DFFs into memory read ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_libmap.html">memory_libmap - map memories to cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_map.html">memory_map - translate multiport memories to basic cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_memx.html">memory_memx - emulate vlog sim behavior for mem ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_narrow.html">memory_narrow - split up wide memory ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_nordff.html">memory_nordff - extract read port FFs from memories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_share.html">memory_share - consolidate memory ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_unpack.html">memory_unpack - unpack multi-port memory cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/microchip_dffopt.html">microchip_dffopt - MICROCHIP: optimize FF control signal usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/microchip_dsp.html">microchip_dsp - MICROCHIP: pack resources into DSPs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/miter.html">miter - automatically create a miter circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/mutate.html">mutate - generate or apply design mutations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/muxcover.html">muxcover - cover trees of MUX cells with wider MUXes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/muxpack.html">muxpack - $mux/$pmux cascades to $pmux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/nlutmap.html">nlutmap - map to LUTs of different sizes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/nx_carry.html">nx_carry - NanoXplore: create carry cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/onehot.html">onehot - optimize $eq cells for onehot signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt.html">opt - perform simple optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_clean.html">opt_clean - remove unused cells and wires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_demorgan.html">opt_demorgan - Optimize reductions with DeMorgan equivalents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_dff.html">opt_dff - perform DFF optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_expr.html">opt_expr - perform const folding and simple expression rewriting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_ffinv.html">opt_ffinv - push inverters through FFs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_lut.html">opt_lut - optimize LUT cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_lut_ins.html">opt_lut_ins - discard unused LUT inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_mem.html">opt_mem - optimize memories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_mem_feedback.html">opt_mem_feedback - convert memory read-to-write port feedback paths to write enables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_mem_priority.html">opt_mem_priority - remove priority relations between write ports that can never collide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_mem_widen.html">opt_mem_widen - optimize memories where all ports are wide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_merge.html">opt_merge - consolidate identical cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_muxtree.html">opt_muxtree - eliminate dead trees in multiplexer trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_reduce.html">opt_reduce - simplify large MUXes and AND/OR gates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_share.html">opt_share - merge mutually exclusive cells of the same type that share an input signal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/paramap.html">paramap - renaming cell parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/peepopt.html">peepopt - collection of peephole optimizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/plugin.html">plugin - load and list loaded plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/pmux2shiftx.html">pmux2shiftx - transform $pmux cells to $shiftx cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/pmuxtree.html">pmuxtree - transform $pmux cells to trees of $mux cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/portarcs.html">portarcs - derive port arcs for propagation delay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/portlist.html">portlist - list (top-level) ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/prep.html">prep - generic synthesis script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/printattrs.html">printattrs - print attributes of selected objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc.html">proc - translate processes to netlists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_arst.html">proc_arst - detect asynchronous resets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_clean.html">proc_clean - remove empty parts of processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_dff.html">proc_dff - extract flip-flops from processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_dlatch.html">proc_dlatch - extract latches from processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_init.html">proc_init - convert initial block to init attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_memwr.html">proc_memwr - extract memory writes from processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_mux.html">proc_mux - convert decision trees to multiplexers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_prune.html">proc_prune - remove redundant assignments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_rmdead.html">proc_rmdead - eliminate dead trees in decision trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_rom.html">proc_rom - convert switches to ROMs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/qbfsat.html">qbfsat - solve a 2QBF-SAT problem in the circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ql_bram_merge.html">ql_bram_merge - Infers QuickLogic k6n10f BRAM pairs that can operate independently</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ql_bram_types.html">ql_bram_types - Change TDP36K type to subtypes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ql_dsp_io_regs.html">ql_dsp_io_regs - change types of QL_DSP2 depending on configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ql_dsp_macc.html">ql_dsp_macc - infer QuickLogic multiplier-accumulator DSP cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ql_dsp_simd.html">ql_dsp_simd - merge QuickLogic K6N10f DSP pairs to operate in SIMD mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ql_ioff.html">ql_ioff - Infer I/O FFs for qlf_k6n10f architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read.html">read - load HDL designs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_aiger.html">read_aiger - read AIGER file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_blif.html">read_blif - read BLIF file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_json.html">read_json - read JSON file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_liberty.html">read_liberty - read cells from liberty file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_rtlil.html">read_rtlil - read modules from RTLIL file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_verilog.html">read_verilog - read modules from Verilog file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_verilog_file_list.html">read_verilog_file_list - parse a Verilog file list</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_xaiger2.html">read_xaiger2 - (experimental) read XAIGER file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/recover_names.html">recover_names - Execute a lossy mapping command and recover original netnames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/rename.html">rename - rename object in the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/rmports.html">rmports - remove module ports with no connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/sat.html">sat - solve a SAT problem in the circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/scatter.html">scatter - add additional intermediate nets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/scc.html">scc - detect strongly connected components (logic loops)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/scratchpad.html">scratchpad - get/set values in the scratchpad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/script.html">script - execute commands from file or wire</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/select.html">select - modify and view the list of selected objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/setattr.html">setattr - set/unset attributes on objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/setenv.html">setenv - set an environment variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/setparam.html">setparam - set/unset parameters on objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/setundef.html">setundef - replace undef values with defined constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/share.html">share - perform sat-based resource sharing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/shell.html">shell - enter interactive command mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/show.html">show - generate schematics using graphviz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/shregmap.html">shregmap - map shift registers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/sim.html">sim - simulate the circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/simplemap.html">simplemap - mapping simple coarse-grain cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/splice.html">splice - create explicit splicing cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/splitcells.html">splitcells - split up multi-bit cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/splitnets.html">splitnets - split up multi-bit nets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/sta.html">sta - perform static timing analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/stat.html">stat - print some statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/submod.html">submod - moving part of a module to a new submodule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/supercover.html">supercover - add hi/lo cover cells for each wire bit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth.html">synth - generic synthesis script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_achronix.html">synth_achronix - synthesis for Achronix Speedster22i FPGAs.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_anlogic.html">synth_anlogic - synthesis for Anlogic FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_coolrunner2.html">synth_coolrunner2 - synthesis for Xilinx Coolrunner-II CPLDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_easic.html">synth_easic - synthesis for eASIC platform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_ecp5.html">synth_ecp5 - synthesis for ECP5 FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_efinix.html">synth_efinix - synthesis for Efinix FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_fabulous.html">synth_fabulous - FABulous synthesis script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_gatemate.html">synth_gatemate - synthesis for Cologne Chip GateMate FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_gowin.html">synth_gowin - synthesis for Gowin FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_greenpak4.html">synth_greenpak4 - synthesis for GreenPAK4 FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_ice40.html">synth_ice40 - synthesis for iCE40 FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_intel.html">synth_intel - synthesis for Intel (Altera) FPGAs.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_intel_alm.html">synth_intel_alm - synthesis for ALM-based Intel (Altera) FPGAs.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_lattice.html">synth_lattice - synthesis for Lattice FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_microchip.html">synth_microchip - synthesis for Microchip FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_nanoxplore.html">synth_nanoxplore - synthesis for NanoXplore FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_nexus.html">synth_nexus - synthesis for Lattice Nexus FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_quicklogic.html">synth_quicklogic - Synthesis for QuickLogic FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_sf2.html">synth_sf2 - synthesis for SmartFusion2 and IGLOO2 FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_xilinx.html">synth_xilinx - synthesis for Xilinx FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synthprop.html">synthprop - synthesize SVA properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/tcl.html">tcl - execute a TCL script file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/techmap.html">techmap - generic technology mapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/tee.html">tee - redirect command output to file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/test_abcloop.html">test_abcloop - automatically test handling of loops in abc command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/test_autotb.html">test_autotb - generate simple test benches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/test_cell.html">test_cell - automatically test the implementation of a cell type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/test_generic.html">test_generic - test the generic compute graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/test_pmgen.html">test_pmgen - test pass for pmgen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/test_select.html">test_select - call internal selection methods on design for testing purposes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/timeest.html">timeest - estimate timing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/torder.html">torder - print cells in topological order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/trace.html">trace - redirect command output to file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/tribuf.html">tribuf - infer tri-state buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/uniquify.html">uniquify - create unique copies of modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/verific.html">verific - load Verilog and VHDL designs using Verific</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/verilog_defaults.html">verilog_defaults - set default options for read_verilog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/verilog_defines.html">verilog_defines - define and undefine verilog defines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/viz.html">viz - visualize data flow graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/wbflip.html">wbflip - flip the whitebox attribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/wrapcell.html">wrapcell - wrap individual cells into new modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/wreduce.html">wreduce - reduce the word size of operations if possible</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_aiger.html">write_aiger - write design to AIGER file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_aiger2.html">write_aiger2 - (experimental) write design to AIGER file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_blif.html">write_blif - write design to BLIF file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_btor.html">write_btor - write design to BTOR file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_cxxrtl.html">write_cxxrtl - convert design to C++ RTL simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_edif.html">write_edif - write design to EDIF netlist file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_file.html">write_file - write a text to a file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_firrtl.html">write_firrtl - write design to a FIRRTL file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_functional_cxx.html">write_functional_cxx - convert design to C++ using the functional backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_functional_rosette.html">write_functional_rosette - Generate Rosette compatible Racket from Functional IR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_functional_smt2.html">write_functional_smt2 - Generate SMT-LIB from Functional IR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_intersynth.html">write_intersynth - write design to InterSynth netlist file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_jny.html">write_jny - generate design metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_json.html">write_json - write design to a JSON file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_rtlil.html">write_rtlil - write design to RTLIL file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_simplec.html">write_simplec - convert design to simple C code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_smt2.html">write_smt2 - write design to SMT-LIBv2 file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_smv.html">write_smv - write design to SMV file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_spice.html">write_spice - write design to SPICE netlist file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_table.html">write_table - write design as connectivity table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_verilog.html">write_verilog - write design to Verilog file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_xaiger.html">write_xaiger - write design to XAIGER file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_xaiger2.html">write_xaiger2 - (experimental) write module to XAIGER file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/xilinx_dffopt.html">xilinx_dffopt - Xilinx: optimize FF control signal usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/xilinx_dsp.html">xilinx_dsp - Xilinx: pack resources into DSPs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/xilinx_srl.html">xilinx_srl - Xilinx shift register extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/xprop.html">xprop - formal x propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/zinit.html">zinit - add inverters so all FF are zero-initialized</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+<div
+  id="furo-sidebar-ad-placement"
+  class="flat"
+  data-ea-publisher="readthedocs"
+  data-ea-type="readthedocs-sidebar"
+  data-ea-manual="true"
+></div>
+</div>
+
+
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/YosysHQ/yosys/blob/main/docs/source/yosys_internals/extending_yosys/functional_ir.rst?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/YosysHQ/yosys/edit/main/docs/source/yosys_internals/extending_yosys/functional_ir.rst" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="writing-a-new-backend-using-functionalir">
+<h1>Writing a new backend using FunctionalIR<a class="headerlink" href="#writing-a-new-backend-using-functionalir" title="Link to this heading">¶</a></h1>
+<section id="what-is-functionalir">
+<h2>What is FunctionalIR<a class="headerlink" href="#what-is-functionalir" title="Link to this heading">¶</a></h2>
+<p>To simplify the writing of backends for functional languages or similar targets,
+Yosys provides an alternative intermediate representation called FunctionalIR
+which maps more directly on those targets.</p>
+<p>FunctionalIR represents the design as a function <code class="docutils literal notranslate"><span class="pre">(inputs,</span> <span class="pre">current_state)</span> <span class="pre">-&gt;</span>
+<span class="pre">(outputs,</span> <span class="pre">next_state)</span></code>. This function is broken down into a series of
+assignments to variables. Each assignment is a simple operation, such as an
+addition. Complex operations are broken up into multiple steps. For example, an
+RTLIL addition will be translated into a sign/zero extension of the inputs,
+followed by an addition.</p>
+<p>Like SSA form, each variable is assigned to exactly once. We can thus treat
+variables and assignments as equivalent and, since this is a graph-like
+representation, those variables are also called “nodes”. Unlike RTLIL’s cells
+and wires representation, this representation is strictly ordered (topologically
+sorted) with definitions preceding their use.</p>
+<p>Every node has a “sort” (the FunctionalIR term for what might otherwise be
+called a “type”). The sorts available are</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bit[n]</span></code> for an <code class="docutils literal notranslate"><span class="pre">n</span></code>-bit bitvector, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">memory[n,m]</span></code> for an immutable array of <code class="docutils literal notranslate"><span class="pre">2**n</span></code> values of sort <code class="docutils literal notranslate"><span class="pre">bit[m]</span></code>.</p></li>
+</ul>
+<p>In terms of actual code, Yosys provides a class <code class="docutils literal notranslate"><span class="pre">Functional::IR</span></code> that
+represents a design in FunctionalIR. <code class="docutils literal notranslate"><span class="pre">Functional::IR::from_module</span></code> generates
+an instance from an RTLIL module. The entire design is stored as a whole in an
+internal data structure. To access the design, the <code class="docutils literal notranslate"><span class="pre">Functional::Node</span></code> class
+provides a reference to a particular node in the design. The <code class="docutils literal notranslate"><span class="pre">Functional::IR</span></code>
+class supports the syntax <code class="docutils literal notranslate"><span class="pre">for(auto</span> <span class="pre">node</span> <span class="pre">:</span> <span class="pre">ir)</span></code> to iterate over every node.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Functional::IR</span></code> also keeps track of inputs, outputs and states. By a “state”
+we mean a pair of a “current state” input and a “next state” output. One such
+pair is created for every register and for every memory. Every input, output and
+state has a name (equal to their name in RTLIL), a sort and a kind. The kind
+field usually remains as the default value <code class="docutils literal notranslate"><span class="pre">$input</span></code>, <code class="docutils literal notranslate"><span class="pre">$output</span></code> or
+<code class="docutils literal notranslate"><span class="pre">$state</span></code>, however some RTLIL cells such as <code class="docutils literal notranslate"><span class="pre">$assert</span></code> or <code class="docutils literal notranslate"><span class="pre">$anyseq</span></code> generate
+auxiliary inputs/outputs/states that are given a different kind to distinguish
+them from ordinary RTLIL inputs/outputs/states.</p>
+<ul class="simple">
+<li><p>To access an individual input/output/state, use <code class="docutils literal notranslate"><span class="pre">ir.input(name,</span> <span class="pre">kind)</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ir.output(name,</span> <span class="pre">kind)</span></code> or <code class="docutils literal notranslate"><span class="pre">ir.state(name,</span> <span class="pre">kind)</span></code>. <code class="docutils literal notranslate"><span class="pre">kind</span></code> defaults to
+the default kind.</p></li>
+<li><p>To iterate over all inputs/outputs/states of a certain kind, methods
+<code class="docutils literal notranslate"><span class="pre">ir.inputs</span></code>, <code class="docutils literal notranslate"><span class="pre">ir.outputs</span></code>, <code class="docutils literal notranslate"><span class="pre">ir.states</span></code> are provided. Their argument
+defaults to the default kinds mentioned.</p></li>
+<li><p>To iterate over inputs/outputs/states of any kind, use <code class="docutils literal notranslate"><span class="pre">ir.all_inputs</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ir.all_outputs</span></code> and <code class="docutils literal notranslate"><span class="pre">ir.all_states</span></code>.</p></li>
+<li><p>Outputs have a node that indicate the value of the output, this can be
+retrieved via <code class="docutils literal notranslate"><span class="pre">output.value()</span></code>.</p></li>
+<li><p>States have a node that indicate the next value of the state, this can be
+retrieved via <code class="docutils literal notranslate"><span class="pre">state.next_value()</span></code>. They also have an initial value that is
+accessed as either <code class="docutils literal notranslate"><span class="pre">state.initial_value_signal()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">state.initial_value_memory()</span></code>, depending on their sort.</p></li>
+</ul>
+<p>Each node has a “function”, which defines its operation (for a complete list of
+functions and a specification of their operation, see <code class="docutils literal notranslate"><span class="pre">functional.h</span></code>).
+Functions are represented as an enum <code class="docutils literal notranslate"><span class="pre">Functional::Fn</span></code> and the function field
+can be accessed as <code class="docutils literal notranslate"><span class="pre">node.fn()</span></code>. Since the most common operation is a switch
+over the function that also accesses the arguments, the <code class="docutils literal notranslate"><span class="pre">Node</span></code> class provides
+a method <code class="docutils literal notranslate"><span class="pre">visit</span></code> that implements the visitor pattern. For example, for an
+addition node <code class="docutils literal notranslate"><span class="pre">node</span></code> with arguments <code class="docutils literal notranslate"><span class="pre">n1</span></code> and <code class="docutils literal notranslate"><span class="pre">n2</span></code>, <code class="docutils literal notranslate"><span class="pre">node.visit(visitor)</span></code>
+would call <code class="docutils literal notranslate"><span class="pre">visitor.add(node,</span> <span class="pre">n1,</span> <span class="pre">n2)</span></code>. Thus typically one would implement a
+class with a method for every function. Visitors should inherit from either
+<code class="docutils literal notranslate"><span class="pre">Functional::AbstractVisitor&lt;ReturnType&gt;</span></code> or
+<code class="docutils literal notranslate"><span class="pre">Functional::DefaultVisitor&lt;ReturnType&gt;</span></code>. The former will produce a compiler
+error if a case is unhandled, the latter will call <code class="docutils literal notranslate"><span class="pre">default_handler(node)</span></code>
+instead. Visitor methods should be marked as <code class="docutils literal notranslate"><span class="pre">override</span></code> to provide compiler
+errors if the arguments are wrong.</p>
+<section id="utility-classes">
+<h3>Utility classes<a class="headerlink" href="#utility-classes" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">functional.h</span></code> also provides utility classes that are independent of the main
+FunctionalIR representation but are likely to be useful for backends.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Functional::Writer</span></code> provides a simple formatting class that wraps a
+<code class="docutils literal notranslate"><span class="pre">std::ostream</span></code> and provides the following methods:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">writer</span> <span class="pre">&lt;&lt;</span> <span class="pre">value</span></code> wraps <code class="docutils literal notranslate"><span class="pre">os</span> <span class="pre">&lt;&lt;</span> <span class="pre">value</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">writer.print(fmt,</span> <span class="pre">value0,</span> <span class="pre">value1,</span> <span class="pre">value2,</span> <span class="pre">...)</span></code> replaces <code class="docutils literal notranslate"><span class="pre">{0}</span></code>, <code class="docutils literal notranslate"><span class="pre">{1}</span></code>,
+<code class="docutils literal notranslate"><span class="pre">{2}</span></code>, etc in the string <code class="docutils literal notranslate"><span class="pre">fmt</span></code> with <code class="docutils literal notranslate"><span class="pre">value0</span></code>, <code class="docutils literal notranslate"><span class="pre">value1</span></code>, <code class="docutils literal notranslate"><span class="pre">value2</span></code>,
+resp. Each value is formatted using <code class="docutils literal notranslate"><span class="pre">os</span> <span class="pre">&lt;&lt;</span> <span class="pre">value</span></code>. It is also possible to
+write <code class="docutils literal notranslate"><span class="pre">{}</span></code> to refer to one past the last index, i.e. <code class="docutils literal notranslate"><span class="pre">{1}</span> <span class="pre">{}</span> <span class="pre">{}</span> <span class="pre">{7}</span> <span class="pre">{}</span></code> is
+equivalent to <code class="docutils literal notranslate"><span class="pre">{1}</span> <span class="pre">{2}</span> <span class="pre">{3}</span> <span class="pre">{7}</span> <span class="pre">{8}</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">writer.print_with(fn,</span> <span class="pre">fmt,</span> <span class="pre">value0,</span> <span class="pre">value1,</span> <span class="pre">value2,</span> <span class="pre">...)</span></code> functions much the
+same as <code class="docutils literal notranslate"><span class="pre">print</span></code> but it uses <code class="docutils literal notranslate"><span class="pre">os</span> <span class="pre">&lt;&lt;</span> <span class="pre">fn(value)</span></code> to print each value and
+falls back to <code class="docutils literal notranslate"><span class="pre">os</span> <span class="pre">&lt;&lt;</span> <span class="pre">value</span></code> if <code class="docutils literal notranslate"><span class="pre">fn(value)</span></code> is not legal.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">Functional::Scope</span></code> keeps track of variable names in a target language. It is
+used to translate between different sets of legal characters and to avoid
+accidentally re-defining identifiers. Users should derive a class from <code class="docutils literal notranslate"><span class="pre">Scope</span></code>
+and supply the following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Scope&lt;Id&gt;</span></code> takes a template argument that specifies a type that’s used to
+uniquely distinguish variables. Typically this would be <code class="docutils literal notranslate"><span class="pre">int</span></code> (if variables
+are used for <code class="docutils literal notranslate"><span class="pre">Functional::IR</span></code> nodes) or <code class="docutils literal notranslate"><span class="pre">IdString</span></code>.</p></li>
+<li><p>The derived class should provide a constructor that calls <code class="docutils literal notranslate"><span class="pre">reserve</span></code> for
+every reserved word in the target language.</p></li>
+<li><p>A method <code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">is_character_legal(char</span> <span class="pre">c,</span> <span class="pre">int</span> <span class="pre">index)</span></code> has to be provided
+that returns <code class="docutils literal notranslate"><span class="pre">true</span></code> iff <code class="docutils literal notranslate"><span class="pre">c</span></code> is legal in an identifier at position
+<code class="docutils literal notranslate"><span class="pre">index</span></code>.</p></li>
+</ul>
+<p>Given an instance <code class="docutils literal notranslate"><span class="pre">scope</span></code> of the derived class, the following methods are then
+available:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">scope.reserve(std::string</span> <span class="pre">name)</span></code> marks the given name as being in-use</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scope.unique_name(IdString</span> <span class="pre">suggestion)</span></code> generates a previously unused name
+and attempts to make it similar to <code class="docutils literal notranslate"><span class="pre">suggestion</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scope(Id</span> <span class="pre">id,</span> <span class="pre">IdString</span> <span class="pre">suggestion)</span></code> functions similar to <code class="docutils literal notranslate"><span class="pre">unique_name</span></code>,
+except that multiple calls with the same <code class="docutils literal notranslate"><span class="pre">id</span></code> are guaranteed to retrieve the
+same name (independent of <code class="docutils literal notranslate"><span class="pre">suggestion</span></code>).</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">sexpr.h</span></code> provides classes that represent and pretty-print s-expressions.
+S-expressions can be constructed with <code class="docutils literal notranslate"><span class="pre">SExpr::list</span></code>, for example <code class="docutils literal notranslate"><span class="pre">SExpr</span> <span class="pre">expr</span>
+<span class="pre">=</span> <span class="pre">SExpr::list(&quot;add&quot;,</span> <span class="pre">&quot;x&quot;,</span> <span class="pre">SExpr::list(&quot;mul&quot;,</span> <span class="pre">&quot;y&quot;,</span> <span class="pre">&quot;z&quot;))</span></code> represents <code class="docutils literal notranslate"><span class="pre">(add</span> <span class="pre">x</span>
+<span class="pre">(mul</span> <span class="pre">y</span> <span class="pre">z))</span></code> (by adding <code class="docutils literal notranslate"><span class="pre">using</span> <span class="pre">SExprUtil::list</span></code> to the top of the file,
+<code class="docutils literal notranslate"><span class="pre">list</span></code> can be used as shorthand for <code class="docutils literal notranslate"><span class="pre">SExpr::list</span></code>). For prettyprinting,
+<code class="docutils literal notranslate"><span class="pre">SExprWriter</span></code> wraps an <code class="docutils literal notranslate"><span class="pre">std::ostream</span></code> and provides the following methods:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">writer</span> <span class="pre">&lt;&lt;</span> <span class="pre">sexpr</span></code> writes the provided expression to the output, breaking
+long lines and adding appropriate indentation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">writer.open(sexpr)</span></code> is similar to <code class="docutils literal notranslate"><span class="pre">writer</span> <span class="pre">&lt;&lt;</span> <span class="pre">sexpr</span></code> but will omit the
+last closing parenthesis. Further arguments can then be added separately with
+<code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> or <code class="docutils literal notranslate"><span class="pre">open</span></code>. This allows for printing large s-expressions without
+needing to construct the whole expression in memory first.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">writer.open(sexpr,</span> <span class="pre">false)</span></code> is similar to <code class="docutils literal notranslate"><span class="pre">writer.open(sexpr)</span></code> but further
+arguments will not be indented. This is used to avoid unlimited indentation on
+structures with unlimited nesting.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">writer.close(n</span> <span class="pre">=</span> <span class="pre">1)</span></code> closes the last <code class="docutils literal notranslate"><span class="pre">n</span></code> open s-expressions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">writer.push()</span></code> and <code class="docutils literal notranslate"><span class="pre">writer.pop()</span></code> are used to automatically close
+s-expressions. <code class="docutils literal notranslate"><span class="pre">writer.pop()</span></code> closes all s-expressions opened since the last
+call to <code class="docutils literal notranslate"><span class="pre">writer.push()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">writer.comment(string)</span></code> writes a comment on a separate-line.
+<code class="docutils literal notranslate"><span class="pre">writer.comment(string,</span> <span class="pre">true)</span></code> appends a comment to the last printed
+s-expression.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">writer.flush()</span></code> flushes any buffering and should be called before any
+direct access to the underlying <code class="docutils literal notranslate"><span class="pre">std::ostream</span></code>. It does not close unclosed
+parentheses.</p></li>
+<li><p>The destructor calls <code class="docutils literal notranslate"><span class="pre">flush</span></code> but also closes all unclosed parentheses.</p></li>
+</ul>
+</section>
+</section>
+<section id="example-a-minimal-functional-backend">
+<span id="minimal-backend"></span><h2>Example: A minimal functional backend<a class="headerlink" href="#example-a-minimal-functional-backend" title="Link to this heading">¶</a></h2>
+<p>At its most basic, there are three steps we need to accomplish for a minimal
+functional backend.  First, we need to convert our design into FunctionalIR.
+This is most easily done by calling the <code class="docutils literal notranslate"><span class="pre">Functional::IR::from_module()</span></code> static
+method with our top-level module, or iterating over and converting each of the
+modules in our design.  Second, we need to handle each of the
+<code class="docutils literal notranslate"><span class="pre">Functional::Node</span></code>s in our design.  Iterating over the <code class="docutils literal notranslate"><span class="pre">Functional::IR</span></code>
+includes reading the module inputs and current state, but not writing the
+results.  So our final step is to handle the outputs and next state.</p>
+<p>In order to add an output command to Yosys, we implement the <code class="docutils literal notranslate"><span class="pre">Yosys::Backend</span></code>
+class and provide an instance of it:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-number">Listing 99 </span><span class="caption-text">Example source code for a minimal functional backend, <code class="docutils literal notranslate"><span class="pre">dummy.cc</span></code></span><a class="headerlink" href="#id1" title="Link to this code">¶</a></div>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kernel/functional.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kernel/yosys.h&quot;</span>
+
+<span class="n">USING_YOSYS_NAMESPACE</span>
+<span class="n">PRIVATE_NAMESPACE_BEGIN</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">FunctionalDummyBackend</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Backend</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="n">FunctionalDummyBackend</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Backend</span><span class="p">(</span><span class="s">&quot;functional_dummy&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;dump generated Functional IR&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">	</span><span class="kt">void</span><span class="w"> </span><span class="n">execute</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">*&amp;</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">args</span><span class="p">,</span><span class="w"> </span><span class="n">RTLIL</span><span class="o">::</span><span class="n">Design</span><span class="w"> </span><span class="o">*</span><span class="n">design</span><span class="p">)</span><span class="w"> </span><span class="k">override</span>
+<span class="w">	</span><span class="p">{</span>
+<span class="w">		</span><span class="c1">// backend pass boiler plate</span>
+<span class="w">		</span><span class="n">log_header</span><span class="p">(</span><span class="n">design</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Executing dummy functional backend.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+<span class="w">		</span><span class="kt">size_t</span><span class="w"> </span><span class="n">argidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">		</span><span class="n">extra_args</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">,</span><span class="w"> </span><span class="n">argidx</span><span class="p">,</span><span class="w"> </span><span class="n">design</span><span class="p">);</span>
+
+<span class="w">		</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">design</span><span class="o">-&gt;</span><span class="n">selected_modules</span><span class="p">())</span>
+<span class="w">		</span><span class="p">{</span>
+<span class="w">			</span><span class="n">log</span><span class="p">(</span><span class="s">&quot;Processing module `%s`.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">module</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+
+<span class="w">			</span><span class="c1">// convert module to FunctionalIR</span>
+<span class="w">			</span><span class="k">auto</span><span class="w"> </span><span class="n">ir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Functional</span><span class="o">::</span><span class="n">IR</span><span class="o">::</span><span class="n">from_module</span><span class="p">(</span><span class="k">module</span><span class="p">);</span>
+<span class="w">			</span><span class="o">*</span><span class="n">f</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;module &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="k">module</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">.</span><span class="n">c_str</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+
+<span class="w">			</span><span class="c1">// write node functions</span>
+<span class="w">			</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ir</span><span class="p">)</span>
+<span class="w">				</span><span class="o">*</span><span class="n">f</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;  assign &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">id2cstr</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">name</span><span class="p">())</span>
+<span class="w">				   </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; = &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">to_string</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">			</span><span class="o">*</span><span class="n">f</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+
+<span class="w">			</span><span class="c1">// write outputs and next state</span>
+<span class="w">			</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ir</span><span class="p">.</span><span class="n">outputs</span><span class="p">())</span>
+<span class="w">				</span><span class="o">*</span><span class="n">f</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">id2cstr</span><span class="p">(</span><span class="n">output</span><span class="o">-&gt;</span><span class="n">kind</span><span class="p">)</span>
+<span class="w">				   </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">id2cstr</span><span class="p">(</span><span class="n">output</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">)</span>
+<span class="w">				   </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; = &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">id2cstr</span><span class="p">(</span><span class="n">output</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">().</span><span class="n">name</span><span class="p">())</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">			</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ir</span><span class="p">.</span><span class="n">states</span><span class="p">())</span>
+<span class="w">				</span><span class="o">*</span><span class="n">f</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">id2cstr</span><span class="p">(</span><span class="n">state</span><span class="o">-&gt;</span><span class="n">kind</span><span class="p">)</span>
+<span class="w">				   </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">id2cstr</span><span class="p">(</span><span class="n">state</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">)</span>
+<span class="w">				   </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; = &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">id2cstr</span><span class="p">(</span><span class="n">state</span><span class="o">-&gt;</span><span class="n">next_value</span><span class="p">().</span><span class="n">name</span><span class="p">())</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="n">FunctionalDummyBackend</span><span class="p">;</span>
+
+<span class="n">PRIVATE_NAMESPACE_END</span>
+</pre></div>
+</div>
+</div>
+<p>Because we are using the <code class="docutils literal notranslate"><span class="pre">Backend</span></code> class, our <code class="docutils literal notranslate"><span class="pre">&quot;functional_dummy&quot;</span></code> is
+registered as the <code class="docutils literal notranslate"><span class="pre">write_functional_dummy</span></code> command.  The <code class="docutils literal notranslate"><span class="pre">execute</span></code> method is
+the part that runs when the user calls the command, handling any options,
+preparing the output file for writing, and iterating over selected modules in
+the design.  Since we don’t have any options here, we set <code class="docutils literal notranslate"><span class="pre">argidx</span> <span class="pre">=</span> <span class="pre">1</span></code> and
+call the <code class="docutils literal notranslate"><span class="pre">extra_args()</span></code> method.  This method will read the command arguments,
+raising an error if there are any unexpected ones.  It will also assign the
+pointer <code class="docutils literal notranslate"><span class="pre">f</span></code> to the output file, or stdout if none is given.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more on adding new commands to Yosys and how they work, refer to
+<a class="reference internal" href="extensions.html"><span class="doc">Writing extensions</span></a>.</p>
+</div>
+<p>For this minimal example all we are doing is printing out each node.  The
+<code class="docutils literal notranslate"><span class="pre">node.name()</span></code> method returns an <code class="docutils literal notranslate"><span class="pre">RTLIL::IdString</span></code>, which we convert for
+printing with <code class="docutils literal notranslate"><span class="pre">id2cstr()</span></code>.  Then, to print the function of the node, we use
+<code class="docutils literal notranslate"><span class="pre">node.to_string()</span></code> which gives us a string of the form <code class="docutils literal notranslate"><span class="pre">function(args)</span></code>. The
+<code class="docutils literal notranslate"><span class="pre">function</span></code> part is the result of <code class="docutils literal notranslate"><span class="pre">Functional::IR::fn_to_string(node.fn())</span></code>;
+while <code class="docutils literal notranslate"><span class="pre">args</span></code> is the zero or more arguments passed to the function, most
+commonly the name of another node.  Behind the scenes, the <code class="docutils literal notranslate"><span class="pre">node.to_string()</span></code>
+method actually wraps <code class="docutils literal notranslate"><span class="pre">node.visit(visitor)</span></code> with a private visitor whose
+return type is <code class="docutils literal notranslate"><span class="pre">std::string</span></code>.</p>
+<p>Finally we iterate over the module’s outputs and states, using
+<code class="docutils literal notranslate"><span class="pre">Functional::IROutput::value()</span></code> and <code class="docutils literal notranslate"><span class="pre">Functional::IRState::next_value()</span></code>
+respectively in order to get the results of the transfer function.</p>
+</section>
+<section id="example-adapting-smt-lib-backend-for-rosette">
+<h2>Example: Adapting SMT-LIB backend for Rosette<a class="headerlink" href="#example-adapting-smt-lib-backend-for-rosette" title="Link to this heading">¶</a></h2>
+<p>This section will introduce the SMT-LIB functional backend
+(<a class="reference internal" href="../../cmd/write_functional_smt2.html#cmd-write_functional_smt2" title="Generate SMT-LIB from Functional IR"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">write_functional_smt2</span></code></a>) and what changes are needed to work with another
+s-expression target, <a class="reference external" href="http://emina.github.io/rosette/">Rosette</a> (<a class="reference internal" href="../../cmd/write_functional_rosette.html#cmd-write_functional_rosette" title="Generate Rosette compatible Racket from Functional IR"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">write_functional_rosette</span></code></a>).</p>
+<section id="overview">
+<h3>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h3>
+<blockquote>
+<div><p>Rosette is a solver-aided programming language that extends <a class="reference external" href="http://racket-lang.org/">Racket</a> with
+language constructs for program synthesis, verification, and more. To verify
+or synthesize code, Rosette compiles it to logical constraints solved with
+off-the-shelf <a class="reference external" href="http://smtlib.cs.uiowa.edu/">SMT</a> solvers.</p>
+<p class="attribution">—<a class="reference external" href="https://emina.github.io/rosette/">https://emina.github.io/rosette/</a></p>
+</div></blockquote>
+<p>Rosette, being backed by SMT solvers and written with s-expressions, uses code
+very similar to the <a class="reference internal" href="../../cmd/write_functional_smt2.html#cmd-write_functional_smt2" title="Generate SMT-LIB from Functional IR"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">write_functional_smt2</span></code></a> output.  As a result, the SMT-LIB
+functional backend can be used as a starting point for implementing a Rosette
+backend.</p>
+<p>Full code listings for the initial SMT-LIB backend and the converted Rosette
+backend are included in the Yosys source repository under
+<code class="file docutils literal notranslate"><span class="pre">backends/functional</span></code> as <code class="docutils literal notranslate"><span class="pre">smtlib.cc</span></code> and <code class="docutils literal notranslate"><span class="pre">smtlib_rosette.cc</span></code>
+respectively.  Note that the Rosette language is an extension of the Racket
+language; this guide tends to refer to Racket when talking about the underlying
+semantics/syntax of the language.</p>
+<p>The major changes from the SMT-LIB backend are as follows:</p>
+<ul class="simple">
+<li><p>all of the <code class="docutils literal notranslate"><span class="pre">Smt</span></code> prefixes in names are replaced with <code class="docutils literal notranslate"><span class="pre">Smtr</span></code> to mean
+<code class="docutils literal notranslate"><span class="pre">smtlib_rosette</span></code>;</p></li>
+<li><p>syntax is adjusted for Racket;</p></li>
+<li><p>data structures for input/output/state are changed from using
+<code class="docutils literal notranslate"><span class="pre">declare-datatype</span></code> with statically typed fields, to using <code class="docutils literal notranslate"><span class="pre">struct</span></code> with no
+static typing;</p></li>
+<li><p>the transfer function also loses its static typing;</p></li>
+<li><p>sign/zero extension in Rosette use the output width instead of the number of
+extra bits, gaining static typing;</p></li>
+<li><p>the single scope is traded for a global scope with local scope for each
+struct;</p></li>
+<li><p>initial state is provided as a constant value instead of a set of assertions;</p></li>
+<li><p>and the <code class="docutils literal notranslate"><span class="pre">-provides</span></code> option is introduced to more easily use generated code
+within Rosette based applications.</p></li>
+</ul>
+</section>
+<section id="scope">
+<h3>Scope<a class="headerlink" href="#scope" title="Link to this heading">¶</a></h3>
+<p>Our first addition to the <a class="reference internal" href="#minimal-backend">minimal backend</a> above is that for both SMT-LIB and
+Rosette backends, we are now targetting real languages which bring with them
+their own sets of constraints with what we can use as identifiers.  This is
+where the <code class="docutils literal notranslate"><span class="pre">Functional::Scope</span></code> class described above comes in; by using this
+class we can safely rename our identifiers in the generated output without
+worrying about collisions or illegal names/characters.</p>
+<p>In the SMT-LIB version, the <code class="docutils literal notranslate"><span class="pre">SmtScope</span></code> class implements <code class="docutils literal notranslate"><span class="pre">Scope&lt;int&gt;</span></code>;
+provides a constructor that iterates over a list of reserved keywords, calling
+<code class="docutils literal notranslate"><span class="pre">reserve</span></code> on each; and defines the <code class="docutils literal notranslate"><span class="pre">is_character_legal</span></code> method to reject any
+characters which are not allowed in SMT-LIB variable names to then be replaced
+with underscores in the output.  To use this scope we create an instance of it,
+and call the <code class="docutils literal notranslate"><span class="pre">Scope::unique_name()</span></code> method to generate a unique and legal name
+for each of our identifiers.</p>
+<p>In the Rosette version we update the list of legal ascii characters in the
+<code class="docutils literal notranslate"><span class="pre">is_character_legal</span></code> method to only those allowed in Racket variable names.</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-number">Listing 100 </span><span class="caption-text">diff of <code class="docutils literal notranslate"><span class="pre">Scope</span></code> class</span><a class="headerlink" href="#id2" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">-struct SmtScope : public Functional::Scope&lt;int&gt; {</span>
+<span class="gd">-	SmtScope() {</span>
+<span class="gi">+struct SmtrScope : public Functional::Scope&lt;int&gt; {</span>
+<span class="gi">+	SmtrScope() {</span>
+<span class="w"> </span>		for(const char **p = reserved_keywords; *p != nullptr; p++)
+<span class="w"> </span>			reserve(*p);
+<span class="w"> </span>	}
+<span class="w"> </span>	bool is_character_legal(char c, int index) override {
+<span class="gd">-		return isascii(c) &amp;&amp; (isalpha(c) || (isdigit(c) &amp;&amp; index &gt; 0) || strchr(&quot;~!@$%^&amp;*_-+=&lt;&gt;.?/&quot;, c));</span>
+<span class="gi">+		return isascii(c) &amp;&amp; (isalpha(c) || (isdigit(c) &amp;&amp; index &gt; 0) || strchr(&quot;@$%^&amp;_+=.&quot;, c));</span>
+<span class="w"> </span>	}
+<span class="w"> </span>};
+</pre></div>
+</div>
+</div>
+<p>For the reserved keywords we trade the SMT-LIB specification for Racket to
+prevent parts of our design from accidentally being treated as Racket code. We
+also no longer need to reserve <code class="docutils literal notranslate"><span class="pre">pair</span></code>, <code class="docutils literal notranslate"><span class="pre">first</span></code>, and <code class="docutils literal notranslate"><span class="pre">second</span></code>.  In
+<a class="reference internal" href="../../cmd/write_functional_smt2.html#cmd-write_functional_smt2" title="Generate SMT-LIB from Functional IR"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">write_functional_smt2</span></code></a> these are used for combining the <code class="docutils literal notranslate"><span class="pre">(inputs,</span>
+<span class="pre">current_state)</span></code> and <code class="docutils literal notranslate"><span class="pre">(outputs,</span> <span class="pre">next_state)</span></code> into a single variable.  Racket
+provides this functionality natively with <code class="docutils literal notranslate"><span class="pre">cons</span></code>, which we will see later.</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-number">Listing 101 </span><span class="caption-text">diff of <code class="docutils literal notranslate"><span class="pre">reserved_keywords</span></code> list</span><a class="headerlink" href="#id3" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>const char *reserved_keywords[] = {
+<span class="gd">-  // reserved keywords from the smtlib spec</span>
+<span class="gd">-  ...</span>
+<span class="gi">+  // reserved keywords from the racket spec</span>
+<span class="gi">+  ...</span>
+
+<span class="w"> </span>  // reserved for our own purposes
+<span class="gd">-  &quot;pair&quot;, &quot;Pair&quot;, &quot;first&quot;, &quot;second&quot;,</span>
+<span class="gd">-  &quot;inputs&quot;, &quot;state&quot;,</span>
+<span class="gi">+  &quot;inputs&quot;, &quot;state&quot;, &quot;name&quot;,</span>
+<span class="w"> </span>  nullptr
+<span class="w"> </span>};
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We skip over the actual list of reserved keywords from both the smtlib
+and racket specifications to save on space in this document.</p>
+</div>
+</section>
+<section id="sort">
+<h3>Sort<a class="headerlink" href="#sort" title="Link to this heading">¶</a></h3>
+<p>Next up in <a class="reference internal" href="../../cmd/write_functional_smt2.html#cmd-write_functional_smt2" title="Generate SMT-LIB from Functional IR"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">write_functional_smt2</span></code></a> we see the <code class="docutils literal notranslate"><span class="pre">Sort</span></code> class.  This is a wrapper
+for the <code class="docutils literal notranslate"><span class="pre">Functional::Sort</span></code> class, providing the additional functionality of
+mapping variable declarations to s-expressions with the <code class="docutils literal notranslate"><span class="pre">to_sexpr()</span></code> method.
+The main change from <code class="docutils literal notranslate"><span class="pre">SmtSort</span></code> to <code class="docutils literal notranslate"><span class="pre">SmtrSort</span></code> is a syntactical one with
+signals represented as <code class="docutils literal notranslate"><span class="pre">bitvector</span></code>s, and memories as <code class="docutils literal notranslate"><span class="pre">list</span></code>s of signals.</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-number">Listing 102 </span><span class="caption-text">diff of <code class="docutils literal notranslate"><span class="pre">Sort</span></code> wrapper</span><a class="headerlink" href="#id4" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>	SExpr to_sexpr() const {
+<span class="w"> </span>		if(sort.is_memory()) {
+<span class="gd">-			return list(&quot;Array&quot;, list(&quot;_&quot;, &quot;BitVec&quot;, sort.addr_width()), list(&quot;_&quot;, &quot;BitVec&quot;, sort.data_width()));</span>
+<span class="gi">+			return list(&quot;list&quot;, list(&quot;bitvector&quot;, sort.addr_width()), list(&quot;bitvector&quot;, sort.data_width()));</span>
+<span class="w"> </span>		} else if(sort.is_signal()) {
+<span class="gd">-			return list(&quot;_&quot;, &quot;BitVec&quot;, sort.width());</span>
+<span class="gi">+			return list(&quot;bitvector&quot;, sort.width());</span>
+<span class="w"> </span>		} else {
+<span class="w"> </span>			log_error(&quot;unknown sort&quot;);
+<span class="w"> </span>		}
+<span class="w"> </span>	}
+</pre></div>
+</div>
+</div>
+</section>
+<section id="struct">
+<h3>Struct<a class="headerlink" href="#struct" title="Link to this heading">¶</a></h3>
+<p>As we saw in the <a class="reference internal" href="#minimal-backend">minimal backend</a> above, the <code class="docutils literal notranslate"><span class="pre">Functional::IR</span></code> class tracks
+the set of inputs, the set of outputs, and the set of “state” variables.  The
+SMT-LIB backend maps each of these sets into its own <code class="docutils literal notranslate"><span class="pre">SmtStruct</span></code>, with each
+variable getting a corresponding field in the struct and a specified <a class="reference internal" href="#sort">Sort</a>.
+<a class="reference internal" href="../../cmd/write_functional_smt2.html#cmd-write_functional_smt2" title="Generate SMT-LIB from Functional IR"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">write_functional_smt2</span></code></a> then defines each of these structs as a new
+<code class="docutils literal notranslate"><span class="pre">datatype</span></code>, with each element being strongly-typed.</p>
+<p>In Rosette, rather than defining new datatypes for our structs, we use the
+native <code class="docutils literal notranslate"><span class="pre">struct</span></code>.  We also only declare each field by name because Racket
+provides less static typing.  For ease of use, we provide the expected type for
+each field as comments.</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-number">Listing 103 </span><span class="caption-text">diff of <code class="docutils literal notranslate"><span class="pre">write_definition</span></code> method</span><a class="headerlink" href="#id5" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>	void write_definition(SExprWriter &amp;w) {
+<span class="gd">-		w.open(list(&quot;declare-datatype&quot;, name));</span>
+<span class="gd">-		w.open(list());</span>
+<span class="gd">-		w.open(list(name));</span>
+<span class="gd">-		for(const auto &amp;field : fields)</span>
+<span class="gd">-			w &lt;&lt; list(field.accessor, field.sort.to_sexpr());</span>
+<span class="gd">-		w.close(3);</span>
+<span class="gi">+		vector&lt;SExpr&gt; field_list;</span>
+<span class="gi">+		for(const auto &amp;field : fields) {</span>
+<span class="gi">+			field_list.emplace_back(field.name);</span>
+<span class="gi">+		}</span>
+<span class="gi">+		w.push();</span>
+<span class="gi">+		w.open(list(&quot;struct&quot;, name, field_list, &quot;#:transparent&quot;));</span>
+<span class="gi">+		if (field_names.size()) {</span>
+<span class="gi">+			for (const auto &amp;field : fields) {</span>
+<span class="gi">+				auto bv_type = field.sort.to_sexpr();</span>
+<span class="gi">+				w.comment(field.name + &quot; &quot; + bv_type.to_string());</span>
+<span class="gi">+			}</span>
+<span class="gi">+		}</span>
+<span class="gi">+		w.pop();</span>
+<span class="w"> </span>	}
+</pre></div>
+</div>
+</div>
+<p>Each field is added to the <code class="docutils literal notranslate"><span class="pre">SmtStruct</span></code> with the <code class="docutils literal notranslate"><span class="pre">insert</span></code> method, which also
+reserves a unique name (or accessor) within the <a class="reference internal" href="#scope">Scope</a>.  These accessors
+combine the struct name and field name and are globally unique, being used in
+the <code class="docutils literal notranslate"><span class="pre">access</span></code> method for reading values from the input/current state.</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-number">Listing 104 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">Struct::access()</span></code> method</span><a class="headerlink" href="#id6" title="Link to this code">¶</a></div>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="w">	</span><span class="n">SExpr</span><span class="w"> </span><span class="nf">access</span><span class="p">(</span><span class="n">SExpr</span><span class="w"> </span><span class="n">record</span><span class="p">,</span><span class="w"> </span><span class="n">IdString</span><span class="w"> </span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">field_names</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="n">list</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">accessor</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">record</span><span class="p">));</span>
+<span class="w">	</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>In Rosette, struct fields are accessed as <code class="docutils literal notranslate"><span class="pre">&lt;struct_name&gt;-&lt;field_name&gt;</span></code> so
+including the struct name in the field name would be redundant.  For
+<a class="reference internal" href="../../cmd/write_functional_rosette.html#cmd-write_functional_rosette" title="Generate Rosette compatible Racket from Functional IR"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">write_functional_rosette</span></code></a> we instead choose to make field names unique only
+within the struct, while accessors are unique across the whole module.  We thus
+modify the class constructor and <code class="docutils literal notranslate"><span class="pre">insert</span></code> method to support this; providing
+one scope that is local to the struct (<code class="docutils literal notranslate"><span class="pre">local_scope</span></code>) and one which is shared
+across the whole module (<code class="docutils literal notranslate"><span class="pre">global_scope</span></code>), leaving the <code class="docutils literal notranslate"><span class="pre">access</span></code> method
+unchanged.</p>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-number">Listing 105 </span><span class="caption-text">diff of struct constructor</span><a class="headerlink" href="#id7" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">-	SmtStruct(std::string name, SmtScope &amp;scope) : scope(scope), name(name) {}</span>
+<span class="gd">-	void insert(IdString field_name, SmtSort sort) {</span>
+<span class="gi">+	SmtrStruct(std::string name, SmtrScope &amp;scope) : global_scope(scope), local_scope(), name(name) {}</span>
+<span class="gi">+	void insert(IdString field_name, SmtrSort sort) {</span>
+<span class="w"> </span>		field_names(field_name);
+<span class="gd">-		auto accessor = scope.unique_name(&quot;\\&quot; + name + &quot;_&quot; + RTLIL::unescape_id(field_name));</span>
+<span class="gd">-		fields.emplace_back(Field{sort, accessor});</span>
+<span class="gi">+		auto base_name = local_scope.unique_name(field_name);</span>
+<span class="gi">+		auto accessor = name + &quot;-&quot; + base_name;</span>
+<span class="gi">+		global_scope.reserve(accessor);</span>
+<span class="gi">+		fields.emplace_back(Field{sort, accessor, base_name});</span>
+<span class="w"> </span>	}
+</pre></div>
+</div>
+</div>
+<p>Finally, <code class="docutils literal notranslate"><span class="pre">SmtStruct</span></code> also provides a <code class="docutils literal notranslate"><span class="pre">write_value</span></code> template method which
+calls a provided function on each element in the struct.  This is used later for
+assigning values to the output/next state pair.  The only change here is to
+remove the check for zero-argument constructors since this is not necessary with
+Rosette <code class="docutils literal notranslate"><span class="pre">struct</span></code>s.</p>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-number">Listing 106 </span><span class="caption-text">diff of <code class="docutils literal notranslate"><span class="pre">write_value</span></code> method</span><a class="headerlink" href="#id8" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>	template&lt;typename Fn&gt; void write_value(SExprWriter &amp;w, Fn fn) {
+<span class="gd">-		if(field_names.empty()) {</span>
+<span class="gd">-			// Zero-argument constructors in SMTLIB must not be called as functions.</span>
+<span class="gd">-			w &lt;&lt; name;</span>
+<span class="gd">-		} else {</span>
+<span class="gd">-			w.open(list(name));</span>
+<span class="gd">-			for(auto field_name : field_names) {</span>
+<span class="gd">-				w &lt;&lt; fn(field_name);</span>
+<span class="gd">-				w.comment(RTLIL::unescape_id(field_name), true);</span>
+<span class="gd">-			}</span>
+<span class="gd">-			w.close();</span>
+<span class="gi">+		w.open(list(name));</span>
+<span class="gi">+		for(auto field_name : field_names) {</span>
+<span class="gi">+			w &lt;&lt; fn(field_name);</span>
+<span class="gi">+			w.comment(RTLIL::unescape_id(field_name), true);</span>
+<span class="w"> </span>		}
+<span class="gi">+		w.close();</span>
+<span class="w"> </span>	}
+</pre></div>
+</div>
+</div>
+</section>
+<section id="printvisitor">
+<h3>PrintVisitor<a class="headerlink" href="#printvisitor" title="Link to this heading">¶</a></h3>
+<p>Remember in the <a class="reference internal" href="#minimal-backend">minimal backend</a> we converted nodes into strings for writing
+using the <code class="docutils literal notranslate"><span class="pre">node.to_string()</span></code> method, which wrapped <code class="docutils literal notranslate"><span class="pre">node.visit()</span></code> with a
+private visitor.  We now want a custom visitor which can convert nodes into
+s-expressions.  This is where the <code class="docutils literal notranslate"><span class="pre">PrintVisitor</span></code> comes in, implementing the
+abstract <code class="docutils literal notranslate"><span class="pre">Functional::AbstractVisitor</span></code> class with a return type of <code class="docutils literal notranslate"><span class="pre">SExpr</span></code>.
+For most functions, the Rosette output is very similar to the corresponding
+SMT-LIB function with minor adjustments for syntax.</p>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-number">Listing 107 </span><span class="caption-text">portion of <code class="docutils literal notranslate"><span class="pre">Functional::AbstractVisitor</span></code> implementation diff showing similarities</span><a class="headerlink" href="#id9" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>	SExpr logical_shift_left(Node, Node a, Node b) override { return list(&quot;bvshl&quot;, n(a), extend(n(b), b.width(), a.width())); }
+<span class="w"> </span>	SExpr logical_shift_right(Node, Node a, Node b) override { return list(&quot;bvlshr&quot;, n(a), extend(n(b), b.width(), a.width())); }
+<span class="w"> </span>	SExpr arithmetic_shift_right(Node, Node a, Node b) override { return list(&quot;bvashr&quot;, n(a), extend(n(b), b.width(), a.width())); }
+<span class="gd">-	SExpr mux(Node, Node a, Node b, Node s) override { return list(&quot;ite&quot;, to_bool(n(s)), n(b), n(a)); }</span>
+<span class="gd">-	SExpr constant(Node, RTLIL::Const const &amp;value) override { return smt_const(value); }</span>
+<span class="gd">-	SExpr memory_read(Node, Node mem, Node addr) override { return list(&quot;select&quot;, n(mem), n(addr)); }</span>
+<span class="gd">-	SExpr memory_write(Node, Node mem, Node addr, Node data) override { return list(&quot;store&quot;, n(mem), n(addr), n(data)); }</span>
+<span class="gi">+	SExpr mux(Node, Node a, Node b, Node s) override { return list(&quot;if&quot;, to_bool(n(s)), n(b), n(a)); }</span>
+<span class="gi">+	SExpr constant(Node, RTLIL::Const const&amp; value) override { return list(&quot;bv&quot;, smt_const(value), value.size()); }</span>
+<span class="gi">+	SExpr memory_read(Node, Node mem, Node addr) override { return list(&quot;list-ref-bv&quot;, n(mem), n(addr)); }</span>
+<span class="gi">+	SExpr memory_write(Node, Node mem, Node addr, Node data) override { return list(&quot;list-set-bv&quot;, n(mem), n(addr), n(data)); }</span>
+</pre></div>
+</div>
+</div>
+<p>However there are some differences in the two formats with regards to how
+booleans are handled, with Rosette providing built-in functions for conversion.</p>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-number">Listing 108 </span><span class="caption-text">portion of <code class="docutils literal notranslate"><span class="pre">Functional::AbstractVisitor</span></code> implementation diff showing differences</span><a class="headerlink" href="#id10" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>	SExpr from_bool(SExpr &amp;&amp;arg) {
+<span class="gd">-		return list(&quot;ite&quot;, std::move(arg), &quot;#b1&quot;, &quot;#b0&quot;);</span>
+<span class="gi">+		return list(&quot;bool-&gt;bitvector&quot;, std::move(arg));</span>
+<span class="w"> </span>	}
+<span class="w"> </span>	SExpr to_bool(SExpr &amp;&amp;arg) {
+<span class="gd">-		return list(&quot;=&quot;, std::move(arg), &quot;#b1&quot;);</span>
+<span class="gi">+		return list(&quot;bitvector-&gt;bool&quot;, std::move(arg));</span>
+<span class="w"> </span>	}
+</pre></div>
+</div>
+</div>
+<p>Of note here is the rare instance of the Rosette implementation <em>gaining</em> static
+typing rather than losing it.  Where SMT_LIB calls zero/sign extension with the
+number of extra bits needed (given by <code class="docutils literal notranslate"><span class="pre">out_width</span> <span class="pre">-</span> <span class="pre">a.width()</span></code>), Rosette
+instead specifies the type of the output (given by <code class="docutils literal notranslate"><span class="pre">list(&quot;bitvector&quot;,</span>
+<span class="pre">out_width)</span></code>).</p>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-number">Listing 109 </span><span class="caption-text">zero/sign extension implementation diff</span><a class="headerlink" href="#id11" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">-	SExpr zero_extend(Node, Node a, int out_width) override { return list(list(&quot;_&quot;, &quot;zero_extend&quot;, out_width - a.width()), n(a)); }</span>
+<span class="gd">-	SExpr sign_extend(Node, Node a, int out_width) override { return list(list(&quot;_&quot;, &quot;sign_extend&quot;, out_width - a.width()), n(a)); }</span>
+<span class="gi">+	SExpr zero_extend(Node, Node a, int out_width) override { return list(&quot;zero-extend&quot;, n(a), list(&quot;bitvector&quot;, out_width)); }</span>
+<span class="gi">+	SExpr sign_extend(Node, Node a, int out_width) override { return list(&quot;sign-extend&quot;, n(a), list(&quot;bitvector&quot;, out_width)); }</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be sure to check the source code for the full list of differences here.</p>
+</div>
+</section>
+<section id="module">
+<h3>Module<a class="headerlink" href="#module" title="Link to this heading">¶</a></h3>
+<p>With most of the supporting classes out of the way, we now reach our three main
+steps from the <a class="reference internal" href="#minimal-backend">minimal backend</a>.  These are all handled by the <code class="docutils literal notranslate"><span class="pre">SmtModule</span></code>
+class, with the mapping from RTLIL module to FunctionalIR happening in the
+constructor.  Each of the three <code class="docutils literal notranslate"><span class="pre">SmtStruct</span></code>s; inputs, outputs, and state;
+are also created in the constructor, with each value in the corresponding lists
+in the IR being <code class="docutils literal notranslate"><span class="pre">insert</span></code>ed.</p>
+<div class="literal-block-wrapper docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-number">Listing 110 </span><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">SmtModule</span></code> constructor</span><a class="headerlink" href="#id12" title="Link to this code">¶</a></div>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="w">	</span><span class="n">SmtModule</span><span class="p">(</span><span class="n">Module</span><span class="w"> </span><span class="o">*</span><span class="k">module</span><span class="p">)</span>
+<span class="w">		</span><span class="o">:</span><span class="w"> </span><span class="n">ir</span><span class="p">(</span><span class="n">Functional</span><span class="o">::</span><span class="n">IR</span><span class="o">::</span><span class="n">from_module</span><span class="p">(</span><span class="k">module</span><span class="p">))</span>
+<span class="w">		</span><span class="p">,</span><span class="w"> </span><span class="n">scope</span><span class="p">()</span>
+<span class="w">		</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">(</span><span class="n">scope</span><span class="p">.</span><span class="n">unique_name</span><span class="p">(</span><span class="k">module</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">))</span>
+<span class="w">		</span><span class="p">,</span><span class="w"> </span><span class="n">input_struct</span><span class="p">(</span><span class="n">scope</span><span class="p">.</span><span class="n">unique_name</span><span class="p">(</span><span class="k">module</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">.</span><span class="n">str</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;_Inputs&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">scope</span><span class="p">)</span>
+<span class="w">		</span><span class="p">,</span><span class="w"> </span><span class="n">output_struct</span><span class="p">(</span><span class="n">scope</span><span class="p">.</span><span class="n">unique_name</span><span class="p">(</span><span class="k">module</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">.</span><span class="n">str</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;_Outputs&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">scope</span><span class="p">)</span>
+<span class="w">		</span><span class="p">,</span><span class="w"> </span><span class="n">state_struct</span><span class="p">(</span><span class="n">scope</span><span class="p">.</span><span class="n">unique_name</span><span class="p">(</span><span class="k">module</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">.</span><span class="n">str</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;_State&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">scope</span><span class="p">)</span>
+<span class="w">	</span><span class="p">{</span>
+<span class="w">		</span><span class="n">scope</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;-initial&quot;</span><span class="p">);</span>
+<span class="w">		</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ir</span><span class="p">.</span><span class="n">inputs</span><span class="p">())</span>
+<span class="w">			</span><span class="n">input_struct</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">input</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">input</span><span class="o">-&gt;</span><span class="n">sort</span><span class="p">);</span>
+<span class="w">		</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ir</span><span class="p">.</span><span class="n">outputs</span><span class="p">())</span>
+<span class="w">			</span><span class="n">output_struct</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">output</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="o">-&gt;</span><span class="n">sort</span><span class="p">);</span>
+<span class="w">		</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ir</span><span class="p">.</span><span class="n">states</span><span class="p">())</span>
+<span class="w">			</span><span class="n">state_struct</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">state</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="o">-&gt;</span><span class="n">sort</span><span class="p">);</span>
+<span class="w">	</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>Since Racket uses the <code class="docutils literal notranslate"><span class="pre">-</span></code> to access struct fields, the <code class="docutils literal notranslate"><span class="pre">SmtrModule</span></code> instead
+uses an underscore for the name of the initial state.</p>
+<div class="literal-block-wrapper docutils container" id="id13">
+<div class="code-block-caption"><span class="caption-number">Listing 111 </span><span class="caption-text">diff of <code class="docutils literal notranslate"><span class="pre">Module</span></code> constructor</span><a class="headerlink" href="#id13" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">-		scope.reserve(name + &quot;-initial&quot;);</span>
+<span class="gi">+		scope.reserve(name + &quot;_initial&quot;);</span>
+</pre></div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">write</span></code> method is then responsible for writing the FunctionalIR to the
+output file, formatted for the corresponding backend. <code class="docutils literal notranslate"><span class="pre">SmtModule::write()</span></code>
+breaks the output file down into four parts: defining the three structs,
+declaring the <code class="docutils literal notranslate"><span class="pre">pair</span></code> datatype, defining the transfer function <code class="docutils literal notranslate"><span class="pre">(inputs,</span>
+<span class="pre">current_state)</span> <span class="pre">-&gt;</span> <span class="pre">(outputs,</span> <span class="pre">next_state)</span></code> with <code class="docutils literal notranslate"><span class="pre">write_eval</span></code>, and declaring the
+initial state with <code class="docutils literal notranslate"><span class="pre">write_initial</span></code>.  The only change for the <code class="docutils literal notranslate"><span class="pre">SmtrModule</span></code> is
+that the <code class="docutils literal notranslate"><span class="pre">pair</span></code> declaration isn’t needed.</p>
+<div class="literal-block-wrapper docutils container" id="id14">
+<div class="code-block-caption"><span class="caption-number">Listing 112 </span><span class="caption-text">diff of <code class="docutils literal notranslate"><span class="pre">Module::write()</span></code> method</span><a class="headerlink" href="#id14" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>	void write(std::ostream &amp;out)
+<span class="w"> </span>	{    
+<span class="w"> </span>		SExprWriter w(out);
+<span class="w"> </span>
+<span class="w"> </span>		input_struct.write_definition(w);
+<span class="w"> </span>		output_struct.write_definition(w);
+<span class="w"> </span>		state_struct.write_definition(w);
+<span class="w"> </span>
+<span class="gd">-		w &lt;&lt; list(&quot;declare-datatypes&quot;,</span>
+<span class="gd">-			list(list(&quot;Pair&quot;, 2)),</span>
+<span class="gd">-			list(list(&quot;par&quot;, list(&quot;X&quot;, &quot;Y&quot;), list(list(&quot;pair&quot;, list(&quot;first&quot;, &quot;X&quot;), list(&quot;second&quot;, &quot;Y&quot;))))));</span>
+<span class="gd">-		</span>
+<span class="w"> </span>		write_eval(w);
+<span class="w"> </span>		write_initial(w);
+<span class="w"> </span>	}
+</pre></div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">write_eval</span></code> method is where the FunctionalIR nodes, outputs, and next
+state are handled.  Just as with the <a class="reference internal" href="#minimal-backend">minimal backend</a>, we iterate over the
+nodes with <code class="docutils literal notranslate"><span class="pre">for(auto</span> <span class="pre">n</span> <span class="pre">:</span> <span class="pre">ir)</span></code>, and then use the <code class="docutils literal notranslate"><span class="pre">Struct::write_value()</span></code>
+method for the <code class="docutils literal notranslate"><span class="pre">output_struct</span></code> and <code class="docutils literal notranslate"><span class="pre">state_struct</span></code> to iterate over the
+outputs and next state respectively.</p>
+<div class="literal-block-wrapper docutils container" id="id15">
+<div class="code-block-caption"><span class="caption-number">Listing 113 </span><span class="caption-text">iterating over FunctionalIR nodes in <code class="docutils literal notranslate"><span class="pre">SmtModule::write_eval()</span></code></span><a class="headerlink" href="#id15" title="Link to this code">¶</a></div>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="w">		</span><span class="k">for</span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ir</span><span class="p">)</span>
+<span class="w">			</span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">inlined</span><span class="p">(</span><span class="n">n</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">				</span><span class="n">w</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="s">&quot;let&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">list</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="n">node_to_sexpr</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">visit</span><span class="p">(</span><span class="n">visitor</span><span class="p">)))),</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span>
+<span class="w">				</span><span class="n">w</span><span class="p">.</span><span class="n">comment</span><span class="p">(</span><span class="n">SmtSort</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">sort</span><span class="p">()).</span><span class="n">to_sexpr</span><span class="p">().</span><span class="n">to_string</span><span class="p">(),</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+<span class="w">			</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>The main differences between our two backends here are syntactical.  First we
+change the <code class="docutils literal notranslate"><span class="pre">define-fun</span></code> for the Racket style <code class="docutils literal notranslate"><span class="pre">define</span></code> which drops the
+explicitly typed inputs/outputs.  And then we change the final result from a
+<code class="docutils literal notranslate"><span class="pre">pair</span></code> to the native <code class="docutils literal notranslate"><span class="pre">cons</span></code> which acts in much the same way, returning both
+the <code class="docutils literal notranslate"><span class="pre">outputs</span></code> and the <code class="docutils literal notranslate"><span class="pre">next_state</span></code> in a single variable.</p>
+<div class="literal-block-wrapper docutils container" id="id16">
+<div class="code-block-caption"><span class="caption-number">Listing 114 </span><span class="caption-text">diff of <code class="docutils literal notranslate"><span class="pre">Module::write_eval()</span></code> transfer function declaration</span><a class="headerlink" href="#id16" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">-		w.open(list(&quot;define-fun&quot;, name,</span>
+<span class="gd">-			list(list(&quot;inputs&quot;, input_struct.name),</span>
+<span class="gd">-			     list(&quot;state&quot;, state_struct.name)),</span>
+<span class="gd">-			list(&quot;Pair&quot;, output_struct.name, state_struct.name)));</span>
+<span class="gi">+		w.open(list(&quot;define&quot;, list(name, &quot;inputs&quot;, &quot;state&quot;)));</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id17">
+<div class="code-block-caption"><span class="caption-number">Listing 115 </span><span class="caption-text">diff of output/next state handling <code class="docutils literal notranslate"><span class="pre">Module::write_eval()</span></code></span><a class="headerlink" href="#id17" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">-		w.open(list(&quot;pair&quot;));</span>
+<span class="gi">+		w.open(list(&quot;cons&quot;));</span>
+<span class="w"> </span>		output_struct.write_value(w, [&amp;](IdString name) { return node_to_sexpr(ir.output(name).value()); });
+<span class="w"> </span>		state_struct.write_value(w, [&amp;](IdString name) { return node_to_sexpr(ir.state(name).next_value()); });
+<span class="w"> </span>		w.pop();
+</pre></div>
+</div>
+</div>
+<p>For the <code class="docutils literal notranslate"><span class="pre">write_initial</span></code> method, the SMT-LIB backend uses <code class="docutils literal notranslate"><span class="pre">declare-const</span></code> and
+<code class="docutils literal notranslate"><span class="pre">assert</span></code>s which must always hold true.  For Rosette we instead define the
+initial state as any other variable that can be used by external code.  This
+variable, <code class="docutils literal notranslate"><span class="pre">[name]_initial</span></code>, can then be used in the <code class="docutils literal notranslate"><span class="pre">[name]</span></code> function call;
+allowing the Rosette code to be used in the generation of the <code class="docutils literal notranslate"><span class="pre">next_state</span></code>,
+whereas the SMT-LIB code can only verify that a given <code class="docutils literal notranslate"><span class="pre">next_state</span></code> is correct.</p>
+<div class="literal-block-wrapper docutils container" id="id18">
+<div class="code-block-caption"><span class="caption-number">Listing 116 </span><span class="caption-text">diff of <code class="docutils literal notranslate"><span class="pre">Module::write_initial()</span></code> method</span><a class="headerlink" href="#id18" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>	void write_initial(SExprWriter &amp;w)
+<span class="w"> </span>	{
+<span class="gd">-		std::string initial = name + &quot;-initial&quot;;</span>
+<span class="gd">-		w &lt;&lt; list(&quot;declare-const&quot;, initial, state_struct.name);</span>
+<span class="gi">+		w.push();</span>
+<span class="gi">+		auto initial = name + &quot;_initial&quot;;</span>
+<span class="gi">+		w.open(list(&quot;define&quot;, initial));</span>
+<span class="gi">+		w.open(list(state_struct.name));</span>
+<span class="w"> </span>		for (auto state : ir.states()) {
+<span class="gd">-			if(state-&gt;sort.is_signal())</span>
+<span class="gd">-				w &lt;&lt; list(&quot;assert&quot;, list(&quot;=&quot;, state_struct.access(initial, state-&gt;name), smt_const(state-&gt;initial_value_signal())));</span>
+<span class="gd">-			else if(state-&gt;sort.is_memory()) {</span>
+<span class="gi">+			if (state-&gt;sort.is_signal())</span>
+<span class="gi">+				w &lt;&lt; list(&quot;bv&quot;, smt_const(state-&gt;initial_value_signal()), state-&gt;sort.width());</span>
+<span class="gi">+			else if (state-&gt;sort.is_memory()) {</span>
+<span class="w"> </span>				const auto &amp;contents = state-&gt;initial_value_memory();
+<span class="gi">+				w.open(list(&quot;list&quot;));</span>
+<span class="w"> </span>				for(int i = 0; i &lt; 1&lt;&lt;state-&gt;sort.addr_width(); i++) {
+<span class="gd">-					auto addr = smt_const(RTLIL::Const(i, state-&gt;sort.addr_width()));</span>
+<span class="gd">-					w &lt;&lt; list(&quot;assert&quot;, list(&quot;=&quot;, list(&quot;select&quot;, state_struct.access(initial, state-&gt;name), addr), smt_const(contents[i])));</span>
+<span class="gi">+					w &lt;&lt; list(&quot;bv&quot;, smt_const(contents[i]), state-&gt;sort.data_width());</span>
+<span class="w"> </span>				}
+<span class="gi">+				w.close();</span>
+<span class="w"> </span>			}
+<span class="w"> </span>		}
+<span class="gi">+		w.pop();</span>
+<span class="w"> </span>	}
+<span class="w"> </span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="backend">
+<h3>Backend<a class="headerlink" href="#backend" title="Link to this heading">¶</a></h3>
+<p>The final part is the <code class="docutils literal notranslate"><span class="pre">Backend</span></code> itself, with much of the same boiler plate as
+the <a class="reference internal" href="#minimal-backend">minimal backend</a>.  The main difference is that we use the <a class="reference internal" href="#module">Module</a> to
+perform the actual processing.</p>
+<div class="literal-block-wrapper docutils container" id="id19">
+<div class="code-block-caption"><span class="caption-number">Listing 117 </span><span class="caption-text">The <code class="docutils literal notranslate"><span class="pre">FunctionalSmtBackend</span></code></span><a class="headerlink" href="#id19" title="Link to this code">¶</a></div>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">FunctionalSmtBackend</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Backend</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="n">FunctionalSmtBackend</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Backend</span><span class="p">(</span><span class="s">&quot;functional_smt2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Generate SMT-LIB from Functional IR&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="w">	</span><span class="kt">void</span><span class="w"> </span><span class="n">help</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">log</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Functional SMT Backend.</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">	</span><span class="kt">void</span><span class="w"> </span><span class="n">execute</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="w"> </span><span class="o">*&amp;</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">args</span><span class="p">,</span><span class="w"> </span><span class="n">RTLIL</span><span class="o">::</span><span class="n">Design</span><span class="w"> </span><span class="o">*</span><span class="n">design</span><span class="p">)</span><span class="w"> </span><span class="k">override</span>
+<span class="w">	</span><span class="p">{</span>
+<span class="w">		</span><span class="n">log_header</span><span class="p">(</span><span class="n">design</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Executing Functional SMT Backend.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+<span class="w">		</span><span class="kt">size_t</span><span class="w"> </span><span class="n">argidx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">		</span><span class="n">extra_args</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">,</span><span class="w"> </span><span class="n">argidx</span><span class="p">,</span><span class="w"> </span><span class="n">design</span><span class="p">);</span>
+
+<span class="w">		</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">design</span><span class="o">-&gt;</span><span class="n">selected_modules</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="n">log</span><span class="p">(</span><span class="s">&quot;Processing module `%s`.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">module</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="w">			</span><span class="n">SmtModule</span><span class="w"> </span><span class="nf">smt</span><span class="p">(</span><span class="k">module</span><span class="p">);</span>
+<span class="w">			</span><span class="n">smt</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">);</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="n">FunctionalSmtBackend</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<p>There are two additions here for Rosette.  The first is that the output file
+needs to start with the <code class="docutils literal notranslate"><span class="pre">#lang</span></code> definition which tells the
+compiler/interpreter that we want to use the Rosette language module.  The
+second is that the <a class="reference internal" href="../../cmd/write_functional_rosette.html#cmd-write_functional_rosette" title="Generate Rosette compatible Racket from Functional IR"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">write_functional_rosette</span></code></a> command takes an optional
+argument, <code class="docutils literal notranslate"><span class="pre">-provides</span></code>.  If this argument is given, then the output file gets
+an additional line declaring that everything in the file should be exported for
+use; allowing the file to be treated as a Racket package with structs and
+mapping function available for use externally.</p>
+<div class="literal-block-wrapper docutils container" id="id20">
+<div class="code-block-caption"><span class="caption-number">Listing 118 </span><span class="caption-text">relevant portion of diff of <code class="docutils literal notranslate"><span class="pre">Backend::execute()</span></code> method</span><a class="headerlink" href="#id20" title="Link to this code">¶</a></div>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gi">+		*f &lt;&lt; &quot;#lang rosette/safe\n&quot;;</span>
+<span class="gi">+		if (provides) {</span>
+<span class="gi">+			*f &lt;&lt; &quot;(provide (all-defined-out))\n&quot;;</span>
+<span class="gi">+		}</span>
+<span class="w"> </span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="contributing.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Contributing to Yosys</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="build_verific.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Compiling with Verific library</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025 YosysHQ GmbH
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link" href="https://readthedocs.org/projects/yosys" aria-label="On Read the Docs">
+                <svg x="0px" y="0px" viewBox="-125 217 360 360" xml:space="preserve">
+                  <path fill="currentColor" d="M39.2,391.3c-4.2,0.6-7.1,4.4-6.5,8.5c0.4,3,2.6,5.5,5.5,6.3 c0,0,18.5,6.1,50,8.7c25.3,2.1,54-1.8,54-1.8c4.2-0.1,7.5-3.6,7.4-7.8c-0.1-4.2-3.6-7.5-7.8-7.4c-0.5,0-1,0.1-1.5,0.2 c0,0-28.1,3.5-50.9,1.6c-30.1-2.4-46.5-7.9-46.5-7.9C41.7,391.3,40.4,391.1,39.2,391.3z M39.2,353.6c-4.2,0.6-7.1,4.4-6.5,8.5 c0.4,3,2.6,5.5,5.5,6.3c0,0,18.5,6.1,50,8.7c25.3,2.1,54-1.8,54-1.8c4.2-0.1,7.5-3.6,7.4-7.8c-0.1-4.2-3.6-7.5-7.8-7.4 c-0.5,0-1,0.1-1.5,0.2c0,0-28.1,3.5-50.9,1.6c-30.1-2.4-46.5-7.9-46.5-7.9C41.7,353.6,40.4,353.4,39.2,353.6z M39.2,315.9 c-4.2,0.6-7.1,4.4-6.5,8.5c0.4,3,2.6,5.5,5.5,6.3c0,0,18.5,6.1,50,8.7c25.3,2.1,54-1.8,54-1.8c4.2-0.1,7.5-3.6,7.4-7.8 c-0.1-4.2-3.6-7.5-7.8-7.4c-0.5,0-1,0.1-1.5,0.2c0,0-28.1,3.5-50.9,1.6c-30.1-2.4-46.5-7.9-46.5-7.9 C41.7,315.9,40.4,315.8,39.2,315.9z M39.2,278.3c-4.2,0.6-7.1,4.4-6.5,8.5c0.4,3,2.6,5.5,5.5,6.3c0,0,18.5,6.1,50,8.7 c25.3,2.1,54-1.8,54-1.8c4.2-0.1,7.5-3.6,7.4-7.8c-0.1-4.2-3.6-7.5-7.8-7.4c-0.5,0-1,0.1-1.5,0.2c0,0-28.1,3.5-50.9,1.6 c-30.1-2.4-46.5-7.9-46.5-7.9C41.7,278.2,40.4,278.1,39.2,278.3z M-13.6,238.5c-39.6,0.3-54.3,12.5-54.3,12.5v295.7 c0,0,14.4-12.4,60.8-10.5s55.9,18.2,112.9,19.3s71.3-8.8,71.3-8.8l0.8-301.4c0,0-25.6,7.3-75.6,7.7c-49.9,0.4-61.9-12.7-107.7-14.2 C-8.2,238.6-10.9,238.5-13.6,238.5z M19.5,257.8c0,0,24,7.9,68.3,10.1c37.5,1.9,75-3.7,75-3.7v267.9c0,0-19,10-66.5,6.6 C59.5,536.1,19,522.1,19,522.1L19.5,257.8z M-3.6,264.8c4.2,0,7.7,3.4,7.7,7.7c0,4.2-3.4,7.7-7.7,7.7c0,0-12.4,0.1-20,0.8 c-12.7,1.3-21.4,5.9-21.4,5.9c-3.7,2-8.4,0.5-10.3-3.2c-2-3.7-0.5-8.4,3.2-10.3c0,0,0,0,0,0c0,0,11.3-6,27-7.5 C-16,264.9-3.6,264.8-3.6,264.8z M-11,302.6c4.2-0.1,7.4,0,7.4,0c4.2,0.5,7.2,4.3,6.7,8.5c-0.4,3.5-3.2,6.3-6.7,6.7 c0,0-12.4,0.1-20,0.8c-12.7,1.3-21.4,5.9-21.4,5.9c-3.7,2-8.4,0.5-10.3-3.2c-2-3.7-0.5-8.4,3.2-10.3c0,0,11.3-6,27-7.5 C-20.5,302.9-15.2,302.7-11,302.6z M-3.6,340.2c4.2,0,7.7,3.4,7.7,7.7s-3.4,7.7-7.7,7.7c0,0-12.4-0.1-20,0.7 c-12.7,1.3-21.4,5.9-21.4,5.9c-3.7,2-8.4,0.5-10.3-3.2c-2-3.7-0.5-8.4,3.2-10.3c0,0,11.3-6,27-7.5C-16,340.1-3.6,340.2-3.6,340.2z" />
+                </svg>
+              </a><a class="muted-link" href="https://github.com/YosysHQ/yosys" aria-label="On GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+          YosysHQ
+          </span>
+        </div>
+        <div class="toc-tree-container yosyshq-links" style="padding-bottom: 0">
+          <div class="toc-tree">
+            <ul>
+              <li></li>
+              <li><a class="reference external" href="https://yosyshq.readthedocs.io">Docs</a></li>
+              <li><a class="reference external" href="https://blog.yosyshq.com">Blog</a></li>
+              <li><a class="reference external" href="https://www.yosyshq.com">Website</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Writing a new backend using FunctionalIR</a><ul>
+<li><a class="reference internal" href="#what-is-functionalir">What is FunctionalIR</a><ul>
+<li><a class="reference internal" href="#utility-classes">Utility classes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#example-a-minimal-functional-backend">Example: A minimal functional backend</a></li>
+<li><a class="reference internal" href="#example-adapting-smt-lib-backend-for-rosette">Example: Adapting SMT-LIB backend for Rosette</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#scope">Scope</a></li>
+<li><a class="reference internal" href="#sort">Sort</a></li>
+<li><a class="reference internal" href="#struct">Struct</a></li>
+<li><a class="reference internal" href="#printvisitor">PrintVisitor</a></li>
+<li><a class="reference internal" href="#module">Module</a></li>
+<li><a class="reference internal" href="#backend">Backend</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+        
+      </div>
+      
+    </aside>
+  </div>
+</div><script src="../../_static/documentation_options.js?v=33dbc229"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo-ys.js?v=8d9c4053"></script>
+    </body>
+</html>

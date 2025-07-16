@@ -1,0 +1,1406 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Internal formats" href="../formats/index.html" /><link rel="prev" title="Control and data flow" href="control_and_data.html" />
+
+    <link rel="shortcut icon" href="../../_static/yshq_favicon.png"/><!-- Generated with Sphinx 8.2.3 and Furo 2025.04.22.dev1 -->
+        <title>The Verilog and AST frontends - YosysHQ Yosys 0.55-dev documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-ys.css?v=5cc2bdad" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=63c85a92" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
+  
+      }
+    }
+  }
+</style><script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="yosys" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/yosys_internals/flow/verilog_frontend.html" /><meta name="readthedocs-http-status" content="200" /></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">YosysHQ Yosys 0.55-dev documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand"
+   title="External link to https://yosyshq.readthedocs.io"
+   href="https://yosyshq.readthedocs.io"><div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../_static/yshq_logo.png" alt="Main Brand Logo"/>
+  </div>
+  
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Yosys (index)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">What is Yosys</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../getting_started/index.html">Getting started with Yosys</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Getting started with Yosys</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/example_synth.html">Synthesis starter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/scripting_intro.html">Scripting in Yosys</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../using_yosys/index.html">Using Yosys (advanced)</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Using Yosys (advanced)</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../using_yosys/synthesis/index.html">Synthesis in detail</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Synthesis in detail</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/synth.html">Synth commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/proc.html">Converting process blocks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/fsm.html">FSM handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/memory.html">Memory handling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/opt.html">Optimization passes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/techmap_synth.html">Technology mapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/extract.html">The extract pass</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/abc.html">The ABC toolbox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/synthesis/cell_libs.html">Mapping to cell libraries</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../using_yosys/more_scripting/index.html">More scripting</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of More scripting</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/more_scripting/load_design.html">Loading a design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/more_scripting/selections.html">Selections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/more_scripting/interactive_investigation.html">Interactive design investigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/more_scripting/model_checking.html">Symbolic model checking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../using_yosys/more_scripting/data_flow_tracking.html">Dataflow tracking</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">Yosys internals</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Yosys internals</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Internal flow</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of Internal flow</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="overview.html">Flow overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="control_and_data.html">Control and data flow</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">The Verilog and AST frontends</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../formats/index.html">Internal formats</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Internal formats</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../formats/rtlil_rep.html">The RTL Intermediate Language (RTLIL)</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../extending_yosys/index.html">Working with the Yosys codebase</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of Working with the Yosys codebase</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../extending_yosys/extensions.html">Writing extensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extending_yosys/build_verific.html">Compiling with Verific library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extending_yosys/functional_ir.html">Writing a new backend using FunctionalIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extending_yosys/contributing.html">Contributing to Yosys</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../extending_yosys/test_suites.html">Testing Yosys</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../techmap.html">Techmap by example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../verilog.html">Notes on Verilog support in Yosys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hashing.html">Hashing and associative data structures in Yosys</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../appendix/primer.html">A primer on digital circuit synthesis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../appendix/rtlil_text.html">RTLIL text representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../appendix/auxlibs.html">Auxiliary libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../appendix/auxprogs.html">Auxiliary programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bib.html">Literature references</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cell_index.html">Internal cell library</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of Internal cell library</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../cell/index_word.html">Word-level cells</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of Word-level cells</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_unary.html">Unary operators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_binary.html">Binary operators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_mux.html">Multiplexers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_reg.html">Registers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_mem.html">Memories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_fsm.html">Finite state machines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_arith.html">Coarse arithmetics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_logic.html">Arbitrary logic functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_spec.html">Specify rules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_formal.html">Formal verification cells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_debug.html">Debugging cells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/word_wire.html">Wire cells</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../cell/index_gate.html">Gate-level cells</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of Gate-level cells</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/gate_comb_simple.html">Combinatorial cells (simple)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/gate_comb_combined.html">Combinatorial cells (combined)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/gate_reg_ff.html">Flip-flop cells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/gate_reg_latch.html">Latch cells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cell/gate_other.html">Other gate-level cells</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../cell/properties.html">Cell properties</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cmd_ref.html">Command line reference</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of Command line reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../appendix/env_vars.html">Yosys environment variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/abc.html">abc - use ABC for technology mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/abc9.html">abc9 - use ABC9 for technology mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/abc9_exe.html">abc9_exe - use ABC9 for technology mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/abc9_ops.html">abc9_ops - helper functions for ABC9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/abc_new.html">abc_new - (experimental) use ABC for SC technology mapping (new)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/abstract.html">abstract - replace signals with abstract values during formal verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/add.html">add - add objects to the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/aigmap.html">aigmap - map logic to and-inverter-graph circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/alumacc.html">alumacc - extract ALU and MACC cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/anlogic_eqn.html">anlogic_eqn - Anlogic: Calculate equations for luts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/anlogic_fixcarry.html">anlogic_fixcarry - Anlogic: fix carry chain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/assertpmux.html">assertpmux - adds asserts for parallel muxes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/async2sync.html">async2sync - convert async FF inputs to sync circuits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/attrmap.html">attrmap - renaming attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/attrmvcp.html">attrmvcp - move or copy attributes from wires to driving cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/autoname.html">autoname - automatically assign names to objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/blackbox.html">blackbox - convert modules into blackbox modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/bmuxmap.html">bmuxmap - transform $bmux cells to trees of $mux cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/booth.html">booth - map $mul cells to Booth multipliers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/box_derive.html">box_derive - derive box modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/bufnorm.html">bufnorm - (experimental) convert design into buffered-normalized form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/bugpoint.html">bugpoint - minimize testcases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/bwmuxmap.html">bwmuxmap - replace $bwmux cells with equivalent logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/cd.html">cd - a shortcut for ‘select -module &lt;name&gt;’</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/cellmatch.html">cellmatch - match cells to their targets in cell library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/check.html">check - check for obvious problems in the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/chformal.html">chformal - change formal constraints of the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/chparam.html">chparam - re-evaluate modules with new parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/chtype.html">chtype - change type of cells in the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/clean.html">clean - remove unused cells and wires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/clean_zerowidth.html">clean_zerowidth - clean zero-width connections from the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/clk2fflogic.html">clk2fflogic - convert clocked FFs to generic $ff cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/clkbufmap.html">clkbufmap - insert clock buffers on clock networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/clockgate.html">clockgate - extract clock gating out of flip flops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/connect.html">connect - create or remove connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/connect_rpc.html">connect_rpc - connect to RPC frontend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/connwrappers.html">connwrappers - match width of input-output port pairs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/constmap.html">constmap - technology mapping of coarse constant value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/coolrunner2_fixup.html">coolrunner2_fixup - insert necessary buffer cells for CoolRunner-II architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/coolrunner2_sop.html">coolrunner2_sop - break $sop cells into ANDTERM/ORTERM cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/copy.html">copy - copy modules in the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/cover.html">cover - print code coverage counters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/cutpoint.html">cutpoint - adds formal cut points to the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/debug.html">debug - run command with debug log messages enabled</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/delete.html">delete - delete objects in the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/deminout.html">deminout - demote inout ports to input or output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/demuxmap.html">demuxmap - transform $demux cells to $eq + $mux cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/design.html">design - save, restore and reset current design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/dffinit.html">dffinit - set INIT param on FF cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/dfflegalize.html">dfflegalize - convert FFs to types supported by the target</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/dfflibmap.html">dfflibmap - technology mapping of flip-flops</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/dffunmap.html">dffunmap - unmap clock enable and synchronous reset from FFs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/dft_tag.html">dft_tag - create tagging logic for data flow tracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/dump.html">dump - print parts of the design in RTLIL format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/echo.html">echo - turning echoing back of commands on and off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/edgetypes.html">edgetypes - list all types of edges in selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/efinix_fixcarry.html">efinix_fixcarry - Efinix: fix carry chain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_add.html">equiv_add - add a $equiv cell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_induct.html">equiv_induct - proving $equiv cells using temporal induction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_make.html">equiv_make - prepare a circuit for equivalence checking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_mark.html">equiv_mark - mark equivalence checking regions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_miter.html">equiv_miter - extract miter from equiv circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_opt.html">equiv_opt - prove equivalence for optimized circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_purge.html">equiv_purge - purge equivalence checking module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_remove.html">equiv_remove - remove $equiv cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_simple.html">equiv_simple - try proving simple $equiv instances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_status.html">equiv_status - print status of equivalent checking module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/equiv_struct.html">equiv_struct - structural equivalence checking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/eval.html">eval - evaluate the circuit given an input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/example_dt.html">example_dt - drivertools example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/exec.html">exec - execute commands in the operating system shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/expose.html">expose - convert internal signals to module ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/extract.html">extract - find subcircuits and replace them with cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/extract_counter.html">extract_counter - Extract GreenPak4 counter cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/extract_fa.html">extract_fa - find and extract full/half adders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/extract_reduce.html">extract_reduce - converts gate chains into $reduce_* cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/extractinv.html">extractinv - extract explicit inverter cells for invertible cell pins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/flatten.html">flatten - flatten design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/flowmap.html">flowmap - pack LUTs with FlowMap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fmcombine.html">fmcombine - combine two instances of a cell into one</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fminit.html">fminit - set init values/sequences for formal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/formalff.html">formalff - prepare FFs for formal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/freduce.html">freduce - perform functional reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm.html">fsm - extract and optimize finite state machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_detect.html">fsm_detect - finding FSMs in design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_expand.html">fsm_expand - expand FSM cells by merging logic into it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_export.html">fsm_export - exporting FSMs to KISS2 files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_extract.html">fsm_extract - extracting FSMs in design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_info.html">fsm_info - print information on finite state machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_map.html">fsm_map - mapping FSMs to basic logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_opt.html">fsm_opt - optimize finite state machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fsm_recode.html">fsm_recode - recoding finite state machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/fst2tb.html">fst2tb - generate testbench out of fst file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/future.html">future - resolve future sampled value functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/gatemate_foldinv.html">gatemate_foldinv - fold inverters into Gatemate LUT trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/glift.html">glift - create GLIFT models and optimization problems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/greenpak4_dffinv.html">greenpak4_dffinv - merge greenpak4 inverters and DFF/latches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/help.html">help - display help messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/hierarchy.html">hierarchy - check, expand and clean up design hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/hilomap.html">hilomap - technology mapping of constant hi- and/or lo-drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/history.html">history - show last interactive commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ice40_braminit.html">ice40_braminit - iCE40: perform SB_RAM40_4K initialization from file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ice40_dsp.html">ice40_dsp - iCE40: map multipliers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ice40_opt.html">ice40_opt - iCE40: perform simple optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ice40_wrapcarry.html">ice40_wrapcarry - iCE40: wrap carries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/insbuf.html">insbuf - insert buffer cells for connected wires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/internal_stats.html">internal_stats - print internal statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/iopadmap.html">iopadmap - technology mapping of i/o pads (or buffers)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/jny.html">jny - write design and metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/json.html">json - write design in JSON format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/keep_hierarchy.html">keep_hierarchy - selectively add the keep_hierarchy attribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/lattice_gsr.html">lattice_gsr - Lattice: handle GSR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/libcache.html">libcache - control caching of technology library data parsed from liberty files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/license.html">license - print license terms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/log.html">log - print text and log files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/logger.html">logger - set logger properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ls.html">ls - list modules or objects in modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ltp.html">ltp - print longest topological path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/lut2mux.html">lut2mux - convert $lut to $_MUX_</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/maccmap.html">maccmap - mapping macc cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory.html">memory - translate memories to basic cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_bmux2rom.html">memory_bmux2rom - convert muxes to ROMs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_bram.html">memory_bram - map memories to block rams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_collect.html">memory_collect - creating multi-port memory cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_dff.html">memory_dff - merge input/output DFFs into memory read ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_libmap.html">memory_libmap - map memories to cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_map.html">memory_map - translate multiport memories to basic cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_memx.html">memory_memx - emulate vlog sim behavior for mem ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_narrow.html">memory_narrow - split up wide memory ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_nordff.html">memory_nordff - extract read port FFs from memories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_share.html">memory_share - consolidate memory ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/memory_unpack.html">memory_unpack - unpack multi-port memory cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/microchip_dffopt.html">microchip_dffopt - MICROCHIP: optimize FF control signal usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/microchip_dsp.html">microchip_dsp - MICROCHIP: pack resources into DSPs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/miter.html">miter - automatically create a miter circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/mutate.html">mutate - generate or apply design mutations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/muxcover.html">muxcover - cover trees of MUX cells with wider MUXes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/muxpack.html">muxpack - $mux/$pmux cascades to $pmux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/nlutmap.html">nlutmap - map to LUTs of different sizes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/nx_carry.html">nx_carry - NanoXplore: create carry cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/onehot.html">onehot - optimize $eq cells for onehot signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt.html">opt - perform simple optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_clean.html">opt_clean - remove unused cells and wires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_demorgan.html">opt_demorgan - Optimize reductions with DeMorgan equivalents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_dff.html">opt_dff - perform DFF optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_expr.html">opt_expr - perform const folding and simple expression rewriting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_ffinv.html">opt_ffinv - push inverters through FFs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_lut.html">opt_lut - optimize LUT cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_lut_ins.html">opt_lut_ins - discard unused LUT inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_mem.html">opt_mem - optimize memories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_mem_feedback.html">opt_mem_feedback - convert memory read-to-write port feedback paths to write enables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_mem_priority.html">opt_mem_priority - remove priority relations between write ports that can never collide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_mem_widen.html">opt_mem_widen - optimize memories where all ports are wide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_merge.html">opt_merge - consolidate identical cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_muxtree.html">opt_muxtree - eliminate dead trees in multiplexer trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_reduce.html">opt_reduce - simplify large MUXes and AND/OR gates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/opt_share.html">opt_share - merge mutually exclusive cells of the same type that share an input signal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/paramap.html">paramap - renaming cell parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/peepopt.html">peepopt - collection of peephole optimizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/plugin.html">plugin - load and list loaded plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/pmux2shiftx.html">pmux2shiftx - transform $pmux cells to $shiftx cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/pmuxtree.html">pmuxtree - transform $pmux cells to trees of $mux cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/portarcs.html">portarcs - derive port arcs for propagation delay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/portlist.html">portlist - list (top-level) ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/prep.html">prep - generic synthesis script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/printattrs.html">printattrs - print attributes of selected objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc.html">proc - translate processes to netlists</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_arst.html">proc_arst - detect asynchronous resets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_clean.html">proc_clean - remove empty parts of processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_dff.html">proc_dff - extract flip-flops from processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_dlatch.html">proc_dlatch - extract latches from processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_init.html">proc_init - convert initial block to init attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_memwr.html">proc_memwr - extract memory writes from processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_mux.html">proc_mux - convert decision trees to multiplexers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_prune.html">proc_prune - remove redundant assignments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_rmdead.html">proc_rmdead - eliminate dead trees in decision trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/proc_rom.html">proc_rom - convert switches to ROMs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/qbfsat.html">qbfsat - solve a 2QBF-SAT problem in the circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ql_bram_merge.html">ql_bram_merge - Infers QuickLogic k6n10f BRAM pairs that can operate independently</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ql_bram_types.html">ql_bram_types - Change TDP36K type to subtypes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ql_dsp_io_regs.html">ql_dsp_io_regs - change types of QL_DSP2 depending on configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ql_dsp_macc.html">ql_dsp_macc - infer QuickLogic multiplier-accumulator DSP cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ql_dsp_simd.html">ql_dsp_simd - merge QuickLogic K6N10f DSP pairs to operate in SIMD mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/ql_ioff.html">ql_ioff - Infer I/O FFs for qlf_k6n10f architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read.html">read - load HDL designs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_aiger.html">read_aiger - read AIGER file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_blif.html">read_blif - read BLIF file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_json.html">read_json - read JSON file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_liberty.html">read_liberty - read cells from liberty file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_rtlil.html">read_rtlil - read modules from RTLIL file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_verilog.html">read_verilog - read modules from Verilog file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_verilog_file_list.html">read_verilog_file_list - parse a Verilog file list</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/read_xaiger2.html">read_xaiger2 - (experimental) read XAIGER file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/recover_names.html">recover_names - Execute a lossy mapping command and recover original netnames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/rename.html">rename - rename object in the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/rmports.html">rmports - remove module ports with no connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/sat.html">sat - solve a SAT problem in the circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/scatter.html">scatter - add additional intermediate nets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/scc.html">scc - detect strongly connected components (logic loops)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/scratchpad.html">scratchpad - get/set values in the scratchpad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/script.html">script - execute commands from file or wire</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/select.html">select - modify and view the list of selected objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/setattr.html">setattr - set/unset attributes on objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/setenv.html">setenv - set an environment variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/setparam.html">setparam - set/unset parameters on objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/setundef.html">setundef - replace undef values with defined constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/share.html">share - perform sat-based resource sharing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/shell.html">shell - enter interactive command mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/show.html">show - generate schematics using graphviz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/shregmap.html">shregmap - map shift registers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/sim.html">sim - simulate the circuit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/simplemap.html">simplemap - mapping simple coarse-grain cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/splice.html">splice - create explicit splicing cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/splitcells.html">splitcells - split up multi-bit cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/splitnets.html">splitnets - split up multi-bit nets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/sta.html">sta - perform static timing analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/stat.html">stat - print some statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/submod.html">submod - moving part of a module to a new submodule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/supercover.html">supercover - add hi/lo cover cells for each wire bit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth.html">synth - generic synthesis script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_achronix.html">synth_achronix - synthesis for Achronix Speedster22i FPGAs.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_anlogic.html">synth_anlogic - synthesis for Anlogic FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_coolrunner2.html">synth_coolrunner2 - synthesis for Xilinx Coolrunner-II CPLDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_easic.html">synth_easic - synthesis for eASIC platform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_ecp5.html">synth_ecp5 - synthesis for ECP5 FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_efinix.html">synth_efinix - synthesis for Efinix FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_fabulous.html">synth_fabulous - FABulous synthesis script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_gatemate.html">synth_gatemate - synthesis for Cologne Chip GateMate FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_gowin.html">synth_gowin - synthesis for Gowin FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_greenpak4.html">synth_greenpak4 - synthesis for GreenPAK4 FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_ice40.html">synth_ice40 - synthesis for iCE40 FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_intel.html">synth_intel - synthesis for Intel (Altera) FPGAs.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_intel_alm.html">synth_intel_alm - synthesis for ALM-based Intel (Altera) FPGAs.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_lattice.html">synth_lattice - synthesis for Lattice FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_microchip.html">synth_microchip - synthesis for Microchip FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_nanoxplore.html">synth_nanoxplore - synthesis for NanoXplore FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_nexus.html">synth_nexus - synthesis for Lattice Nexus FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_quicklogic.html">synth_quicklogic - Synthesis for QuickLogic FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_sf2.html">synth_sf2 - synthesis for SmartFusion2 and IGLOO2 FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synth_xilinx.html">synth_xilinx - synthesis for Xilinx FPGAs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/synthprop.html">synthprop - synthesize SVA properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/tcl.html">tcl - execute a TCL script file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/techmap.html">techmap - generic technology mapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/tee.html">tee - redirect command output to file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/test_abcloop.html">test_abcloop - automatically test handling of loops in abc command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/test_autotb.html">test_autotb - generate simple test benches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/test_cell.html">test_cell - automatically test the implementation of a cell type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/test_generic.html">test_generic - test the generic compute graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/test_pmgen.html">test_pmgen - test pass for pmgen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/test_select.html">test_select - call internal selection methods on design for testing purposes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/timeest.html">timeest - estimate timing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/torder.html">torder - print cells in topological order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/trace.html">trace - redirect command output to file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/tribuf.html">tribuf - infer tri-state buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/uniquify.html">uniquify - create unique copies of modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/verific.html">verific - load Verilog and VHDL designs using Verific</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/verilog_defaults.html">verilog_defaults - set default options for read_verilog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/verilog_defines.html">verilog_defines - define and undefine verilog defines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/viz.html">viz - visualize data flow graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/wbflip.html">wbflip - flip the whitebox attribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/wrapcell.html">wrapcell - wrap individual cells into new modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/wreduce.html">wreduce - reduce the word size of operations if possible</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_aiger.html">write_aiger - write design to AIGER file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_aiger2.html">write_aiger2 - (experimental) write design to AIGER file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_blif.html">write_blif - write design to BLIF file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_btor.html">write_btor - write design to BTOR file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_cxxrtl.html">write_cxxrtl - convert design to C++ RTL simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_edif.html">write_edif - write design to EDIF netlist file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_file.html">write_file - write a text to a file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_firrtl.html">write_firrtl - write design to a FIRRTL file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_functional_cxx.html">write_functional_cxx - convert design to C++ using the functional backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_functional_rosette.html">write_functional_rosette - Generate Rosette compatible Racket from Functional IR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_functional_smt2.html">write_functional_smt2 - Generate SMT-LIB from Functional IR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_intersynth.html">write_intersynth - write design to InterSynth netlist file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_jny.html">write_jny - generate design metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_json.html">write_json - write design to a JSON file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_rtlil.html">write_rtlil - write design to RTLIL file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_simplec.html">write_simplec - convert design to simple C code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_smt2.html">write_smt2 - write design to SMT-LIBv2 file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_smv.html">write_smv - write design to SMV file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_spice.html">write_spice - write design to SPICE netlist file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_table.html">write_table - write design as connectivity table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_verilog.html">write_verilog - write design to Verilog file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_xaiger.html">write_xaiger - write design to XAIGER file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/write_xaiger2.html">write_xaiger2 - (experimental) write module to XAIGER file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/xilinx_dffopt.html">xilinx_dffopt - Xilinx: optimize FF control signal usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/xilinx_dsp.html">xilinx_dsp - Xilinx: pack resources into DSPs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/xilinx_srl.html">xilinx_srl - Xilinx shift register extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/xprop.html">xprop - formal x propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cmd/zinit.html">zinit - add inverters so all FF are zero-initialized</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+
+<div
+  id="furo-sidebar-ad-placement"
+  class="flat"
+  data-ea-publisher="readthedocs"
+  data-ea-type="readthedocs-sidebar"
+  data-ea-manual="true"
+></div>
+</div>
+
+
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/YosysHQ/yosys/blob/main/docs/source/yosys_internals/flow/verilog_frontend.rst?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/YosysHQ/yosys/edit/main/docs/source/yosys_internals/flow/verilog_frontend.rst" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="the-verilog-and-ast-frontends">
+<span id="chapter-verilog"></span><h1>The Verilog and AST frontends<a class="headerlink" href="#the-verilog-and-ast-frontends" title="Link to this heading">¶</a></h1>
+<p>This chapter provides an overview of the implementation of the Yosys Verilog and
+AST frontends. The Verilog frontend reads Verilog-2005 code and creates an
+abstract syntax tree (AST) representation of the input. This AST representation
+is then passed to the AST frontend that converts it to RTLIL data, as
+illustrated in <a class="reference internal" href="#fig-verilog-flow"><span class="std std-numref">Fig. 56</span></a>.</p>
+<figure class="align-default" id="fig-verilog-flow">
+<img alt="../../_images/verilog_flow.svg" class="width-helper invert-helper" src="../../_images/verilog_flow.svg" />
+<figcaption>
+<p><span class="caption-number">Fig. 56 </span><span class="caption-text">Simplified Verilog to RTLIL data flow</span><a class="headerlink" href="#fig-verilog-flow" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<section id="transforming-verilog-to-ast">
+<h2>Transforming Verilog to AST<a class="headerlink" href="#transforming-verilog-to-ast" title="Link to this heading">¶</a></h2>
+<p>The Verilog frontend converts the Verilog sources to an internal AST
+representation that closely resembles the structure of the original Verilog
+code. The Verilog frontend consists of three components, the Preprocessor, the
+Lexer and the Parser.</p>
+<p>The source code to the Verilog frontend can be found in
+<code class="file docutils literal notranslate"><span class="pre">frontends/verilog/</span></code> in the Yosys source tree.</p>
+<section id="the-verilog-preprocessor">
+<h3>The Verilog preprocessor<a class="headerlink" href="#the-verilog-preprocessor" title="Link to this heading">¶</a></h3>
+<p>The Verilog preprocessor scans over the Verilog source code and interprets some
+of the Verilog compiler directives such as <code class="docutils literal notranslate"><span class="pre">`include</span></code>,
+<code class="docutils literal notranslate"><span class="pre">`define</span></code> and <code class="docutils literal notranslate"><span class="pre">`ifdef</span></code>.</p>
+<p>It is implemented as a C++ function that is passed a file descriptor as input
+and returns the pre-processed Verilog code as a <code class="docutils literal notranslate"><span class="pre">std::string</span></code>.</p>
+<p>The source code to the Verilog Preprocessor can be found in
+<code class="file docutils literal notranslate"><span class="pre">frontends/verilog/preproc.cc</span></code> in the Yosys source tree.</p>
+</section>
+<section id="the-verilog-lexer">
+<h3>The Verilog lexer<a class="headerlink" href="#the-verilog-lexer" title="Link to this heading">¶</a></h3>
+<p>The Verilog Lexer is written using the lexer generator flex. Its source code can
+be found in <code class="file docutils literal notranslate"><span class="pre">frontends/verilog/verilog_lexer.l</span></code> in the Yosys source tree.
+The lexer does little more than identifying all keywords and literals recognised
+by the Yosys Verilog frontend.</p>
+<p>The lexer keeps track of the current location in the Verilog source code using
+some global variables. These variables are used by the constructor of AST nodes
+to annotate each node with the source code location it originated from.</p>
+<p>Finally the lexer identifies and handles special comments such as “<code class="docutils literal notranslate"><span class="pre">//</span> <span class="pre">synopsys</span>
+<span class="pre">translate_off</span></code>” and “<code class="docutils literal notranslate"><span class="pre">//</span> <span class="pre">synopsys</span> <span class="pre">full_case</span></code>”. (It is recommended to use
+<code class="docutils literal notranslate"><span class="pre">`ifdef</span></code> constructs instead of the Synsopsys translate_on/off comments
+and attributes such as <code class="docutils literal notranslate"><span class="pre">(*</span> <span class="pre">full_case</span> <span class="pre">*)</span></code> over “<code class="docutils literal notranslate"><span class="pre">//</span> <span class="pre">synopsys</span> <span class="pre">full_case</span></code>”
+whenever possible.)</p>
+</section>
+<section id="the-verilog-parser">
+<h3>The Verilog parser<a class="headerlink" href="#the-verilog-parser" title="Link to this heading">¶</a></h3>
+<p>The Verilog Parser is written using the parser generator bison. Its source code
+can be found in <code class="file docutils literal notranslate"><span class="pre">frontends/verilog/verilog_parser.y</span></code> in the Yosys source
+tree.</p>
+<p>It generates an AST using the <code class="docutils literal notranslate"><span class="pre">AST::AstNode</span></code> data structure defined in
+<code class="file docutils literal notranslate"><span class="pre">frontends/ast/ast.h</span></code>. An <code class="docutils literal notranslate"><span class="pre">AST::AstNode</span></code> object has the following
+properties:</p>
+<div class="table-wrapper colwidths-given docutils container" id="tab-verilog-astnodetype">
+<table class="docutils align-default" id="tab-verilog-astnodetype">
+<caption><span class="caption-number">Table 2 </span><span class="caption-text">AST node types with their corresponding Verilog constructs.</span><a class="headerlink" href="#tab-verilog-astnodetype" title="Link to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>AST Node Type</p></td>
+<td><p>Corresponding Verilog Construct</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_NONE</p></td>
+<td><p>This Node type should never be used.</p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_DESIGN</p></td>
+<td><p>This node type is used for the top node of the AST tree. It has no
+corresponding Verilog construct.</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_MODULE, AST_TASK, AST_FUNCTION</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">module</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code> and <code class="docutils literal notranslate"><span class="pre">function</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_WIRE</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">input</span></code>, <code class="docutils literal notranslate"><span class="pre">output</span></code>, <code class="docutils literal notranslate"><span class="pre">wire</span></code>, <code class="docutils literal notranslate"><span class="pre">reg</span></code> and <code class="docutils literal notranslate"><span class="pre">integer</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>AST_MEMORY</p></td>
+<td><p>Verilog Arrays</p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_AUTOWIRE</p></td>
+<td><p>Created by the simplifier when an undeclared signal name is used.</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_PARAMETER, AST_LOCALPARAM</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">parameter</span></code> and <code class="docutils literal notranslate"><span class="pre">localparam</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_PARASET</p></td>
+<td><p>Parameter set in cell instantiation</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_ARGUMENT</p></td>
+<td><p>Port connection in cell instantiation</p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_RANGE</p></td>
+<td><p>Bit-Index in a signal or element index in array</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_CONSTANT</p></td>
+<td><p>A literal value</p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_CELLTYPE</p></td>
+<td><p>The type of cell in cell instantiation</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_IDENTIFIER</p></td>
+<td><p>An Identifier (signal name in expression or cell/task/etc. name in other
+contexts)</p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_PREFIX</p></td>
+<td><p>Construct an identifier in the form &lt;prefix&gt;[&lt;index&gt;].&lt;suffix&gt; (used
+only in advanced generate constructs)</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_FCALL, AST_TCALL</p></td>
+<td><p>Call to function or task</p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_TO_SIGNED, AST_TO_UNSIGNED</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">$signed()</span></code> and <code class="docutils literal notranslate"><span class="pre">$unsigned()</span></code> functions</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_CONCAT, AST_REPLICATE</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">{...}</span></code> and <code class="docutils literal notranslate"><span class="pre">{...{...}}</span></code> operators</p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_BIT_NOT, AST_BIT_AND, AST_BIT_OR, AST_BIT_XOR, AST_BIT_XNOR</p></td>
+<td><p>The bitwise operators <code class="docutils literal notranslate"><span class="pre">~</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, <code class="docutils literal notranslate"><span class="pre">|</span></code>, <code class="docutils literal notranslate"><span class="pre">^</span></code> and <code class="docutils literal notranslate"><span class="pre">~^</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>AST_REDUCE_AND, AST_REDUCE_OR, AST_REDUCE_XOR, AST_REDUCE_XNOR</p></td>
+<td><p>The unary reduction operators <code class="docutils literal notranslate"><span class="pre">~</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, <code class="docutils literal notranslate"><span class="pre">|</span></code>, <code class="docutils literal notranslate"><span class="pre">^</span></code> and <code class="docutils literal notranslate"><span class="pre">~^</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_REDUCE_BOOL</p></td>
+<td><p>Conversion from multi-bit value to boolean value (equivalent to
+AST_REDUCE_OR)</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_SHIFT_LEFT, AST_SHIFT_RIGHT, AST_SHIFT_SLEFT, AST_SHIFT_SRIGHT</p></td>
+<td><p>The shift operators <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&gt;&gt;&gt;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_LT, AST_LE, AST_EQ, AST_NE, AST_GE, AST_GT</p></td>
+<td><p>The relational operators <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">==</span></code>, <code class="docutils literal notranslate"><span class="pre">!=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code> and <code class="docutils literal notranslate"><span class="pre">&gt;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>AST_ADD, AST_SUB, AST_MUL, AST_DIV, AST_MOD, AST_POW</p></td>
+<td><p>The binary operators <code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code>, <code class="docutils literal notranslate"><span class="pre">%</span></code> and <code class="docutils literal notranslate"><span class="pre">**</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_POS, AST_NEG</p></td>
+<td><p>The prefix operators <code class="docutils literal notranslate"><span class="pre">+</span></code> and <code class="docutils literal notranslate"><span class="pre">-</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>AST_LOGIC_AND, AST_LOGIC_OR, AST_LOGIC_NOT</p></td>
+<td><p>The logic operators <code class="docutils literal notranslate"><span class="pre">&amp;&amp;</span></code>, <code class="docutils literal notranslate"><span class="pre">||</span></code> and <code class="docutils literal notranslate"><span class="pre">!</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_TERNARY</p></td>
+<td><p>The ternary <code class="docutils literal notranslate"><span class="pre">?:</span></code>-operator</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_MEMRD AST_MEMWR</p></td>
+<td><p>Read and write memories. These nodes are generated by the AST simplifier
+for writes/reads to/from Verilog arrays.</p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_ASSIGN</p></td>
+<td><p>An <code class="docutils literal notranslate"><span class="pre">assign</span></code> statement</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_CELL</p></td>
+<td><p>A cell instantiation</p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_PRIMITIVE</p></td>
+<td><p>A primitive cell (<code class="docutils literal notranslate"><span class="pre">and</span></code>, <code class="docutils literal notranslate"><span class="pre">nand</span></code>, <code class="docutils literal notranslate"><span class="pre">or</span></code>, etc.)</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_ALWAYS, AST_INITIAL</p></td>
+<td><p>Verilog <code class="docutils literal notranslate"><span class="pre">always</span></code>- and <code class="docutils literal notranslate"><span class="pre">initial</span></code>-blocks</p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_BLOCK</p></td>
+<td><p>A <code class="docutils literal notranslate"><span class="pre">begin</span></code>-<code class="docutils literal notranslate"><span class="pre">end</span></code>-block</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_ASSIGN_EQ. AST_ASSIGN_LE</p></td>
+<td><p>Blocking (<code class="docutils literal notranslate"><span class="pre">=</span></code>) and nonblocking (<code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>) assignments within an
+<code class="docutils literal notranslate"><span class="pre">always</span></code>- or <code class="docutils literal notranslate"><span class="pre">initial</span></code>-block</p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_CASE. AST_COND, AST_DEFAULT</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">case</span></code> (<code class="docutils literal notranslate"><span class="pre">if</span></code>) statements, conditions within a case and the
+default case respectively</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_FOR</p></td>
+<td><p>A <code class="docutils literal notranslate"><span class="pre">for</span></code>-loop with an <code class="docutils literal notranslate"><span class="pre">always</span></code>- or <code class="docutils literal notranslate"><span class="pre">initial</span></code>-block</p></td>
+</tr>
+<tr class="row-odd"><td><p>AST_GENVAR, AST_GENBLOCK, AST_GENFOR, AST_GENIF</p></td>
+<td><p>The <code class="docutils literal notranslate"><span class="pre">genvar</span></code> and <code class="docutils literal notranslate"><span class="pre">generate</span></code> keywords and <code class="docutils literal notranslate"><span class="pre">for</span></code> and <code class="docutils literal notranslate"><span class="pre">if</span></code> within a
+generate block.</p></td>
+</tr>
+<tr class="row-even"><td><p>AST_POSEDGE, AST_NEGEDGE, AST_EDGE</p></td>
+<td><p>Event conditions for <code class="docutils literal notranslate"><span class="pre">always</span></code> blocks.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li><div class="line-block">
+<div class="line">The node type</div>
+<div class="line">This enum (<code class="docutils literal notranslate"><span class="pre">AST::AstNodeType</span></code>) specifies the role of the node.
+<a class="reference internal" href="#tab-verilog-astnodetype"><span class="std std-numref">Table 2</span></a> contains a list of all node
+types.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">The child nodes</div>
+<div class="line">This is a list of pointers to all children in the abstract syntax tree.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Attributes</div>
+<div class="line">As almost every AST node might have Verilog attributes assigned to it, the
+<code class="docutils literal notranslate"><span class="pre">AST::AstNode</span></code> has direct support for attributes. Note that the attribute
+values are again AST nodes.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Node content</div>
+<div class="line">Each node might have additional content data. A series of member variables
+exist to hold such data. For example the member <code class="docutils literal notranslate"><span class="pre">std::string</span> <span class="pre">str</span></code> can
+hold a string value and is used e.g. in the <code class="docutils literal notranslate"><span class="pre">AST_IDENTIFIER</span></code> node type to
+store the identifier name.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">Source code location</div>
+<div class="line">Each <code class="docutils literal notranslate"><span class="pre">AST::AstNode</span></code> is automatically annotated with the current source
+code location by the <code class="docutils literal notranslate"><span class="pre">AST::AstNode</span></code> constructor. It is stored in the
+<code class="docutils literal notranslate"><span class="pre">std::string</span> <span class="pre">filename</span></code> and <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">linenum</span></code> member variables.</div>
+</div>
+</li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">AST::AstNode</span></code> constructor can be called with up to two child nodes that
+are automatically added to the list of child nodes for the new object. This
+simplifies the creation of AST nodes for simple expressions a bit. For example
+the bison code for parsing multiplications:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>basic_expr &#39;*&#39; attr basic_expr {
+<span class="linenos">2</span>        $$ = new AstNode(AST_MUL, $1, $4);
+<span class="linenos">3</span>        append_attr($$, $3);
+<span class="linenos">4</span>} |
+</pre></div>
+</div>
+<p>The generated AST data structure is then passed directly to the AST frontend
+that performs the actual conversion to RTLIL.</p>
+<p>Note that the Yosys command <code class="docutils literal notranslate"><span class="pre">read_verilog</span></code> provides the options <code class="docutils literal notranslate"><span class="pre">-yydebug</span></code>
+and <code class="docutils literal notranslate"><span class="pre">-dump_ast</span></code> that can be used to print the parse tree or abstract syntax
+tree respectively.</p>
+</section>
+</section>
+<section id="transforming-ast-to-rtlil">
+<h2>Transforming AST to RTLIL<a class="headerlink" href="#transforming-ast-to-rtlil" title="Link to this heading">¶</a></h2>
+<p>The AST Frontend converts a set of modules in AST representation to modules in
+RTLIL representation and adds them to the current design. This is done in two
+steps: simplification and RTLIL generation.</p>
+<p>The source code to the AST frontend can be found in <code class="docutils literal notranslate"><span class="pre">frontends/ast/</span></code> in the
+Yosys source tree.</p>
+<section id="ast-simplification">
+<h3>AST simplification<a class="headerlink" href="#ast-simplification" title="Link to this heading">¶</a></h3>
+<p>A full-featured AST is too complex to be transformed into RTLIL directly.
+Therefore it must first be brought into a simpler form. This is done by calling
+the <code class="docutils literal notranslate"><span class="pre">AST::AstNode::simplify()</span></code> method of all <code class="docutils literal notranslate"><span class="pre">AST_MODULE</span></code> nodes in the AST.
+This initiates a recursive process that performs the following transformations
+on the AST data structure:</p>
+<ul class="simple">
+<li><p>Inline all task and function calls.</p></li>
+<li><p>Evaluate all <code class="docutils literal notranslate"><span class="pre">generate</span></code>-statements and unroll all <code class="docutils literal notranslate"><span class="pre">for</span></code>-loops.</p></li>
+<li><p>Perform const folding where it is necessary (e.g. in the value part of
+<code class="docutils literal notranslate"><span class="pre">AST_PARAMETER</span></code>, <code class="docutils literal notranslate"><span class="pre">AST_LOCALPARAM</span></code>, <code class="docutils literal notranslate"><span class="pre">AST_PARASET</span></code> and <code class="docutils literal notranslate"><span class="pre">AST_RANGE</span></code>
+nodes).</p></li>
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">AST_PRIMITIVE</span></code> nodes with appropriate <code class="docutils literal notranslate"><span class="pre">AST_ASSIGN</span></code> nodes.</p></li>
+<li><p>Replace dynamic bit ranges in the left-hand-side of assignments with
+<code class="docutils literal notranslate"><span class="pre">AST_CASE</span></code> nodes with <code class="docutils literal notranslate"><span class="pre">AST_COND</span></code> children for each possible case.</p></li>
+<li><p>Detect array access patterns that are too complicated for the
+<code class="docutils literal notranslate"><span class="pre">RTLIL::Memory</span></code> abstraction and replace them with a set of signals and
+cases for all reads and/or writes.</p></li>
+<li><p>Otherwise replace array accesses with <code class="docutils literal notranslate"><span class="pre">AST_MEMRD</span></code> and <code class="docutils literal notranslate"><span class="pre">AST_MEMWR</span></code> nodes.</p></li>
+</ul>
+<p>In addition to these transformations, the simplifier also annotates the
+AST with additional information that is needed for the RTLIL generator,
+namely:</p>
+<ul class="simple">
+<li><p>All ranges (width of signals and bit selections) are not only const
+folded but (when a constant value is found) are also written to
+member variables in the AST_RANGE node.</p></li>
+<li><p>All identifiers are resolved and all <code class="docutils literal notranslate"><span class="pre">AST_IDENTIFIER</span></code> nodes are annotated
+with a pointer to the AST node that contains the declaration of the
+identifier. If no declaration has been found, an <code class="docutils literal notranslate"><span class="pre">AST_AUTOWIRE</span></code> node is
+created and used for the annotation.</p></li>
+</ul>
+<p>This produces an AST that is fairly easy to convert to the RTLIL format.</p>
+</section>
+<section id="generating-rtlil">
+<h3>Generating RTLIL<a class="headerlink" href="#generating-rtlil" title="Link to this heading">¶</a></h3>
+<p>After AST simplification, the <code class="docutils literal notranslate"><span class="pre">AST::AstNode::genRTLIL()</span></code> method of each
+<code class="docutils literal notranslate"><span class="pre">AST_MODULE</span></code> node in the AST is called. This initiates a recursive process
+that generates equivalent RTLIL data for the AST data.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">AST::AstNode::genRTLIL()</span></code> method returns an <code class="docutils literal notranslate"><span class="pre">RTLIL::SigSpec</span></code> structure.
+For nodes that represent expressions (operators, constants, signals, etc.), the
+cells needed to implement the calculation described by the expression are
+created and the resulting signal is returned. That way it is easy to generate
+the circuits for large expressions using depth-first recursion. For nodes that
+do not represent an expression (such as <code class="docutils literal notranslate"><span class="pre">AST_CELL</span></code>), the corresponding circuit
+is generated and an empty <code class="docutils literal notranslate"><span class="pre">RTLIL::SigSpec</span></code> is returned.</p>
+</section>
+</section>
+<section id="synthesizing-verilog-always-blocks">
+<h2>Synthesizing Verilog always blocks<a class="headerlink" href="#synthesizing-verilog-always-blocks" title="Link to this heading">¶</a></h2>
+<p>For behavioural Verilog code (code utilizing <code class="docutils literal notranslate"><span class="pre">always</span></code>- and <code class="docutils literal notranslate"><span class="pre">initial</span></code>-blocks)
+it is necessary to also generate <code class="docutils literal notranslate"><span class="pre">RTLIL::Process</span></code> objects. This is done in the
+following way:</p>
+<p>Whenever <code class="docutils literal notranslate"><span class="pre">AST::AstNode::genRTLIL()</span></code> encounters an <code class="docutils literal notranslate"><span class="pre">always</span></code>- or
+<code class="docutils literal notranslate"><span class="pre">initial</span></code>-block, it creates an instance of <code class="docutils literal notranslate"><span class="pre">AST_INTERNAL::ProcessGenerator</span></code>.
+This object then generates the <code class="docutils literal notranslate"><span class="pre">RTLIL::Process</span></code> object for the block. It also
+calls <code class="docutils literal notranslate"><span class="pre">AST::AstNode::genRTLIL()</span></code> for all right-hand-side expressions contained
+within the block.</p>
+<p>First the <code class="docutils literal notranslate"><span class="pre">AST_INTERNAL::ProcessGenerator</span></code> creates a list of all signals
+assigned within the block. It then creates a set of temporary signals using the
+naming scheme <code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">&lt;number&gt;</span> <span class="pre">\</span> <span class="pre">&lt;original_name&gt;</span></code> for each of the assigned signals.</p>
+<p>Then an <code class="docutils literal notranslate"><span class="pre">RTLIL::Process</span></code> is created that assigns all intermediate values for
+each left-hand-side signal to the temporary signal in its
+<code class="docutils literal notranslate"><span class="pre">RTLIL::CaseRule</span></code>/<code class="docutils literal notranslate"><span class="pre">RTLIL::SwitchRule</span></code> tree.</p>
+<p>Finally a <code class="docutils literal notranslate"><span class="pre">RTLIL::SyncRule</span></code> is created for the <code class="docutils literal notranslate"><span class="pre">RTLIL::Process</span></code> that assigns
+the temporary signals for the final values to the actual signals.</p>
+<p>A process may also contain memory writes. A <code class="docutils literal notranslate"><span class="pre">RTLIL::MemWriteAction</span></code> is created
+for each of them.</p>
+<p>Calls to <code class="docutils literal notranslate"><span class="pre">AST::AstNode::genRTLIL()</span></code> are generated for right hand sides as
+needed. When blocking assignments are used, <code class="docutils literal notranslate"><span class="pre">AST::AstNode::genRTLIL()</span></code> is
+configured using global variables to use the temporary signals that hold the
+correct intermediate values whenever one of the previously assigned signals is
+used in an expression.</p>
+<p>Unfortunately the generation of a correct
+<code class="docutils literal notranslate"><span class="pre">RTLIL::CaseRule</span></code>/<code class="docutils literal notranslate"><span class="pre">RTLIL::SwitchRule</span></code> tree for behavioural code is a
+non-trivial task. The AST frontend solves the problem using the approach
+described on the following pages. The following example illustrates what the
+algorithm is supposed to do. Consider the following Verilog code:</p>
+<div class="highlight-verilog notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">always</span><span class="w"> </span><span class="p">@(</span><span class="k">posedge</span><span class="w"> </span><span class="n">clock</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span>
+<span class="linenos"> 2</span><span class="w">    </span><span class="n">out1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">in1</span><span class="p">;</span>
+<span class="linenos"> 3</span><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">in2</span><span class="p">)</span>
+<span class="linenos"> 4</span><span class="w">        </span><span class="n">out1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="n">out1</span><span class="p">;</span>
+<span class="linenos"> 5</span><span class="w">    </span><span class="n">out2</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">out1</span><span class="p">;</span>
+<span class="linenos"> 6</span><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">in3</span><span class="p">)</span>
+<span class="linenos"> 7</span><span class="w">        </span><span class="n">out2</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">out2</span><span class="p">;</span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">in4</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">in5</span><span class="p">)</span>
+<span class="linenos">10</span><span class="w">            </span><span class="n">out3</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">in6</span><span class="p">;</span>
+<span class="linenos">11</span><span class="w">        </span><span class="k">else</span>
+<span class="linenos">12</span><span class="w">            </span><span class="n">out3</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">in7</span><span class="p">;</span>
+<span class="linenos">13</span><span class="w">    </span><span class="n">out1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">out1</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="n">out2</span><span class="p">;</span>
+<span class="linenos">14</span><span class="k">end</span>
+</pre></div>
+</div>
+<p>This is translated by the Verilog and AST frontends into the following RTLIL
+code (attributes, cell parameters and wire declarations not included):</p>
+<div class="highlight-RTLIL notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">cell</span><span class="w"> </span><span class="nf">$logic_not</span><span class="w"> </span><span class="nf">$logic_not$&lt;input&gt;:4$2</span>
+<span class="linenos"> 2</span><span class="w">  </span><span class="k">connect</span><span class="w"> </span><span class="nv">\A</span><span class="w"> </span><span class="nv">\in1</span>
+<span class="linenos"> 3</span><span class="w">  </span><span class="k">connect</span><span class="w"> </span><span class="nv">\Y</span><span class="w"> </span><span class="nv">$logic_not$&lt;input&gt;:4$2_Y</span>
+<span class="linenos"> 4</span><span class="k">end</span>
+<span class="linenos"> 5</span><span class="k">cell</span><span class="w"> </span><span class="nf">$xor</span><span class="w"> </span><span class="nf">$xor$&lt;input&gt;:13$3</span>
+<span class="linenos"> 6</span><span class="w">  </span><span class="k">connect</span><span class="w"> </span><span class="nv">\A</span><span class="w"> </span><span class="nv">$1\out1[0:0]</span>
+<span class="linenos"> 7</span><span class="w">  </span><span class="k">connect</span><span class="w"> </span><span class="nv">\B</span><span class="w"> </span><span class="nv">\out2</span>
+<span class="linenos"> 8</span><span class="w">  </span><span class="k">connect</span><span class="w"> </span><span class="nv">\Y</span><span class="w"> </span><span class="nv">$xor$&lt;input&gt;:13$3_Y</span>
+<span class="linenos"> 9</span><span class="k">end</span>
+<span class="linenos">10</span><span class="k">process</span><span class="w"> </span><span class="ni">$proc$&lt;input&gt;:1$1</span>
+<span class="linenos">11</span><span class="w">  </span><span class="k">assign</span><span class="w"> </span><span class="nv">$0\out3[0:0]</span><span class="w"> </span><span class="nv">\out3</span>
+<span class="linenos">12</span><span class="w">  </span><span class="k">assign</span><span class="w"> </span><span class="nv">$0\out2[0:0]</span><span class="w"> </span><span class="nv">$1\out1[0:0]</span>
+<span class="linenos">13</span><span class="w">  </span><span class="k">assign</span><span class="w"> </span><span class="nv">$0\out1[0:0]</span><span class="w"> </span><span class="nv">$xor$&lt;input&gt;:13$3_Y</span>
+<span class="linenos">14</span><span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="nv">\in2</span>
+<span class="linenos">15</span><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="m">1&#39;1</span>
+<span class="linenos">16</span><span class="w">      </span><span class="k">assign</span><span class="w"> </span><span class="nv">$1\out1[0:0]</span><span class="w"> </span><span class="nv">$logic_not$&lt;input&gt;:4$2_Y</span>
+<span class="linenos">17</span><span class="w">    </span><span class="k">case</span>
+<span class="linenos">18</span><span class="w">      </span><span class="k">assign</span><span class="w"> </span><span class="nv">$1\out1[0:0]</span><span class="w"> </span><span class="nv">\in1</span>
+<span class="linenos">19</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos">20</span><span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="nv">\in3</span>
+<span class="linenos">21</span><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="m">1&#39;1</span>
+<span class="linenos">22</span><span class="w">      </span><span class="k">assign</span><span class="w"> </span><span class="nv">$0\out2[0:0]</span><span class="w"> </span><span class="nv">\out2</span>
+<span class="linenos">23</span><span class="w">    </span><span class="k">case</span>
+<span class="linenos">24</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos">25</span><span class="w">  </span><span class="k">switch</span><span class="w"> </span><span class="nv">\in4</span>
+<span class="linenos">26</span><span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="m">1&#39;1</span>
+<span class="linenos">27</span><span class="w">      </span><span class="k">switch</span><span class="w"> </span><span class="nv">\in5</span>
+<span class="linenos">28</span><span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="m">1&#39;1</span>
+<span class="linenos">29</span><span class="w">          </span><span class="k">assign</span><span class="w"> </span><span class="nv">$0\out3[0:0]</span><span class="w"> </span><span class="nv">\in6</span>
+<span class="linenos">30</span><span class="w">        </span><span class="k">case</span>
+<span class="linenos">31</span><span class="w">          </span><span class="k">assign</span><span class="w"> </span><span class="nv">$0\out3[0:0]</span><span class="w"> </span><span class="nv">\in7</span>
+<span class="linenos">32</span><span class="w">      </span><span class="k">end</span>
+<span class="linenos">33</span><span class="w">    </span><span class="k">case</span>
+<span class="linenos">34</span><span class="w">  </span><span class="k">end</span>
+<span class="linenos">35</span><span class="w">  </span><span class="k">sync</span><span class="w"> </span><span class="k">posedge</span><span class="w"> </span><span class="nv">\clock</span>
+<span class="linenos">36</span><span class="w">    </span><span class="k">update</span><span class="w"> </span><span class="nv">\out1</span><span class="w"> </span><span class="nv">$0\out1[0:0]</span>
+<span class="linenos">37</span><span class="w">    </span><span class="k">update</span><span class="w"> </span><span class="nv">\out2</span><span class="w"> </span><span class="nv">$0\out2[0:0]</span>
+<span class="linenos">38</span><span class="w">    </span><span class="k">update</span><span class="w"> </span><span class="nv">\out3</span><span class="w"> </span><span class="nv">$0\out3[0:0]</span>
+<span class="linenos">39</span><span class="k">end</span>
+</pre></div>
+</div>
+<p>Note that the two operators are translated into separate cells outside the
+generated process. The signal <code class="docutils literal notranslate"><span class="pre">out1</span></code> is assigned using blocking assignments
+and therefore <code class="docutils literal notranslate"><span class="pre">out1</span></code> has been replaced with a different signal in all
+expressions after the initial assignment. The signal <code class="docutils literal notranslate"><span class="pre">out2</span></code> is assigned using
+nonblocking assignments and therefore is not substituted on the right-hand-side
+expressions.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">RTLIL::CaseRule</span></code>/<code class="docutils literal notranslate"><span class="pre">RTLIL::SwitchRule</span></code> tree must be interpreted the
+following way:</p>
+<ul>
+<li><p>On each case level (the body of the process is the root case), first the
+actions on this level are evaluated and then the switches within the case are
+evaluated. (Note that the last assignment on line 13 of the Verilog code has
+been moved to the beginning of the RTLIL process to line 13 of the RTLIL
+listing.)</p>
+<p>I.e. the special cases deeper in the switch hierarchy override the defaults
+on the upper levels. The assignments in lines 12 and 22 of the RTLIL code
+serve as an example for this.</p>
+<p>Note that in contrast to this, the order within the <code class="docutils literal notranslate"><span class="pre">RTLIL::SwitchRule</span></code>
+objects within a <code class="docutils literal notranslate"><span class="pre">RTLIL::CaseRule</span></code> is preserved with respect to the
+original AST and Verilog code.</p>
+</li>
+<li><p>The whole <code class="docutils literal notranslate"><span class="pre">RTLIL::CaseRule</span></code>/<code class="docutils literal notranslate"><span class="pre">RTLIL::SwitchRule</span></code> tree describes an
+asynchronous circuit. I.e. the decision tree formed by the switches can be
+seen independently for each assigned signal. Whenever one assigned signal
+changes, all signals that depend on the changed signals are to be updated.
+For example the assignments in lines 16 and 18 in the RTLIL code in fact
+influence the assignment in line 12, even though they are in the “wrong
+order”.</p></li>
+</ul>
+<p>The only synchronous part of the process is in the <code class="docutils literal notranslate"><span class="pre">RTLIL::SyncRule</span></code> object
+generated at line 35 in the RTLIL code. The sync rule is the only part of the
+process where the original signals are assigned. The synchronization event from
+the original Verilog code has been translated into the synchronization type
+(posedge) and signal (<code class="docutils literal notranslate"><span class="pre">\clock</span></code>) for the <code class="docutils literal notranslate"><span class="pre">RTLIL::SyncRule</span></code> object. In the
+case of this simple example the <code class="docutils literal notranslate"><span class="pre">RTLIL::SyncRule</span></code> object is later simply
+transformed into a set of d-type flip-flops and the
+<code class="docutils literal notranslate"><span class="pre">RTLIL::CaseRule</span></code>/<code class="docutils literal notranslate"><span class="pre">RTLIL::SwitchRule</span></code> tree to a decision tree using
+multiplexers.</p>
+<p>In more complex examples (e.g. asynchronous resets) the part of the
+<code class="docutils literal notranslate"><span class="pre">RTLIL::CaseRule</span></code>/<code class="docutils literal notranslate"><span class="pre">RTLIL::SwitchRule</span></code> tree that describes the asynchronous
+reset must first be transformed to the correct <code class="docutils literal notranslate"><span class="pre">RTLIL::SyncRule</span></code> objects. This
+is done by the <code class="docutils literal notranslate"><span class="pre">proc_arst</span></code> pass.</p>
+<section id="the-processgenerator-algorithm">
+<h3>The ProcessGenerator algorithm<a class="headerlink" href="#the-processgenerator-algorithm" title="Link to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">AST_INTERNAL::ProcessGenerator</span></code> uses the following internal state
+variables:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">subst_rvalue_from</span></code> and <code class="docutils literal notranslate"><span class="pre">subst_rvalue_to</span></code></div>
+<div class="line">These two variables hold the replacement pattern that should be used by
+ <code class="docutils literal notranslate"><span class="pre">AST::AstNode::genRTLIL()</span></code> for signals with blocking assignments. After
+initialization of <code class="docutils literal notranslate"><span class="pre">AST_INTERNAL::ProcessGenerator</span></code> these two variables are
+empty.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">subst_lvalue_from</span></code> and <code class="docutils literal notranslate"><span class="pre">subst_lvalue_to</span></code></div>
+<div class="line">These two variables contain the mapping from left-hand-side signals (<code class="docutils literal notranslate"><span class="pre">\</span>
+<span class="pre">&lt;name&gt;</span></code>) to the current temporary signal for the same thing (initially
+<code class="docutils literal notranslate"><span class="pre">$0\</span> <span class="pre">&lt;name&gt;</span></code>).</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">current_case</span></code></div>
+<div class="line">A pointer to a <code class="docutils literal notranslate"><span class="pre">RTLIL::CaseRule</span></code> object. Initially this is the root case
+of the generated <code class="docutils literal notranslate"><span class="pre">RTLIL::Process</span></code>.</div>
+</div>
+</li>
+</ul>
+<p>As the algorithm runs these variables are continuously modified as well as
+pushed to the stack and later restored to their earlier values by popping from
+the stack.</p>
+<p>On startup the ProcessGenerator generates a new <code class="docutils literal notranslate"><span class="pre">RTLIL::Process</span></code> object with
+an empty root case and initializes its state variables as described above. Then
+the <code class="docutils literal notranslate"><span class="pre">RTLIL::SyncRule</span></code> objects are created using the synchronization events
+from the AST_ALWAYS node and the initial values of <code class="docutils literal notranslate"><span class="pre">subst_lvalue_from</span></code> and
+<code class="docutils literal notranslate"><span class="pre">subst_lvalue_to</span></code>. Then the AST for this process is evaluated recursively.</p>
+<p>During this recursive evaluation, three different relevant types of AST nodes
+can be discovered: <code class="docutils literal notranslate"><span class="pre">AST_ASSIGN_LE</span></code> (nonblocking assignments),
+<code class="docutils literal notranslate"><span class="pre">AST_ASSIGN_EQ</span></code> (blocking assignments) and <code class="docutils literal notranslate"><span class="pre">AST_CASE</span></code> (<code class="docutils literal notranslate"><span class="pre">if</span></code> or <code class="docutils literal notranslate"><span class="pre">case</span></code>
+statement).</p>
+<section id="handling-of-nonblocking-assignments">
+<h4>Handling of nonblocking assignments<a class="headerlink" href="#handling-of-nonblocking-assignments" title="Link to this heading">¶</a></h4>
+<p>When an <code class="docutils literal notranslate"><span class="pre">AST_ASSIGN_LE</span></code> node is discovered, the following actions are
+performed by the ProcessGenerator:</p>
+<ul class="simple">
+<li><p>The left-hand-side is evaluated using <code class="docutils literal notranslate"><span class="pre">AST::AstNode::genRTLIL()</span></code> and mapped
+to a temporary signal name using <code class="docutils literal notranslate"><span class="pre">subst_lvalue_from</span></code> and
+<code class="docutils literal notranslate"><span class="pre">subst_lvalue_to</span></code>.</p></li>
+<li><p>The right-hand-side is evaluated using <code class="docutils literal notranslate"><span class="pre">AST::AstNode::genRTLIL()</span></code>. For this
+call, the values of <code class="docutils literal notranslate"><span class="pre">subst_rvalue_from</span></code> and <code class="docutils literal notranslate"><span class="pre">subst_rvalue_to</span></code> are used to
+map blocking-assigned signals correctly.</p></li>
+<li><p>Remove all assignments to the same left-hand-side as this assignment from the
+<code class="docutils literal notranslate"><span class="pre">current_case</span></code> and all cases within it.</p></li>
+<li><p>Add the new assignment to the <code class="docutils literal notranslate"><span class="pre">current_case</span></code>.</p></li>
+</ul>
+</section>
+<section id="handling-of-blocking-assignments">
+<h4>Handling of blocking assignments<a class="headerlink" href="#handling-of-blocking-assignments" title="Link to this heading">¶</a></h4>
+<p>When an <code class="docutils literal notranslate"><span class="pre">AST_ASSIGN_EQ</span></code> node is discovered, the following actions are
+performed by the ProcessGenerator:</p>
+<ul class="simple">
+<li><p>Perform all the steps that would be performed for a nonblocking assignment
+(see above).</p></li>
+<li><p>Remove the found left-hand-side (before lvalue mapping) from
+<code class="docutils literal notranslate"><span class="pre">subst_rvalue_from</span></code> and also remove the respective bits from
+<code class="docutils literal notranslate"><span class="pre">subst_rvalue_to</span></code>.</p></li>
+<li><p>Append the found left-hand-side (before lvalue mapping) to
+<code class="docutils literal notranslate"><span class="pre">subst_rvalue_from</span></code> and append the found right-hand-side to
+<code class="docutils literal notranslate"><span class="pre">subst_rvalue_to</span></code>.</p></li>
+</ul>
+</section>
+<section id="handling-of-cases-and-if-statements">
+<h4>Handling of cases and if-statements<a class="headerlink" href="#handling-of-cases-and-if-statements" title="Link to this heading">¶</a></h4>
+<p>When an <code class="docutils literal notranslate"><span class="pre">AST_CASE</span></code> node is discovered, the following actions are performed by
+the ProcessGenerator:</p>
+<ul class="simple">
+<li><p>The values of <code class="docutils literal notranslate"><span class="pre">subst_rvalue_from</span></code>, <code class="docutils literal notranslate"><span class="pre">subst_rvalue_to</span></code>,
+<code class="docutils literal notranslate"><span class="pre">subst_lvalue_from</span></code> and <code class="docutils literal notranslate"><span class="pre">subst_lvalue_to</span></code> are pushed to the stack.</p></li>
+<li><p>A new <code class="docutils literal notranslate"><span class="pre">RTLIL::SwitchRule</span></code> object is generated, the selection expression is
+evaluated using <code class="docutils literal notranslate"><span class="pre">AST::AstNode::genRTLIL()</span></code> (with the use of
+<code class="docutils literal notranslate"><span class="pre">subst_rvalue_from</span></code> and <code class="docutils literal notranslate"><span class="pre">subst_rvalue_to</span></code>) and added to the
+<code class="docutils literal notranslate"><span class="pre">RTLIL::SwitchRule</span></code> object and the object is added to the <code class="docutils literal notranslate"><span class="pre">current_case</span></code>.</p></li>
+<li><p>All lvalues assigned to within the <code class="docutils literal notranslate"><span class="pre">AST_CASE</span></code> node using blocking
+assignments are collected and saved in the local variable
+<code class="docutils literal notranslate"><span class="pre">this_case_eq_lvalue</span></code>.</p></li>
+<li><p>New temporary signals are generated for all signals in
+<code class="docutils literal notranslate"><span class="pre">this_case_eq_lvalue</span></code> and stored in <code class="docutils literal notranslate"><span class="pre">this_case_eq_ltemp</span></code>.</p></li>
+<li><p>The signals in <code class="docutils literal notranslate"><span class="pre">this_case_eq_lvalue</span></code> are mapped using <code class="docutils literal notranslate"><span class="pre">subst_rvalue_from</span></code>
+and <code class="docutils literal notranslate"><span class="pre">subst_rvalue_to</span></code> and the resulting set of signals is stored in
+<code class="docutils literal notranslate"><span class="pre">this_case_eq_rvalue</span></code>.</p></li>
+</ul>
+<p>Then the following steps are performed for each <code class="docutils literal notranslate"><span class="pre">AST_COND</span></code> node within the
+<code class="docutils literal notranslate"><span class="pre">AST_CASE</span></code> node:</p>
+<ul class="simple">
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">subst_rvalue_from</span></code>, <code class="docutils literal notranslate"><span class="pre">subst_rvalue_to</span></code>, <code class="docutils literal notranslate"><span class="pre">subst_lvalue_from</span></code> and
+<code class="docutils literal notranslate"><span class="pre">subst_lvalue_to</span></code> to the values that have been pushed to the stack.</p></li>
+<li><p>Remove <code class="docutils literal notranslate"><span class="pre">this_case_eq_lvalue</span></code> from
+<code class="docutils literal notranslate"><span class="pre">subst_lvalue_from</span></code>/<code class="docutils literal notranslate"><span class="pre">subst_lvalue_to</span></code>.</p></li>
+<li><p>Append <code class="docutils literal notranslate"><span class="pre">this_case_eq_lvalue</span></code> to <code class="docutils literal notranslate"><span class="pre">subst_lvalue_from</span></code> and append
+<code class="docutils literal notranslate"><span class="pre">this_case_eq_ltemp</span></code> to <code class="docutils literal notranslate"><span class="pre">subst_lvalue_to</span></code>.</p></li>
+<li><p>Push the value of <code class="docutils literal notranslate"><span class="pre">current_case</span></code>.</p></li>
+<li><p>Create a new <code class="docutils literal notranslate"><span class="pre">RTLIL::CaseRule</span></code>. Set <code class="docutils literal notranslate"><span class="pre">current_case</span></code> to the new object and
+add the new object to the <code class="docutils literal notranslate"><span class="pre">RTLIL::SwitchRule</span></code> created above.</p></li>
+<li><p>Add an assignment from <code class="docutils literal notranslate"><span class="pre">this_case_eq_rvalue</span></code> to <code class="docutils literal notranslate"><span class="pre">this_case_eq_ltemp</span></code> to
+the new <code class="docutils literal notranslate"><span class="pre">current_case</span></code>.</p></li>
+<li><p>Evaluate the compare value for this case using
+<code class="docutils literal notranslate"><span class="pre">AST::AstNode::genRTLIL()</span></code> (with the use of <code class="docutils literal notranslate"><span class="pre">subst_rvalue_from</span></code>
+and <code class="docutils literal notranslate"><span class="pre">subst_rvalue_to</span></code>) modify the new <code class="docutils literal notranslate"><span class="pre">current_case</span></code> accordingly.</p></li>
+<li><p>Recursion into the children of the <code class="docutils literal notranslate"><span class="pre">AST_COND</span></code> node.</p></li>
+<li><p>Restore <code class="docutils literal notranslate"><span class="pre">current_case</span></code> by popping the old value from the stack.</p></li>
+</ul>
+<p>Finally the following steps are performed:</p>
+<ul class="simple">
+<li><p>The values of <code class="docutils literal notranslate"><span class="pre">subst_rvalue_from</span></code>, <code class="docutils literal notranslate"><span class="pre">subst_rvalue_to</span></code>,
+<code class="docutils literal notranslate"><span class="pre">subst_lvalue_from</span></code> and <code class="docutils literal notranslate"><span class="pre">subst_lvalue_to</span></code> are popped from the stack.</p></li>
+<li><p>The signals from <code class="docutils literal notranslate"><span class="pre">this_case_eq_lvalue</span></code> are removed from the
+<code class="docutils literal notranslate"><span class="pre">subst_rvalue_from</span></code>/<code class="docutils literal notranslate"><span class="pre">subst_rvalue_to</span></code>-pair.</p></li>
+<li><p>The value of <code class="docutils literal notranslate"><span class="pre">this_case_eq_lvalue</span></code> is appended to <code class="docutils literal notranslate"><span class="pre">subst_rvalue_from</span></code> and
+the value of <code class="docutils literal notranslate"><span class="pre">this_case_eq_ltemp</span></code> is appended to <code class="docutils literal notranslate"><span class="pre">subst_rvalue_to</span></code>.</p></li>
+<li><p>Map the signals in <code class="docutils literal notranslate"><span class="pre">this_case_eq_lvalue</span></code> using
+<code class="docutils literal notranslate"><span class="pre">subst_lvalue_from</span></code>/<code class="docutils literal notranslate"><span class="pre">subst_lvalue_to</span></code>.</p></li>
+<li><p>Remove all assignments to signals in <code class="docutils literal notranslate"><span class="pre">this_case_eq_lvalue</span></code> in
+<code class="docutils literal notranslate"><span class="pre">current_case</span></code> and all cases within it.</p></li>
+<li><p>Add an assignment from <code class="docutils literal notranslate"><span class="pre">this_case_eq_ltemp</span></code> to <code class="docutils literal notranslate"><span class="pre">this_case_eq_lvalue</span></code> to
+<code class="docutils literal notranslate"><span class="pre">current_case</span></code>.</p></li>
+</ul>
+</section>
+<section id="further-analysis-of-the-algorithm-for-cases-and-if-statements">
+<h4>Further analysis of the algorithm for cases and if-statements<a class="headerlink" href="#further-analysis-of-the-algorithm-for-cases-and-if-statements" title="Link to this heading">¶</a></h4>
+<p>With respect to nonblocking assignments the algorithm is easy: later assignments
+invalidate earlier assignments. For each signal assigned using nonblocking
+assignments exactly one temporary variable is generated (with the <code class="docutils literal notranslate"><span class="pre">$0</span></code>-prefix)
+and this variable is used for all assignments of the variable.</p>
+<p>Note how all the <code class="docutils literal notranslate"><span class="pre">_eq_</span></code>-variables become empty when no blocking assignments
+are used and many of the steps in the algorithm can then be ignored as a result
+of this.</p>
+<p>For a variable with blocking assignments the algorithm shows the following
+behaviour: First a new temporary variable is created. This new temporary
+variable is then registered as the assignment target for all assignments for
+this variable within the cases for this <code class="docutils literal notranslate"><span class="pre">AST_CASE</span></code> node. Then for each case
+the new temporary variable is first assigned the old temporary variable. This
+assignment is overwritten if the variable is actually assigned in this case and
+is kept as a default value otherwise.</p>
+<p>This yields an <code class="docutils literal notranslate"><span class="pre">RTLIL::CaseRule</span></code> that assigns the new temporary variable in
+all branches. So when all cases have been processed a final assignment is added
+to the containing block that assigns the new temporary variable to the old one.
+Note how this step always overrides a previous assignment to the old temporary
+variable. Other than nonblocking assignments, the old assignment could still
+have an effect somewhere in the design, as there have been calls to
+<code class="docutils literal notranslate"><span class="pre">AST::AstNode::genRTLIL()</span></code> with a
+<code class="docutils literal notranslate"><span class="pre">subst_rvalue_from</span></code>/<code class="docutils literal notranslate"><span class="pre">subst_rvalue_to</span></code>-tuple that contained the
+right-hand-side of the old assignment.</p>
+</section>
+</section>
+<section id="the-proc-pass">
+<h3>The proc pass<a class="headerlink" href="#the-proc-pass" title="Link to this heading">¶</a></h3>
+<p>The ProcessGenerator converts a behavioural model in AST representation to a
+behavioural model in <code class="docutils literal notranslate"><span class="pre">RTLIL::Process</span></code> representation. The actual conversion
+from a behavioural model to an RTL representation is performed by the <a class="reference internal" href="../../cmd/proc.html#cmd-proc" title="translate processes to netlists"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">proc</span></code></a>
+pass and the passes it launches:</p>
+<ul>
+<li><div class="line-block">
+<div class="line"><a class="reference internal" href="../../cmd/proc_clean.html#cmd-proc_clean" title="remove empty parts of processes"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">proc_clean</span></code></a> and <a class="reference internal" href="../../cmd/proc_rmdead.html#cmd-proc_rmdead" title="eliminate dead trees in decision trees"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">proc_rmdead</span></code></a></div>
+<div class="line">These two passes just clean up the <code class="docutils literal notranslate"><span class="pre">RTLIL::Process</span></code> structure. The
+<a class="reference internal" href="../../cmd/proc_clean.html#cmd-proc_clean" title="remove empty parts of processes"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">proc_clean</span></code></a> pass removes empty parts (eg. empty assignments) from the
+process and <a class="reference internal" href="../../cmd/proc_rmdead.html#cmd-proc_rmdead" title="eliminate dead trees in decision trees"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">proc_rmdead</span></code></a> detects and removes unreachable branches from the
+process’s decision trees.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><a class="reference internal" href="../../cmd/proc_arst.html#cmd-proc_arst" title="detect asynchronous resets"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">proc_arst</span></code></a></div>
+<div class="line">This pass detects processes that describe d-type flip-flops with
+asynchronous resets and rewrites the process to better reflect what they
+are modelling: Before this pass, an asynchronous reset has two
+edge-sensitive sync rules and one top-level <code class="docutils literal notranslate"><span class="pre">RTLIL::SwitchRule</span></code> for the
+reset path. After this pass the sync rule for the reset is level-sensitive
+and the top-level <code class="docutils literal notranslate"><span class="pre">RTLIL::SwitchRule</span></code> has been removed.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><a class="reference internal" href="../../cmd/proc_mux.html#cmd-proc_mux" title="convert decision trees to multiplexers"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">proc_mux</span></code></a></div>
+<div class="line">This pass converts the <code class="docutils literal notranslate"><span class="pre">RTLIL::CaseRule</span></code>/<code class="docutils literal notranslate"><span class="pre">RTLIL::SwitchRule</span></code>-tree to
+a tree of multiplexers per written signal. After this, the
+<code class="docutils literal notranslate"><span class="pre">RTLIL::Process</span></code> structure only contains the <code class="docutils literal notranslate"><span class="pre">RTLIL::SyncRule</span></code> s that
+describe the output registers.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><a class="reference internal" href="../../cmd/proc_dff.html#cmd-proc_dff" title="extract flip-flops from processes"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">proc_dff</span></code></a></div>
+<div class="line">This pass replaces the <code class="docutils literal notranslate"><span class="pre">RTLIL::SyncRule</span></code>s to d-type flip-flops (with
+asynchronous resets if necessary).</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><a class="reference internal" href="../../cmd/proc_memwr.html#cmd-proc_memwr" title="extract memory writes from processes"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">proc_memwr</span></code></a></div>
+<div class="line">This pass replaces the <code class="docutils literal notranslate"><span class="pre">RTLIL::MemWriteAction</span></code>s with <a class="reference internal" href="../../cell/word_mem.html#mem.$memwr" title="mem::$memwr"><code class="xref cell cell-ref docutils literal notranslate"><span class="pre">$memwr</span></code></a> cells.</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line"><a class="reference internal" href="../../cmd/proc_clean.html#cmd-proc_clean" title="remove empty parts of processes"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">proc_clean</span></code></a></div>
+<div class="line">A final call to <a class="reference internal" href="../../cmd/proc_clean.html#cmd-proc_clean" title="remove empty parts of processes"><code class="xref cmd cmd-ref docutils literal notranslate"><span class="pre">proc_clean</span></code></a> removes the now empty <code class="docutils literal notranslate"><span class="pre">RTLIL::Process</span></code>
+objects.</div>
+</div>
+</li>
+</ul>
+<p>Performing these last processing steps in passes instead of in the Verilog
+frontend has two important benefits:</p>
+<p>First it improves the transparency of the process. Everything that happens in a
+separate pass is easier to debug, as the RTLIL data structures can be easily
+investigated before and after each of the steps.</p>
+<p>Second it improves flexibility. This scheme can easily be extended to support
+other types of storage-elements, such as sr-latches or d-latches, without having
+to extend the actual Verilog frontend.</p>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../formats/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Internal formats</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="control_and_data.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Control and data flow</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025 YosysHQ GmbH
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link" href="https://readthedocs.org/projects/yosys" aria-label="On Read the Docs">
+                <svg x="0px" y="0px" viewBox="-125 217 360 360" xml:space="preserve">
+                  <path fill="currentColor" d="M39.2,391.3c-4.2,0.6-7.1,4.4-6.5,8.5c0.4,3,2.6,5.5,5.5,6.3 c0,0,18.5,6.1,50,8.7c25.3,2.1,54-1.8,54-1.8c4.2-0.1,7.5-3.6,7.4-7.8c-0.1-4.2-3.6-7.5-7.8-7.4c-0.5,0-1,0.1-1.5,0.2 c0,0-28.1,3.5-50.9,1.6c-30.1-2.4-46.5-7.9-46.5-7.9C41.7,391.3,40.4,391.1,39.2,391.3z M39.2,353.6c-4.2,0.6-7.1,4.4-6.5,8.5 c0.4,3,2.6,5.5,5.5,6.3c0,0,18.5,6.1,50,8.7c25.3,2.1,54-1.8,54-1.8c4.2-0.1,7.5-3.6,7.4-7.8c-0.1-4.2-3.6-7.5-7.8-7.4 c-0.5,0-1,0.1-1.5,0.2c0,0-28.1,3.5-50.9,1.6c-30.1-2.4-46.5-7.9-46.5-7.9C41.7,353.6,40.4,353.4,39.2,353.6z M39.2,315.9 c-4.2,0.6-7.1,4.4-6.5,8.5c0.4,3,2.6,5.5,5.5,6.3c0,0,18.5,6.1,50,8.7c25.3,2.1,54-1.8,54-1.8c4.2-0.1,7.5-3.6,7.4-7.8 c-0.1-4.2-3.6-7.5-7.8-7.4c-0.5,0-1,0.1-1.5,0.2c0,0-28.1,3.5-50.9,1.6c-30.1-2.4-46.5-7.9-46.5-7.9 C41.7,315.9,40.4,315.8,39.2,315.9z M39.2,278.3c-4.2,0.6-7.1,4.4-6.5,8.5c0.4,3,2.6,5.5,5.5,6.3c0,0,18.5,6.1,50,8.7 c25.3,2.1,54-1.8,54-1.8c4.2-0.1,7.5-3.6,7.4-7.8c-0.1-4.2-3.6-7.5-7.8-7.4c-0.5,0-1,0.1-1.5,0.2c0,0-28.1,3.5-50.9,1.6 c-30.1-2.4-46.5-7.9-46.5-7.9C41.7,278.2,40.4,278.1,39.2,278.3z M-13.6,238.5c-39.6,0.3-54.3,12.5-54.3,12.5v295.7 c0,0,14.4-12.4,60.8-10.5s55.9,18.2,112.9,19.3s71.3-8.8,71.3-8.8l0.8-301.4c0,0-25.6,7.3-75.6,7.7c-49.9,0.4-61.9-12.7-107.7-14.2 C-8.2,238.6-10.9,238.5-13.6,238.5z M19.5,257.8c0,0,24,7.9,68.3,10.1c37.5,1.9,75-3.7,75-3.7v267.9c0,0-19,10-66.5,6.6 C59.5,536.1,19,522.1,19,522.1L19.5,257.8z M-3.6,264.8c4.2,0,7.7,3.4,7.7,7.7c0,4.2-3.4,7.7-7.7,7.7c0,0-12.4,0.1-20,0.8 c-12.7,1.3-21.4,5.9-21.4,5.9c-3.7,2-8.4,0.5-10.3-3.2c-2-3.7-0.5-8.4,3.2-10.3c0,0,0,0,0,0c0,0,11.3-6,27-7.5 C-16,264.9-3.6,264.8-3.6,264.8z M-11,302.6c4.2-0.1,7.4,0,7.4,0c4.2,0.5,7.2,4.3,6.7,8.5c-0.4,3.5-3.2,6.3-6.7,6.7 c0,0-12.4,0.1-20,0.8c-12.7,1.3-21.4,5.9-21.4,5.9c-3.7,2-8.4,0.5-10.3-3.2c-2-3.7-0.5-8.4,3.2-10.3c0,0,11.3-6,27-7.5 C-20.5,302.9-15.2,302.7-11,302.6z M-3.6,340.2c4.2,0,7.7,3.4,7.7,7.7s-3.4,7.7-7.7,7.7c0,0-12.4-0.1-20,0.7 c-12.7,1.3-21.4,5.9-21.4,5.9c-3.7,2-8.4,0.5-10.3-3.2c-2-3.7-0.5-8.4,3.2-10.3c0,0,11.3-6,27-7.5C-16,340.1-3.6,340.2-3.6,340.2z" />
+                </svg>
+              </a><a class="muted-link" href="https://github.com/YosysHQ/yosys" aria-label="On GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+          YosysHQ
+          </span>
+        </div>
+        <div class="toc-tree-container yosyshq-links" style="padding-bottom: 0">
+          <div class="toc-tree">
+            <ul>
+              <li></li>
+              <li><a class="reference external" href="https://yosyshq.readthedocs.io">Docs</a></li>
+              <li><a class="reference external" href="https://blog.yosyshq.com">Blog</a></li>
+              <li><a class="reference external" href="https://www.yosyshq.com">Website</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">The Verilog and AST frontends</a><ul>
+<li><a class="reference internal" href="#transforming-verilog-to-ast">Transforming Verilog to AST</a><ul>
+<li><a class="reference internal" href="#the-verilog-preprocessor">The Verilog preprocessor</a></li>
+<li><a class="reference internal" href="#the-verilog-lexer">The Verilog lexer</a></li>
+<li><a class="reference internal" href="#the-verilog-parser">The Verilog parser</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#transforming-ast-to-rtlil">Transforming AST to RTLIL</a><ul>
+<li><a class="reference internal" href="#ast-simplification">AST simplification</a></li>
+<li><a class="reference internal" href="#generating-rtlil">Generating RTLIL</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#synthesizing-verilog-always-blocks">Synthesizing Verilog always blocks</a><ul>
+<li><a class="reference internal" href="#the-processgenerator-algorithm">The ProcessGenerator algorithm</a><ul>
+<li><a class="reference internal" href="#handling-of-nonblocking-assignments">Handling of nonblocking assignments</a></li>
+<li><a class="reference internal" href="#handling-of-blocking-assignments">Handling of blocking assignments</a></li>
+<li><a class="reference internal" href="#handling-of-cases-and-if-statements">Handling of cases and if-statements</a></li>
+<li><a class="reference internal" href="#further-analysis-of-the-algorithm-for-cases-and-if-statements">Further analysis of the algorithm for cases and if-statements</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-proc-pass">The proc pass</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+        
+      </div>
+      
+    </aside>
+  </div>
+</div><script src="../../_static/documentation_options.js?v=33dbc229"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo-ys.js?v=8d9c4053"></script>
+    </body>
+</html>
